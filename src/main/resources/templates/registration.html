@@ -1,0 +1,43 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+
+</head>
+<body>
+
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <div class="fadeIn first">
+            <label id="lable">Registration</label>
+        </div>
+
+        <form th:userDo="${userForm}" th:action="@{/registration}" method="post">
+            <input type="text" id="login" class="fadeIn second" name="login" placeholder="Login" required autofocus
+                   th:field="*{userForm.username}"
+                   th:class="${#fields.hasErrors(userForm.username)}? fieldError">
+            <input type="password" id="inputPassword" class="fadeIn third" placeholder="Password" required
+                   th:field="*{userForm.password}">
+
+            <input type="text" id="firstName" class="fadeIn fourth" name="First name (optional)" placeholder="First name" optional autofocus
+                   th:field="*{userForm.firstName}">
+            <input type="text" id="lastName" class="fadeIn fifth" name="Last name (optional)" placeholder="lastName" optional autofocus
+                   th:field="*{userForm.lastName}">
+            <input type="text" id="phoneNumber" class="fadeIn sixth" name="Phone number (optional)" placeholder="Phone number" optional autofocus
+                   th:field="*{userForm.phoneNumber}">
+            <input type="text" id="email" class="fadeIn seventh" name="Email (optional)" placeholder="Email" optional autofocus
+                   th:field="*{userForm.email}">
+            <input id="button-sub" type="submit" class="fadeIn eighth" value="Sign Up">
+
+        </form>
+
+        <div id="formFooter">
+            <a class="underlineHover" href="login">Already have an account? Log in</a>
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+</html>
