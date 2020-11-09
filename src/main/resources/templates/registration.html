@@ -9,16 +9,16 @@
 <div class="wrapper fadeInDown">
     <div id="formContent">
         <div class="fadeIn first">
-            <label id="lable">Registration</label>
+            <h1 id="lable">Registration</h1>
         </div>
 
         <form th:userDo="${userForm}" th:action="@{/registration}" method="post">
+
             <input type="text" id="login" class="fadeIn second" name="login" placeholder="Login" required autofocus
-                   th:field="*{userForm.username}"
-                   th:class="${#fields.hasErrors(userForm.username)}? fieldError">
+                   th:field="*{userForm.username}">
             <input type="password" id="inputPassword" class="fadeIn third" placeholder="Password" required
                    th:field="*{userForm.password}">
-
+            <h1 th:inline="text">Optional</h1>
             <input type="text" id="firstName" class="fadeIn fourth" name="First name (optional)" placeholder="First name" optional autofocus
                    th:field="*{userForm.firstName}">
             <input type="text" id="lastName" class="fadeIn fifth" name="Last name (optional)" placeholder="lastName" optional autofocus
@@ -28,16 +28,15 @@
             <input type="text" id="email" class="fadeIn seventh" name="Email (optional)" placeholder="Email" optional autofocus
                    th:field="*{userForm.email}">
             <input id="button-sub" type="submit" class="fadeIn eighth" value="Sign Up">
-
         </form>
 
         <div id="formFooter">
             <a class="underlineHover" href="login">Already have an account? Log in</a>
         </div>
-
+        <output type = "text" th:text="*{usernameError}"> </output>
+        <output type = "text" th:text="*{DataFormatError}"> </output>
     </div>
 </div>
-
 
 </body>
 </html>
