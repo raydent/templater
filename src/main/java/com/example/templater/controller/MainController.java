@@ -12,10 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,8 +28,11 @@ public class MainController {
 
 
     @GetMapping("/login")
-    public String getLogin(Model model, @AuthenticationPrincipal User authenticatedUser) {
+    public String getLogin(Model model, @AuthenticationPrincipal User authenticatedUser, @RequestParam(required = false) String error) {
         System.out.println(model.toString());
+        if (error != null){
+            model.addAttribute("loginError", "Login or password is incorrect");
+        }
         if (Objects.nonNull(authenticatedUser)) {
             return "redirect:/user";
         }
@@ -52,6 +52,7 @@ public class MainController {
         return "redirect:/user";
     }
 
+
     @GetMapping("/403")
     public String error403() {
         return "/error";
@@ -66,4 +67,7 @@ public class MainController {
     public String about(){
         return "/about";
     }
+
+    @GetMapping("/home")
+    public String home() {return "/home";}
 }
