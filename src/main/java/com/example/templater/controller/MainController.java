@@ -70,4 +70,7 @@ public class MainController {
 
     @GetMapping("/home")
     public String home() {return "/home";}
+
+    @GetMapping("/template")
+    public String template() { return "/template";}
 }

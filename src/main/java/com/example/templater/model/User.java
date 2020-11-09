@@ -16,11 +16,11 @@ import java.util.Set;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Integer id;
     @Size(min = 2, max = 16, message = "Must be between 1 and 16 characters")
     private String username;
-    @Size(min = 2, max = 16, message = "Must be between 2 and 16 characters")
+    @Size(min = 2, message = "Must be more then 2 character")
     private String password;
     private String firstName;
     private String lastName;
