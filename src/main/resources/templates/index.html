@@ -73,7 +73,7 @@
     Dropzone.autoDiscover = false;
 
     $("#demo-upload").dropzone({
-        success : function(file, response) {
+        success : function(file) {
             toastr.success('File ' + file.name + ' uploaded successfully');
         }
     });
