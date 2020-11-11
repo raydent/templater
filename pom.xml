@@ -16,6 +16,9 @@
 
     <properties>
         <java.version>11</java.version>
+        <bootstrap.version>4.5.3</bootstrap.version>
+        <webjars-locator.version>0.40</webjars-locator.version>
+        <lombok.version>1.18.16</lombok.version>
     </properties>
     <dependencies>
         <dependency>
