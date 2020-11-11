@@ -26,7 +26,7 @@ public class MainController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-
+//test
     @GetMapping("/login")
     public String getLogin(Model model, @AuthenticationPrincipal User authenticatedUser, @RequestParam(required = false) String error) {
         System.out.println(model.toString());
