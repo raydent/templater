@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Templater</title>
+
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.5.3/css/bootstrap.css} "/>
+    <link th:rel="stylesheet" th:href="@{/webjars/dropzone/5.7.2/dropzone.css}"/>
+    <link th:rel="stylesheet" th:href="@{/webjars/toastr/2.1.0/toastr.min.css}"/>
+    <style>
+
+        .All{
+            width: 1000px ;
+            height: 300px;
+        }
+
+        .Mine{
+            float: left;
+            margin: 0 1.5%;
+            width: 30%;
+            height: 300px;
+        }
+        .fir{
+            margin-top: 30px;
+            width : 250px;
+            height : 20px;
+        }
+        .sec{
+            width : 150px;
+        }
+        .thi{
+            width: 100px;
+        }
+
+        .btnlike{
+            display : none;
+        }
+
+        input.btnlike + span{
+            background-color : lightgray;
+            color : #111;
+            display : block;
+            height : 25px;
+            width : 70px;
+        }
+
+        input.btnlike:checked + span{
+            background-color : gray;
+            color : #FFF;
+        }
+
+        .Mine{
+            float: left;
+            width: 30%;
+        }
+        .Mar{
+            padding-top: 50px;
+        }
+
+
+
+    </style>
+</head>
+<body>
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">Templater</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/home">Home
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/registration">Registration</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="All">
+
+
+<div class="Mine">
+    <select class="fir">
+        <option disabled selected>Header style</option>
+        <option>Header 1</option>
+        <option>Header 2</option>
+    </select>
+    <select class="sec">
+        <option disabled selected>Font</option>
+        <option>Times New Roman</option>
+        <option>Arial</option>
+    </select>
+    <select class="thi">
+        <option disabled selected>Font size</option>
+        <option>12</option>
+        <option>14</option>
+    </select>
+    <select class="fou">
+        <option disabled selected>Interval</option>
+        <option>1.0</option>
+        <option>3.0</option>
+    </select><br>
+    <label><input class="btnlike" type="checkbox"><span>Bold</span></label>
+    <label><input class="btnlike" type="checkbox"><span>Italic</span></label>
+    <label><input class="btnlike" type="checkbox"><span>Underline</span></label>
+    <label><input class="btnlike" type="checkbox"><span>Striken</span></label>
+
+    <label><b>Alignment</b></label><br>
+        <label><input name="dzen" type="radio" value="left">left</label>
+            <label><input name="dzen" type="radio" value="right">right</label>
+                <label><input name="dzen" type="radio" value="middle" checked>middle</label>
+                    <label><input name="dzen" type="radio" value="width">width</label>
+
+    <label>Text color <input type="color" name="bg" value="black"></label>
+
+
+</div>
+
+<div class="Mar">
+    <label><input class="tt" type="checkbox"><span>Title page</span></label><br>
+    <label><input class="tt" type="checkbox"><span>Numeration</span></label><br>
+    <label><input class="tt" type="checkbox"><span>Footer</span></label><br>
+    <label><input class="tt" type="checkbox"><span>Header</span></label>
+</div>
+
+</div>
+
+
+<div class="Nar">
+    <label>Heading cell text color<input type="color" name="hctc" value="black"></label><br>
+    <label>Heading cell color<input type="color" name="hcc" value="#95A5A6"></label><br>
+    <label>Cell border color<input type="color" name="cbc" value="#95A5A6"></label><br>
+    <label>Common cell color<input type="color" name="ccc" value="#FDFEFE"></label><br>
+    <select class="sak">
+        <option disabled selected>Font</option>
+        <option>Times New Roman</option>
+        <option>Arial</option>
+    </select><br>
+    <select class="shik">
+        <option disabled selected>Font size</option>
+        <option>12</option>
+        <option>14</option>
+    </select><br>
+    <label><input class="btnlike" type="checkbox"><span>Bold</span></label>
+    <label><input class="btnlike" type="checkbox"><span>Italic</span></label>
+    <label><input class="btnlike" type="checkbox"><span>Underline</span></label>
+    <label><input class="btnlike" type="checkbox"><span>Striken</span></label>
+</div>
+
+</body>
+</html>

@@ -73,4 +73,7 @@ public class MainController {
 
     @GetMapping("/template")
     public String template() { return "/template";}
+
+    @GetMapping("/temp")
+    public String temp() { return "/temp_creation";}
 }
