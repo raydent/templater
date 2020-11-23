@@ -12,20 +12,17 @@
         </div>
 
         <form th:userDo="${userForm}" th:action="@{/registration}" method="post">
+            <p class="error-message"
+               th:if="${#fields.hasGlobalErrors()}"
+               th:each="error : ${#fields.errors('global')}"
+               th:text="${error}">Validation error</p>
 
             <input type="text" id="login" class="fadeIn second" name="login" placeholder="Login" required autofocus
                    th:field="*{userForm.username}">
+            <p></p>
             <input type="password" id="inputPassword" class="fadeIn third" placeholder="Password" required
                    th:field="*{userForm.password}">
-            <h1 th:inline="text">Optional</h1>
-            <input type="text" id="firstName" class="fadeIn fourth" name="First name (optional)" placeholder="First name" optional autofocus
-                   th:field="*{userForm.firstName}">
-            <input type="text" id="lastName" class="fadeIn fifth" name="Last name (optional)" placeholder="lastName" optional autofocus
-                   th:field="*{userForm.lastName}">
-            <input type="text" id="phoneNumber" class="fadeIn sixth" name="Phone number (optional)" placeholder="Phone number" optional autofocus
-                   th:field="*{userForm.phoneNumber}">
-            <input type="text" id="email" class="fadeIn seventh" name="Email (optional)" placeholder="Email" optional autofocus
-                   th:field="*{userForm.email}">
+            <p></p>
             <input id="button-sub" type="submit" class="fadeIn eighth" value="Sign Up">
         </form>
 

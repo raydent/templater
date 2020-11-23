@@ -34,7 +34,7 @@ public class RegistrationController {
         }
         if (!userService.saveUser(userForm)){
             System.out.println("return2");
-            model.addAttribute("usernameError", "User with such username already exists");
+            model.addAttribute("usernameError", "User with such login already exists");
             incosistentDataFlag = true;
         }
         if (incosistentDataFlag == true){
