@@ -2,17 +2,12 @@ package com.example.templater.docBuilder;
 
 import org.apache.poi.xwpf.usermodel.*;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class DocBuilder {
 
@@ -32,7 +27,7 @@ public class DocBuilder {
         subTitle.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun subTitleRun = subTitle.createRun();
         subTitleRun.setText("Text in subtitle");
-        subTitleRun.setColor("00CC44");
+        subTitleRun.setColor("0000FF");
         subTitleRun.setFontFamily("Courier");
         subTitleRun.setFontSize(16);
         subTitleRun.setTextPosition(20);
