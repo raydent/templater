@@ -12,10 +12,6 @@
         </div>
 
         <form th:userDo="${userForm}" th:action="@{/registration}" method="post">
-            <p class="error-message"
-               th:if="${#fields.hasGlobalErrors()}"
-               th:each="error : ${#fields.errors('global')}"
-               th:text="${error}">Validation error</p>
 
             <input type="text" id="login" class="fadeIn second" name="login" placeholder="Login" required autofocus
                    th:field="*{userForm.username}">
