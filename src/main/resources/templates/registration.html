@@ -19,6 +19,9 @@
             <input type="password" id="inputPassword" class="fadeIn third" placeholder="Password" required
                    th:field="*{userForm.password}">
             <p></p>
+            <input type="password" id="confirmationPassword" class="fadeIn third" placeholder="Confirm password" required
+                   th:field="*{userForm.confirmationPassword}">
+            <p></p>
             <input id="button-sub" type="submit" class="fadeIn eighth" value="Sign Up">
         </form>
 
@@ -26,8 +29,10 @@
             <a class="underlineHover" href="login">Already have an account? Log in</a>
         </div>
         <output type = "text" th:text="*{usernameError}"> </output>
-        <h1> </h1>
-        <output type = "text" th:text="*{DataFormatError}"> </output>
+        <h2> </h2>
+        <output type = "text" th:text="*{dataFormatError}"> </output>
+        <h2> </h2>
+        <output type = "text" th:text="*{passwordConfirmationError}"> </output>
     </div>
 </div>
 
