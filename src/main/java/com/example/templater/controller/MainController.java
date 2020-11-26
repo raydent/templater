@@ -1,5 +1,6 @@
 package com.example.templater.controller;
 
+import com.example.templater.model.Temp;
 import com.example.templater.model.User;
 import com.example.templater.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.Objects;
 
 @Controller
@@ -74,6 +74,19 @@ public class MainController {
     @GetMapping("/template")
     public String template() { return "/template";}
 
+
+
     @GetMapping("/temp")
-    public String temp() { return "/temp_creation";}
+    public String tempForm(Model model) {
+        model.addAttribute("temp", new Temp());
+        return "temp";
+    }
+
+    @PostMapping("/temp")
+    public String tempSubmit(@ModelAttribute Temp temp, Model model) {
+        model.addAttribute("temp", temp);
+        return "tempresult";
+    }
+
+
 }

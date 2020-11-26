@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>Result</h1>
+<p th:text="'Header style: ' + ${temp.header_style}" />
+<p th:text="'Font: ' + ${temp.font}" />
+<p th:text="'Font size: ' + ${temp.font_size}" />
+<p th:text="'Interval: ' + ${temp.interval}" />
+<p th:text="'Bold: ' + ${temp.bold}" />
+<p th:text="'Italic: ' + ${temp.italic}" />
+<p th:text="'Underline: ' + ${temp.underline}" />
+<p th:text="'Striken: ' + ${temp.striken}" />
+<p th:text="'Alignment: ' + ${temp.alignment}" />
+<p th:text="'Color: ' + ${temp.color}" />
+<p th:text="'Fields: ' + ${temp.fields}" />
+<p th:text="'Title pag: ' + ${temp.title_page}" />
+<p th:text="'Numeration: ' + ${temp.numeration}" />
+<p th:text="'Footer: ' + ${temp.footer}" />
+<p th:text="'Header: ' + ${temp.header}" />
+<p th:text="'Heading cell text color: ' + ${temp.heading_cell_text_color}" />
+<p th:text="'Heading cell color: ' + ${temp.heading_cell_color}" />
+<p th:text="'Cell border color: ' + ${temp.cell_border_color}" />
+<p th:text="'Common cell color: ' + ${temp.common_cell_color}" />
+<p th:text="'Table Font: ' + ${temp.t_font}" />
+<p th:text="'Table Font Size: ' + ${temp.t_font_size}" />
+<p th:text="'Table Bold: ' + ${temp.t_bold}" />
+<p th:text="'Table Italic: ' + ${temp.t_italic}" />
+<p th:text="'Table Underline: ' + ${temp.t_underline}" />
+<p th:text="'Table Striken: ' + ${temp.t_striken}" />
+
+<a href="/temp">Submit another message</a>
+</body>
+</html>

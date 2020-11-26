@@ -1,0 +1,178 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Templater</title>
+
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.5.3/css/bootstrap.css} "/>
+    <link th:rel="stylesheet" th:href="@{/webjars/dropzone/5.7.2/dropzone.css}"/>
+    <link th:rel="stylesheet" th:href="@{/webjars/toastr/2.1.0/toastr.min.css}"/>
+    <style>
+
+        .All{
+            width: 1000px ;
+            height: 300px;
+        }
+
+        .Mine{
+            float: left;
+            margin: 0 1.5%;
+            width: 30%;
+            height: 300px;
+        }
+        .fir{
+            margin-top: 30px;
+            width : 250px;
+            height : 20px;
+        }
+        .sec{
+            width : 150px;
+        }
+        .thi{
+            width: 100px;
+        }
+
+        .btnlike{
+            display : none;
+        }
+
+        input.btnlike + span{
+            background-color : lightgray;
+            color : #111;
+            display : block;
+            height : 25px;
+            width : 70px;
+        }
+
+        input.btnlike:checked + span{
+            background-color : gray;
+            color : #FFF;
+        }
+
+        .Mine{
+            float: left;
+            width: 30%;
+        }
+        .Mar{
+            padding-top: 50px;
+        }
+        .Nar{
+            padding-left: 10px;
+        }
+
+
+
+    </style>
+</head>
+<body>
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">Templater</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/home">Home
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/registration">Registration</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<form action="#" th:action="@{/temp}" th:object="${temp}" method="post">
+<div class="All">
+    <div class="Mine">
+        <select class="fir" th:field="*{header_style}">
+            <option disabled selected value="1">Header style</option>
+            <option value="1">Header 1</option>
+            <option value="2">Header 2</option>
+        </select>
+        <select class="sec" th:field="*{font}">
+            <option disabled selected value="1">Font</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Arial">Arial</option>
+        </select>
+        <select class="thi" th:field="*{font_size}">
+            <option disabled selecte value="11" d>Font size</option>
+            <option value="12">12</option>
+            <option value="14">14</option>
+        </select>
+        <select class="fou" th:field="*{interval}">
+            <option disabled selected value="1">Interval</option>
+            <option value="1.0">1.0</option>
+            <option value="3.0">3.0</option>
+        </select><br>
+        <label><input class="btnlike1" type="checkbox" value="1" th:field="*{bold}"><span>Bold</span></label>
+        <label><input class="btnlike1" type="checkbox" value="1" th:field="*{italic}"><span>Italic</span></label>
+        <label><input class="btnlike1" type="checkbox" value="1" th:field="*{underline}"><span>Underline</span></label>
+        <label><input class="btnlike1" type="checkbox" value="1" th:field="*{striken}"><span>Striken</span></label><br>
+
+        <label><b>Alignment</b></label><br>
+        <label><input name="dzen" type="radio" value="left" th:field="*{alignment}">left</label>
+        <label><input name="dzen" type="radio" value="right" th:field="*{alignment}">right</label>
+        <label><input th:field="*{alignment}" name="dzen" type="radio" value="middle" checked="checked" >middle</label>
+        <label><input name="dzen" type="radio" value="width" th:field="*{alignment}">width</label>
+
+        <label>Text color <input type="color" name="bg" value="black" th:field="*{color}"></label><br>
+
+
+        <label><b>Fields</b></label><br>
+        <label><input name="cho" type="radio" value="narrow" th:field="*{fields}">narrow</label>
+        <label><input name="cho" type="radio" value="average" checked="checked" th:field="*{fields}">average</label>
+        <label><input name="cho" type="radio" value="wide" th:field="*{fields}">wide</label>
+
+
+
+    </div>
+
+    <div class="Mar">
+        <label><input class="tt" type="checkbox" value="1" th:field="*{title_page}"><span>Title page</span></label><br>
+        <label><input class="tt" type="checkbox" value="1" th:field="*{numeration}"><span>Numeration</span></label><br>
+        <label><input class="tt" type="checkbox" value="1" th:field="*{footer}"><span>Footer</span></label><br>
+        <label><input class="tt" type="checkbox" value="1" th:field="*{header}"><span>Header</span></label>
+    </div>
+
+</div>
+
+
+<div class="Nar">
+    <label>Heading cell text color<input type="color" name="hctc" value="black" th:field="*{heading_cell_text_color}"></label><br>
+    <label>Heading cell color<input type="color" name="hcc" value="#95A5A6" th:field="*{heading_cell_color}"></label><br>
+    <label>Cell border color<input type="color" name="cbc" value="#95A5A6" th:field="*{cell_border_color}"></label><br>
+    <label>Common cell color<input type="color" name="ccc" value="#FDFEFE" th:field="*{common_cell_color}"></label><br>
+    <select class="sak" th:field="*{t_font}">
+        <option disabled selected value="1">Font</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="Arial">Arial</option>
+    </select><br>
+    <select class="shik" th:field="*{t_font_size}">
+        <option disabled selected value="11">Font size</option>
+        <option value="12">12</option>
+        <option value="14">14</option>
+    </select><br>
+    <label><input class="btnlike2" type="checkbox" value="1" th:field="*{t_bold}"><span>Bold</span></label>
+    <label><input class="btnlike2" type="checkbox" value="1" th:field="*{t_italic}"><span>Italic</span></label>
+    <label><input class="btnlike2" type="checkbox" value="1" th:field="*{t_underline}"><span>Underline</span></label>
+    <label><input class="btnlike2" type="checkbox" value="1" th:field="*{t_striken}"><span>Striken</span></label>
+</div>
+    <p><input type="submit" value="Submit" />
+</form>
+</body>
+</html>
