@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
@@ -78,15 +79,35 @@ public class MainController {
 
     @GetMapping("/temp")
     public String tempForm(Model model) {
-        model.addAttribute("temp", new Temp());
+        Temp temp1 = new Temp();
+        Temp temp2 = new Temp();
+        Temp temp3 = new Temp();
+        Temp temp4 = new Temp();
+        Temp temp5 = new Temp();
+        model.addAttribute("temp1", temp1);
+        model.addAttribute("temp2",temp2);
+        model.addAttribute("temp3",temp3);
+        model.addAttribute("temp4",temp4);
+        model.addAttribute("temp5",temp5);
         return "temp";
     }
 
+
+
+
+
     @PostMapping("/temp")
-    public String tempSubmit(@ModelAttribute Temp temp, Model model) {
-        model.addAttribute("temp", temp);
+    public String saveBooks(@ModelAttribute("temp1") Temp temp1,
+                            @ModelAttribute("temp2") Temp temp2,
+                            @ModelAttribute("temp3") Temp temp3,
+                            @ModelAttribute("temp4") Temp temp4,
+                            @ModelAttribute("temp5") Temp temp5) {
+        System.out.println(temp4.getBold());
+
         return "tempresult";
     }
+
+
 
 
 }

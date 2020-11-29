@@ -40,6 +40,7 @@ public class Temp {
     private String t_underline;
     private String t_striken;
 
+
     public String getHeader_style() {
         return header_style;
     }
@@ -246,14 +247,6 @@ public class Temp {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
 }
