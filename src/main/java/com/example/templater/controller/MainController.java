@@ -62,7 +62,6 @@ public class MainController {
         FileInputStream fis = new FileInputStream(file);
         return IOUtils.toByteArray(fis);
     }
-}
 
     @GetMapping("/template")
     public String template() { return "/template";}
@@ -95,7 +94,6 @@ public class MainController {
                             @ModelAttribute("temp4") Temp temp4,
                             @ModelAttribute("temp5") Temp temp5) {
         System.out.println(temp4.getBold());
-
         return "tempresult";
     }
 
