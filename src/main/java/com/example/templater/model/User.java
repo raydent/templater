@@ -1,8 +1,6 @@
 package com.example.templater.model;
 
 
-import org.assertj.core.internal.bytebuddy.implementation.bytecode.StackManipulation;
-import org.hibernate.engine.profile.Fetch;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -22,45 +20,20 @@ public class User implements UserDetails {
     private String username;
     @Size(min = 2, message = "Must be more then 2 character")
     private String password;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String phoneNumber;
+    @Transient
+    private String confirmationPassword;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-    public String getFirstName() {
-        return firstName;
+    public String getConfirmationPassword() {
+        return confirmationPassword;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setConfirmationPassword(String confirmationPassword) {
+        this.confirmationPassword = confirmationPassword;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
 
     public void setUsername(String username) {
         this.username = username;
@@ -127,10 +100,7 @@ public class User implements UserDetails {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
+                ", confirmationPassword='" + confirmationPassword + '\'' +
                 ", roles=" + roles +
                 '}';
     }
