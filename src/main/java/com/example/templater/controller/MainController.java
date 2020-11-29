@@ -63,7 +63,6 @@ public class MainController {
         FileInputStream fis = new FileInputStream(file);
         return IOUtils.toByteArray(fis);
     }
-}
 
     @GetMapping("/template")
     public String template() { return "/template";}
