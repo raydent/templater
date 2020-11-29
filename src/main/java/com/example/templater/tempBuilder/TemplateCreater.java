@@ -132,7 +132,7 @@ public class TemplateCreater {
     public XWPFDocument createFieldText(XWPFDocument document, ParagraphParams paragraphParams) {
         XWPFParagraph paragraph = document.createParagraph();
         paragraph.setAlignment(paragraphParams.getAlignment());
-        paragraph.setSpacingAfter(300);
+        paragraph.setSpacingAfter(150);
         XWPFRun run = paragraph.createRun();
         run.setText("Text");
         run.setColor(Colors.getColorCode(paragraphParams.getTextColor()));
@@ -142,13 +142,65 @@ public class TemplateCreater {
         return document;
     }
 
-    private static void createNumberedParagraph(XWPFDocument doc,String style, ParagraphParams paragraphParams) {
+    public static BigInteger getNumId(XWPFDocument document) {
+
+        CTAbstractNum cTAbstractNum = CTAbstractNum.Factory.newInstance();
+        cTAbstractNum.setAbstractNumId(BigInteger.valueOf(0));
+
+        CTLvl cTLvl0 = cTAbstractNum.addNewLvl();
+        cTLvl0.setIlvl(BigInteger.ZERO);
+        cTLvl0.addNewNumFmt().setVal(STNumberFormat.DECIMAL);
+        cTLvl0.addNewLvlText().setVal("%1");
+        cTLvl0.addNewStart().setVal(BigInteger.ONE);
+        cTLvl0.addNewSuff().setVal(STLevelSuffix.SPACE);
+
+        CTLvl cTLvl1 = cTAbstractNum.addNewLvl();
+        cTLvl1.setIlvl(BigInteger.ONE);
+        cTLvl1.addNewNumFmt().setVal(STNumberFormat.DECIMAL);
+        cTLvl1.addNewLvlText().setVal("%1.%2");
+        cTLvl1.addNewStart().setVal(BigInteger.ONE);
+        cTLvl1.addNewSuff().setVal(STLevelSuffix.SPACE);
+
+        CTLvl cTLvl2 = cTAbstractNum.addNewLvl();
+        cTLvl2.setIlvl(BigInteger.TWO);
+        cTLvl2.addNewNumFmt().setVal(STNumberFormat.DECIMAL);
+        cTLvl2.addNewLvlText().setVal("%1.%2.%3");
+        cTLvl2.addNewStart().setVal(BigInteger.ONE);
+        cTLvl2.addNewSuff().setVal(STLevelSuffix.SPACE);
+
+        CTLvl cTLvl3 = cTAbstractNum.addNewLvl();
+        cTLvl3.setIlvl(BigInteger.valueOf(3));
+        cTLvl3.addNewNumFmt().setVal(STNumberFormat.DECIMAL);
+        cTLvl3.addNewLvlText().setVal("%1.%2.%3.%4");
+        cTLvl3.addNewStart().setVal(BigInteger.ONE);
+        cTLvl3.addNewSuff().setVal(STLevelSuffix.SPACE);
+
+        CTLvl cTLvl4 = cTAbstractNum.addNewLvl();
+        cTLvl4.setIlvl(BigInteger.valueOf(4));
+        cTLvl4.addNewNumFmt().setVal(STNumberFormat.DECIMAL);
+        cTLvl4.addNewLvlText().setVal("%1.%2.%3.%4.%5");
+        cTLvl4.addNewStart().setVal(BigInteger.ONE);
+        cTLvl4.addNewSuff().setVal(STLevelSuffix.SPACE);
+
+        XWPFAbstractNum abstractNum = new XWPFAbstractNum(cTAbstractNum);
+        XWPFNumbering numbering = document.createNumbering();
+        BigInteger abstractNumID = numbering.addAbstractNum(abstractNum);
+        /*return an ID for the numbering*/
+        return numbering.addNum(abstractNumID);
+    }
+
+    private static void createNumberedParagraph(XWPFDocument doc, BigInteger numId, BigInteger numLevel, String style,
+                                                ParagraphParams paragraphParams) {
         XWPFParagraph paragraph = doc.createParagraph();
         paragraph.setStyle(style);
         if (paragraphParams.isUnderline()) {
             paragraph.setBorderBottom(Borders.APPLES);
         }
         paragraph.setAlignment(paragraphParams.getAlignment());
+        paragraph.setNumID(numId);
+        paragraph.setSpacingAfter(100);
+        CTDecimalNumber ctDecimalNumber = paragraph.getCTP().getPPr().getNumPr().addNewIlvl();
+        ctDecimalNumber.setVal(numLevel);
         XWPFRun run = paragraph.createRun();
         run.setText("Header");
         run.setBold(paragraphParams.isBold());
@@ -160,14 +212,15 @@ public class TemplateCreater {
 
     public XWPFDocument createDefaultMainPage(XWPFDocument document, TempParams tempParams, List<ParagraphParams> paragraphParamsList,
                                               Fields fields, TableParams tableParams) {
-        createNumberedParagraph(document,"Heading1", paragraphParamsList.get(0));
-        createNumberedParagraph(document,"Heading2", paragraphParamsList.get(1));
+        BigInteger numId = getNumId(document);
+        createNumberedParagraph(document, numId,BigInteger.valueOf(0),"Heading1", paragraphParamsList.get(0));
+        createNumberedParagraph(document, numId,BigInteger.valueOf(1),"Heading2", paragraphParamsList.get(1));
         document = createFieldText(document, paragraphParamsList.get(paragraphParamsList.size() - 1));
-        createNumberedParagraph(document,"Heading3", paragraphParamsList.get(2));
+        createNumberedParagraph(document, numId,BigInteger.valueOf(2),"Heading3", paragraphParamsList.get(2));
         document = createFieldText(document, paragraphParamsList.get(paragraphParamsList.size() - 1));
-        createNumberedParagraph(document,"Heading4", paragraphParamsList.get(3));
+        createNumberedParagraph(document, numId,BigInteger.valueOf(3),"Heading4", paragraphParamsList.get(3));
         document = createFieldText(document, paragraphParamsList.get(paragraphParamsList.size() - 1));
-        createNumberedParagraph(document,"Heading5", paragraphParamsList.get(4));
+        createNumberedParagraph(document, numId,BigInteger.valueOf(4),"Heading5", paragraphParamsList.get(4));
         document = createFieldText(document, paragraphParamsList.get(paragraphParamsList.size() - 1));
 
         XWPFTable table = document.createTable(tableParams.getRows(), tableParams.getColoms());
