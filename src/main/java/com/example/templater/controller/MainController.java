@@ -3,19 +3,16 @@ package com.example.templater.controller;
 import com.example.templater.model.Temp;
 import com.example.templater.model.User;
 import com.example.templater.service.IUserService;
+import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.io.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
@@ -27,7 +24,10 @@ public class MainController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    //test
+
+    final String defaultDirectoryName = "C:\\files\\";
+    final String defaultFileName = "test.docx";
+
     @GetMapping("/login")
     public String getLogin(Model model, @AuthenticationPrincipal User authenticatedUser, @RequestParam(required = false) String error) {
         System.out.println(model.toString());
@@ -41,17 +41,6 @@ public class MainController {
         return "login";
     }
 
-    @PostMapping("/login")
-    public String setLogin(HttpServletRequest request, HttpServletResponse response, @ModelAttribute("userForm") User user,
-                           BindingResult result) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UsernamePasswordAuthenticationToken authReq
-                = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), user.getAuthorities());
-        Authentication auth = authenticationManager.authenticate(authReq);
-        SecurityContext sc = SecurityContextHolder.getContext();
-        sc.setAuthentication(auth);
-        return "redirect:/user";
-    }
 
 
     @GetMapping("/403")
@@ -64,13 +53,16 @@ public class MainController {
         return "/user";
     }
 
-    @GetMapping("/about")
-    public String about(){
-        return "/about";
-    }
 
-    @GetMapping("/home")
-    public String home() {return "/home";}
+
+    @PostMapping(value = "/download/{templateId}", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+    @ResponseBody
+    byte[] getFile(@PathVariable String templateId) throws IOException {
+        File file = new File(defaultDirectoryName + templateId + ".docx");
+        FileInputStream fis = new FileInputStream(file);
+        return IOUtils.toByteArray(fis);
+    }
+}
 
     @GetMapping("/template")
     public String template() { return "/template";}

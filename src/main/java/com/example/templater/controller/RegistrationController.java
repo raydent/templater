@@ -28,13 +28,18 @@ public class RegistrationController {
         boolean incosistentDataFlag = false;
         if (bindingResult.hasErrors()) {
             System.out.println("Too long or too short password or login");
-            model.addAttribute("DataFormatError",
+            model.addAttribute("dataFormatError",
                     "Too long or too short password or login (must be 2 to 16 characters)");
             incosistentDataFlag = true;
         }
-        if (!userService.saveUser(userForm)){
+        else if (!userForm.getConfirmationPassword().equals(userForm.getPassword())) {
+            model.addAttribute("passwordConfirmationError",
+                    "Passwords are not identical");
+            incosistentDataFlag = true;
+        }
+        else if (!userService.saveUser(userForm)){
             System.out.println("return2");
-            model.addAttribute("usernameError", "User with such username already exists");
+            model.addAttribute("usernameError", "User with such login already exists");
             incosistentDataFlag = true;
         }
         if (incosistentDataFlag == true){
