@@ -70,10 +70,23 @@
             <version>2.0.1.Final</version>
         </dependency>
 
+
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>6.0.1.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>4.1.2</version>
         </dependency>
 
         <dependency>
@@ -123,21 +136,20 @@
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
+
+
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>dropzone</artifactId>
             <version>5.7.2</version>
         </dependency>
+
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>toastr</artifactId>
             <version>2.1.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>4.1.2</version>
-        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.apache.poi/ooxml-schemas -->
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -146,4 +158,14 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
