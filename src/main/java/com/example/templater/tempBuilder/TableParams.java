@@ -1,6 +1,13 @@
 package com.example.templater.tempBuilder;
 
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
+
 public class TableParams {
+    private int rows = 2;
+    private int coloms = 2;
+    private List<BigInteger> width = Arrays.asList(BigInteger.valueOf(5000), BigInteger.valueOf(5000));
     private Colors headingCellTextColor = Colors.black;
     private Fonts headingTextFont = Fonts.Calibri;
     private boolean headingTextBold = false;
@@ -12,9 +19,12 @@ public class TableParams {
 
     public TableParams() {}
 
-    public TableParams(Colors headingCellTextColor, Fonts headingTextFont, boolean headingTextBold,
-                       boolean headingTextItalic, Integer headingTextFontSize, Colors headingCellColor,
-                       Colors borderColor, Colors commonCellColor) {
+    public TableParams(int rows, int coloms, List<BigInteger> width, Colors headingCellTextColor, Fonts headingTextFont,
+                       boolean headingTextBold, boolean headingTextItalic, Integer headingTextFontSize,
+                       Colors headingCellColor, Colors borderColor, Colors commonCellColor) {
+        this.rows = rows;
+        this.coloms = coloms;
+        this.width = width;
         this.headingCellTextColor = headingCellTextColor;
         this.headingTextFont = headingTextFont;
         this.headingTextBold = headingTextBold;
@@ -23,6 +33,30 @@ public class TableParams {
         this.headingCellColor = headingCellColor;
         this.borderColor = borderColor;
         CommonCellColor = commonCellColor;
+    }
+
+    public List<BigInteger> getWidth() {
+        return width;
+    }
+
+    public void setWidth(List<BigInteger> width) {
+        this.width = width;
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public void setRows(int rows) {
+        this.rows = rows;
+    }
+
+    public int getColoms() {
+        return coloms;
+    }
+
+    public void setColoms(int coloms) {
+        this.coloms = coloms;
     }
 
     public Colors getHeadingCellTextColor() {
@@ -87,5 +121,21 @@ public class TableParams {
 
     public void setCommonCellColor(Colors commonCellColor) {
         CommonCellColor = commonCellColor;
+    }
+
+    public static TableParams getDefaultTemplate1TableParams() {
+        return new TableParams(2, 2, Arrays.asList(BigInteger.valueOf(5000), BigInteger.valueOf(5000)),
+                Colors.black, Fonts.Calibri, true, false, 11,
+                Colors.gray, Colors.blue, Colors.transparent);
+    }
+    public static TableParams getDefaultTemplate2TableParams() {
+        return new TableParams(2, 2, Arrays.asList(BigInteger.valueOf(1500), BigInteger.valueOf(7000)),
+                Colors.black, Fonts.Calibri, true, false, 11,
+                Colors.gray, Colors.blue, Colors.transparent);
+    }
+    public static TableParams getDefaultTemplate3TableParams() {
+        return new TableParams(3, 3, Arrays.asList(BigInteger.valueOf(3500), BigInteger.valueOf(3500), BigInteger.valueOf(3500)),
+                Colors.black, Fonts.Calibri, true, false, 11,
+                Colors.gray, Colors.blue, Colors.transparent);
     }
 }
