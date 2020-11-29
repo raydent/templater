@@ -95,7 +95,6 @@ public class MainController {
                             @ModelAttribute("temp4") Temp temp4,
                             @ModelAttribute("temp5") Temp temp5) {
         System.out.println(temp4.getBold());
-
         return "tempresult";
     }
 
