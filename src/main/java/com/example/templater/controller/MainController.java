@@ -3,7 +3,10 @@ package com.example.templater.controller;
 import com.example.templater.model.Temp;
 import com.example.templater.model.User;
 import com.example.templater.service.IUserService;
+import com.example.templater.tempBuilder.*;
 import org.apache.commons.compress.utils.IOUtils;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.xmlbeans.XmlException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -86,17 +89,49 @@ public class MainController {
 
 
 
-
-
-    @PostMapping("/temp")
-    public String saveBooks(@ModelAttribute("temp1") Temp temp1,
+    @PostMapping(value = "/temp", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+    @ResponseBody
+    public byte[] saveBooks(@ModelAttribute("temp1") Temp temp1,
                             @ModelAttribute("temp2") Temp temp2,
                             @ModelAttribute("temp3") Temp temp3,
                             @ModelAttribute("temp4") Temp temp4,
-                            @ModelAttribute("temp5") Temp temp5) {
-        System.out.println(temp4.getBold());
+                            @ModelAttribute("temp5") Temp temp5,
+                            @ModelAttribute("firstLine") Temp firstLine,
+                            @ModelAttribute("secondLine") Temp secondLine,
+                            @ModelAttribute("thirdLine") Temp thirdLine,
+                            @ModelAttribute("dateColomn") Temp dateColomn,
+                            @ModelAttribute("nameField") Temp nameField,
+                            @ModelAttribute("dateField") Temp dateField) {
+        //System.out.println(temp4.getBold());
+        //Необходим особый стиль для заглавной страницы?
+        ParagraphParams firstParagraph = new ParagraphParams(temp1);
+        ParagraphParams secondParagraph = new ParagraphParams(temp2);
+        ParagraphParams thirdParagraph = new ParagraphParams(temp3);
+        ParagraphParams fourthParagraph = new ParagraphParams(temp4);
+        ParagraphParams fifthParagraph = new ParagraphParams(temp5);
+        TitleParams titleParams = new TitleParams(1, firstParagraph, firstParagraph,
+                firstParagraph, firstParagraph, firstParagraph, firstParagraph);
 
-        return "tempresult";
+        TempParams tempParams = new TempParams();
+        tempParams.setFooter(generalTemp.getFooter().equals("On"));
+
+        TemplateCreater templateCreater = new TemplateCreater();
+        File file;
+        FileInputStream fis;
+        byte[] bytes = null;
+        try {
+            templateCreater.createTemplate(tempParams, titleParams, paragraphParamsList, tableParams);
+            file = new File("Empty.docx");
+            fis = new FileInputStream(file);
+            bytes = IOUtils.toByteArray(fis);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bytes;
+        //FileInputStream fis = new FileInputStream(file);
+//        return (//TempParams tempParams, TitleParams titleParams, List< ParagraphParams > paragraphParamsList, TableParams
+//        tableParams
+        //return "tempresult";
     }
 
 
