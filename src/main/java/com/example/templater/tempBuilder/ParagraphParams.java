@@ -111,6 +111,7 @@ public class ParagraphParams {
         list.add(heading3);
         list.add(heading4);
         list.add(heading5);
+        list.add(textField);
         return list;
     }
 
@@ -133,6 +134,7 @@ public class ParagraphParams {
         list.add(heading3);
         list.add(heading4);
         list.add(heading5);
+        list.add(textField);
         return list;
     }
 
@@ -155,6 +157,7 @@ public class ParagraphParams {
         list.add(heading3);
         list.add(heading4);
         list.add(heading5);
+        list.add(textField);
         return list;
     }
 
