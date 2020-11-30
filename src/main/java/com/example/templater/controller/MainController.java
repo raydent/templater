@@ -126,7 +126,7 @@ public class MainController {
                 thirdParagraph, fourthParagraph, fifthParagraph);
 
 
-        TitleParams titleParams = new TitleParams(1, firstLineTemp, secondLineTemp,
+        TitleParams titleParams = new TitleParams(3, firstLineTemp, secondLineTemp,
                 thirdLineTemp, dateColomnTemp, nameFieldTemp, dateFieldTemp);
 
         TempParams tempParams = new TempParams(generalTemp);
@@ -179,7 +179,7 @@ public class MainController {
                 thirdParagraph, fourthParagraph, fifthParagraph);
 
 
-        TitleParams titleParams = new TitleParams(1, firstLineTemp, secondLineTemp,
+        TitleParams titleParams = new TitleParams(3, firstLineTemp, secondLineTemp,
                 thirdLineTemp, dateColomnTemp, nameFieldTemp, dateFieldTemp);
 
         TempParams tempParams = new TempParams(generalTemp);
