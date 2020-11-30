@@ -13,9 +13,20 @@ public enum Fonts {
             case Tahoma: return "Tahoma";
             case Calibri: return "Calibri";
             case Times_New_Roman: return "Times New Roman";
-            case Kambria: return "Kambira";
+            case Kambria: return "Kambria";
             case Calibria: return "Calibria";
             default: return "Calibri";
+        }
+    }
+    public static Fonts ValueOf(String s){
+        switch(s){
+            case "Arial": return Arial;
+            case "Tahoma": return Tahoma;
+            case "Calibri": return Calibri;
+            case "Times New Roman": return Times_New_Roman;
+            case "Kambria": return Kambria;
+            case "Calibria": return Calibria;
+            default: return Calibri;
         }
     }
 }
