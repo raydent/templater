@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import java.io.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 //test
@@ -96,24 +99,39 @@ public class MainController {
                             @ModelAttribute("temp3") Temp temp3,
                             @ModelAttribute("temp4") Temp temp4,
                             @ModelAttribute("temp5") Temp temp5,
-                            @ModelAttribute("firstLine") Temp firstLine,
-                            @ModelAttribute("secondLine") Temp secondLine,
-                            @ModelAttribute("thirdLine") Temp thirdLine,
-                            @ModelAttribute("dateColomn") Temp dateColomn,
-                            @ModelAttribute("nameField") Temp nameField,
-                            @ModelAttribute("dateField") Temp dateField) {
+                            @ModelAttribute("firstLine") Temp firstLineTemp,
+                            @ModelAttribute("secondLine") Temp secondLineTemp,
+                            @ModelAttribute("thirdLine") Temp thirdLineTemp,
+                            @ModelAttribute("dateColomn") Temp dateColomnTemp,
+                            @ModelAttribute("nameField") Temp nameFieldTemp,
+                            @ModelAttribute("dateField") Temp dateFieldTemp,
+                            @ModelAttribute("generalTemp") Temp generalTemp) {
         //System.out.println(temp4.getBold());
         //Необходим особый стиль для заглавной страницы?
+
         ParagraphParams firstParagraph = new ParagraphParams(temp1);
         ParagraphParams secondParagraph = new ParagraphParams(temp2);
         ParagraphParams thirdParagraph = new ParagraphParams(temp3);
         ParagraphParams fourthParagraph = new ParagraphParams(temp4);
         ParagraphParams fifthParagraph = new ParagraphParams(temp5);
-        TitleParams titleParams = new TitleParams(1, firstParagraph, firstParagraph,
-                firstParagraph, firstParagraph, firstParagraph, firstParagraph);
+        List<ParagraphParams> paragraphParamsList = Arrays.asList(firstParagraph, secondParagraph,
+                thirdParagraph, fourthParagraph, fifthParagraph);
 
-        TempParams tempParams = new TempParams();
-        tempParams.setFooter(generalTemp.getFooter().equals("On"));
+
+        ParagraphParams firstLine = new ParagraphParams(firstLineTemp);
+        ParagraphParams secondLine = new ParagraphParams(secondLineTemp);
+        ParagraphParams thirdLine = new ParagraphParams(thirdLineTemp);
+        ParagraphParams dateColomn = new ParagraphParams(dateColomnTemp);
+        ParagraphParams nameField = new ParagraphParams(nameFieldTemp);
+        ParagraphParams dateField = new ParagraphParams(dateFieldTemp);
+
+        TitleParams titleParams = new TitleParams(1, firstLine, secondLine,
+                thirdLine, dateColomn, nameField, dateField);
+
+        TempParams tempParams = new TempParams(generalTemp);
+
+        TableParams tableParams = new TableParams(generalTemp);
+
 
         TemplateCreater templateCreater = new TemplateCreater();
         File file;

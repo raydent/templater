@@ -29,9 +29,9 @@ public class ParagraphParams {
     }
 
     public ParagraphParams(Temp temp){
-        boolean bold = temp.getBold().equals("On") ? true : false;
-        boolean italic = temp.getItalic().equals("On") ? true : false;
-        boolean underline = temp.getUnderline().equals("On") ? true : false;
+        boolean bold = temp.getBold().equals("On");
+        boolean italic = temp.getItalic().equals("On");
+        boolean underline = temp.getUnderline().equals("On");
         //не хватает textHighlightColor
         this.font = Fonts.ValueOf(temp.getFont());
         this.fontSize = Integer.parseInt(temp.getFont_size());

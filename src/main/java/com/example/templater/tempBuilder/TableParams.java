@@ -1,5 +1,7 @@
 package com.example.templater.tempBuilder;
 
+import com.example.templater.model.Temp;
+
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +35,19 @@ public class TableParams {
         this.headingCellColor = headingCellColor;
         this.borderColor = borderColor;
         CommonCellColor = commonCellColor;
+    }
+
+    public TableParams(Temp temp){
+        this.rows = 2;//Заплатка
+        this.coloms = 2; // заплатка
+        this.width = Arrays.asList(BigInteger.valueOf(5000), BigInteger.valueOf(5000)); // заплатка
+        this.headingCellTextColor = Colors.valueOf(temp.getHeading_cell_text_color());
+        this.headingTextFont = Fonts.valueOf(temp.getT_font());
+        this.headingTextBold = temp.getT_bold().equals("On");
+        this.headingTextItalic = temp.getT_italic().equals("On");
+        this.headingTextFontSize = Integer.valueOf(temp.getT_font_size());
+        this.headingCellColor = Colors.valueOf(temp.getHeading_cell_color());
+        this.borderColor = Colors.valueOf(temp.getCell_border_color());
     }
 
     public List<BigInteger> getWidth() {
