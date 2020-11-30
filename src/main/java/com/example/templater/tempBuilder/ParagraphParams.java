@@ -1,5 +1,6 @@
 package com.example.templater.tempBuilder;
 
+import com.example.templater.model.Temp;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 
 import java.util.ArrayList;
@@ -25,6 +26,21 @@ public class ParagraphParams {
         this.alignment = alignment;
         this.textHighlightColor = textHighlightColor;
         this.textColor = textColor;
+    }
+
+    public ParagraphParams(Temp temp){
+        boolean bold = temp.getBold().equals("On") ? true : false;
+        boolean italic = temp.getItalic().equals("On") ? true : false;
+        boolean underline = temp.getUnderline().equals("On") ? true : false;
+        //не хватает textHighlightColor
+        this.font = Fonts.ValueOf(temp.getFont());
+        this.fontSize = Integer.parseInt(temp.getFont_size());
+        this.bold = bold;
+        this.italic = italic;
+        this.underline = underline;
+        this.alignment = ParagraphAlignment.valueOf(temp.getAlignment());
+        this.textHighlightColor = Colors.valueOf(temp.getColor());
+        this.textColor = Colors.valueOf(temp.getColor());
     }
 
     public Fonts getFont() {

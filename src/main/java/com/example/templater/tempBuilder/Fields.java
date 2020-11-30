@@ -18,4 +18,11 @@ public enum Fields {
     public List<Double> getWideParams() {
         return Arrays.asList(2.5, 2.5, 3.0, 3.0);
     }
+    public List<Double> getParams(String s){
+        switch(s){
+            case("narrow"): return getNarrowParams();
+            case("wide"): return getWideParams();
+            default: return getAverageParams();
+        }
+    }
 }
