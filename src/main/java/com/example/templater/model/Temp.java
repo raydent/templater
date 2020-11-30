@@ -51,19 +51,19 @@ public class Temp {
         font_size = "14";
         interval = "1.0";
 
-        bold = "1";
-        italic = "1";
-        underline = "1";
-        striken = "1";
+        bold = "0";
+        italic = "0";
+        underline = "0";
+        striken = "0";
 
         alignment = "LEFT";
         color = "black";
         fields = "average";
 
-        header = "1";
-        footer = "1";
-        title_page = "1";
-        numeration = "1";
+        header = "0";
+        footer = "0";
+        title_page = "0";
+        numeration = "0";
 
 
 

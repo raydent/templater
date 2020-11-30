@@ -140,7 +140,7 @@ public class MainController {
         byte[] bytes = null;
         try {
             templateCreater.createTemplate(tempParams, titleParams, paragraphParamsList, tableParams);
-            file = new File("Empty.docx");
+            file = new File("Template.docx");
             fis = new FileInputStream(file);
             bytes = IOUtils.toByteArray(fis);
         } catch (Exception e) {
