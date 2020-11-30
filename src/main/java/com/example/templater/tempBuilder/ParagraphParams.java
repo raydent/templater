@@ -29,11 +29,11 @@ public class ParagraphParams {
     }
 
     public ParagraphParams(Temp temp){
-        boolean bold = temp.getBold().equals("On");
-        boolean italic = temp.getItalic().equals("On");
-        boolean underline = temp.getUnderline().equals("On");
+        boolean bold = temp.getBold().equals("1");
+        boolean italic = temp.getItalic().equals("1");
+        boolean underline = temp.getUnderline().equals("1");
         //не хватает textHighlightColor
-        this.font = Fonts.ValueOf(temp.getFont());
+        this.font = Fonts.valueOf(temp.getFont());
         this.fontSize = Integer.parseInt(temp.getFont_size());
         this.bold = bold;
         this.italic = italic;

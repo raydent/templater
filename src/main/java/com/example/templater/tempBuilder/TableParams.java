@@ -43,8 +43,8 @@ public class TableParams {
         this.width = Arrays.asList(BigInteger.valueOf(5000), BigInteger.valueOf(5000)); // заплатка
         this.headingCellTextColor = Colors.valueOf(temp.getHeading_cell_text_color());
         this.headingTextFont = Fonts.valueOf(temp.getT_font());
-        this.headingTextBold = temp.getT_bold().equals("On");
-        this.headingTextItalic = temp.getT_italic().equals("On");
+        this.headingTextBold = temp.getT_bold().equals("1");
+        this.headingTextItalic = temp.getT_italic().equals("1");
         this.headingTextFontSize = Integer.valueOf(temp.getT_font_size());
         this.headingCellColor = Colors.valueOf(temp.getHeading_cell_color());
         this.borderColor = Colors.valueOf(temp.getCell_border_color());

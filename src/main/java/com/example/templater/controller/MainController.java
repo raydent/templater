@@ -5,8 +5,6 @@ import com.example.templater.model.User;
 import com.example.templater.service.IUserService;
 import com.example.templater.tempBuilder.*;
 import org.apache.commons.compress.utils.IOUtils;
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
-import org.apache.xmlbeans.XmlException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,9 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.io.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -70,8 +65,24 @@ public class MainController {
         return IOUtils.toByteArray(fis);
     }
 
-    @GetMapping("/template")
-    public String template() { return "/template";}
+    @GetMapping(value = "/template", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+    @ResponseBody
+    public byte[] template() {
+        Temp temp1 = new Temp(1);
+        Temp temp2 = new Temp(1);
+        Temp temp3 = new Temp(1);
+        Temp temp4 = new Temp(1);
+        Temp temp5 = new Temp(1);
+        Temp firstLineTemp = new Temp(1);
+        Temp secondLineTemp = new Temp(1);
+        Temp thirdLineTemp = new Temp(1);
+        Temp dateColomnTemp = new Temp(1);
+        Temp nameFieldTemp = new Temp(1);
+        Temp dateFieldTemp = new Temp(1);
+        Temp generalTemp = new Temp(1);
+        return saveTest(temp1, temp2, temp3, temp4, temp5, firstLineTemp, secondLineTemp, thirdLineTemp,
+                dateColomnTemp, nameFieldTemp, dateFieldTemp, generalTemp);
+    }
 
 
 
@@ -91,6 +102,56 @@ public class MainController {
     }
 
 
+    public byte[] saveTest(Temp temp1,
+                            Temp temp2,
+                            Temp temp3,
+                            Temp temp4,
+                            Temp temp5,
+                            Temp firstLineTemp,
+                            Temp secondLineTemp,
+                            Temp thirdLineTemp,
+                            Temp dateColomnTemp,
+                            Temp nameFieldTemp,
+                            Temp dateFieldTemp,
+                            Temp generalTemp) {
+        //System.out.println(temp4.getBold());
+        //Необходим особый стиль для заглавной страницы?
+
+        ParagraphParams firstParagraph = new ParagraphParams(temp1);
+        ParagraphParams secondParagraph = new ParagraphParams(temp2);
+        ParagraphParams thirdParagraph = new ParagraphParams(temp3);
+        ParagraphParams fourthParagraph = new ParagraphParams(temp4);
+        ParagraphParams fifthParagraph = new ParagraphParams(temp5);
+        List<ParagraphParams> paragraphParamsList = Arrays.asList(firstParagraph, secondParagraph,
+                thirdParagraph, fourthParagraph, fifthParagraph);
+
+
+        TitleParams titleParams = new TitleParams(1, firstLineTemp, secondLineTemp,
+                thirdLineTemp, dateColomnTemp, nameFieldTemp, dateFieldTemp);
+
+        TempParams tempParams = new TempParams(generalTemp);
+
+        TableParams tableParams = new TableParams(generalTemp);
+
+
+        TemplateCreater templateCreater = new TemplateCreater();
+        File file;
+        FileInputStream fis;
+        byte[] bytes = null;
+        try {
+            templateCreater.createTemplate(tempParams, titleParams, paragraphParamsList, tableParams);
+            file = new File("Empty.docx");
+            fis = new FileInputStream(file);
+            bytes = IOUtils.toByteArray(fis);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bytes;
+        //FileInputStream fis = new FileInputStream(file);
+//        return (//TempParams tempParams, TitleParams titleParams, List< ParagraphParams > paragraphParamsList, TableParams
+//        tableParams
+        //return "tempresult";
+    }
 
     @PostMapping(value = "/temp", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     @ResponseBody
@@ -118,15 +179,8 @@ public class MainController {
                 thirdParagraph, fourthParagraph, fifthParagraph);
 
 
-        ParagraphParams firstLine = new ParagraphParams(firstLineTemp);
-        ParagraphParams secondLine = new ParagraphParams(secondLineTemp);
-        ParagraphParams thirdLine = new ParagraphParams(thirdLineTemp);
-        ParagraphParams dateColomn = new ParagraphParams(dateColomnTemp);
-        ParagraphParams nameField = new ParagraphParams(nameFieldTemp);
-        ParagraphParams dateField = new ParagraphParams(dateFieldTemp);
-
-        TitleParams titleParams = new TitleParams(1, firstLine, secondLine,
-                thirdLine, dateColomn, nameField, dateField);
+        TitleParams titleParams = new TitleParams(1, firstLineTemp, secondLineTemp,
+                thirdLineTemp, dateColomnTemp, nameFieldTemp, dateFieldTemp);
 
         TempParams tempParams = new TempParams(generalTemp);
 

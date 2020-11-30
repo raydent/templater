@@ -23,11 +23,11 @@ public class TempParams {
 
     public TempParams(Temp generalTemp){
         setInterval_between_lines(Double.valueOf(generalTemp.getInterval()));
-        setHeader(generalTemp.getHeader().equals("On"));
+        setHeader(generalTemp.getHeader().equals("1"));
         setField(Fields.valueOf(generalTemp.getFields()));
-        setTitle_page(generalTemp.getTitle_page().equals("On"));
-        setFooter(generalTemp.getFooter().equals("On"));
-        setNumeration(generalTemp.getNumeration().equals("On"));
+        setTitle_page(generalTemp.getTitle_page().equals("1"));
+        setFooter(generalTemp.getFooter().equals("1"));
+        setNumeration(generalTemp.getNumeration().equals("1"));
     }
 
     public boolean isTitle_page() {
