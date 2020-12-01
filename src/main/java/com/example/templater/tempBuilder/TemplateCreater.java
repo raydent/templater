@@ -307,7 +307,8 @@ public class TemplateCreater {
     }
 
     public void createTemplate(TempParams tempParams, TitleParams titleParams, List<ParagraphParams> paragraphParamsList, TableParams tableParams) throws IOException, XmlException {
-        XWPFDocument temp = new XWPFDocument(new FileInputStream(new File("Empty.docx")));
+        FileInputStream fis = new FileInputStream(new File("Empty.docx"));
+        XWPFDocument temp = new XWPFDocument(fis);
         XWPFDocument document = new XWPFDocument();
         XWPFStyles styles = document.createStyles();
         styles.setStyles(temp.getStyle());
@@ -337,7 +338,10 @@ public class TemplateCreater {
             ctSectPrLastSect.unsetTitlePg();
         }
         try {
-            document.write(new FileOutputStream("Template.docx"));
+            FileOutputStream fos = new FileOutputStream("Template.docx");
+            document.write(fos);
+            fis.close();
+            fos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

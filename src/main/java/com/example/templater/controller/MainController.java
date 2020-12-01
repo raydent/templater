@@ -143,6 +143,7 @@ public class MainController {
             file = new File("Template.docx");
             fis = new FileInputStream(file);
             bytes = IOUtils.toByteArray(fis);
+            fis.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -196,6 +197,7 @@ public class MainController {
             file = new File("Empty.docx");
             fis = new FileInputStream(file);
             bytes = IOUtils.toByteArray(fis);
+            fis.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
