@@ -1,5 +1,7 @@
 package com.example.templater.tempBuilder;
 
+import com.example.templater.model.Temp;
+
 public class TempParams {
     private boolean title_page = true;
     private boolean numeration = true;
@@ -17,6 +19,15 @@ public class TempParams {
         this.header = header;
         this.interval_between_lines = interval_between_lines;
         this.field = field;
+    }
+
+    public TempParams(Temp generalTemp){
+        setInterval_between_lines(Double.valueOf(generalTemp.getInterval()));
+        setHeader(generalTemp.getHeader().equals("1"));
+        setField(Fields.valueOf(generalTemp.getFields()));
+        setTitle_page(generalTemp.getTitle_page().equals("1"));
+        setFooter(generalTemp.getFooter().equals("1"));
+        setNumeration(generalTemp.getNumeration().equals("1"));
     }
 
     public boolean isTitle_page() {
