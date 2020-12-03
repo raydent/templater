@@ -40,6 +40,46 @@ public class Temp {
     private String t_underline;
     private String t_striken;
 
+    public Temp() {
+    }
+
+    public Temp(int t){
+        id = 1;
+
+
+        font = "Times_New_Roman";
+        font_size = "14";
+        interval = "1.0";
+
+        bold = "0";
+        italic = "0";
+        underline = "0";
+        striken = "0";
+
+        alignment = "LEFT";
+        color = "black";
+        fields = "average";
+
+        header = "0";
+        footer = "0";
+        title_page = "0";
+        numeration = "0";
+
+
+
+        heading_cell_text_color = "black";
+        Heading_cell_color = "white";
+        cell_border_color = "black";
+        common_cell_color = "white";
+
+        t_font = "Times_New_Roman";
+        t_font_size = "14";
+
+        t_bold = "1";
+        t_italic = "1";
+        t_underline = "1";
+        t_striken = "1";
+    }
 
     public String getHeader_style() {
         return header_style;
