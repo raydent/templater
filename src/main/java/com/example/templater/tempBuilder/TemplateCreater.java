@@ -1,14 +1,22 @@
 package com.example.templater.tempBuilder;
 
+import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.wp.usermodel.HeaderFooterType;
+import org.apache.poi.xssf.model.Styles;
 import org.apache.poi.xwpf.usermodel.*;
+import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
+import org.openxmlformats.schemas.drawingml.x2006.diagram.STBooleans;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTStringImpl;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.STNumberFormatImpl;
+import org.springframework.format.annotation.NumberFormat;
 
-
-
+import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
+import java.awt.*;
 import java.io.*;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.List;
 
 public class TemplateCreater {
@@ -149,6 +157,7 @@ public class TemplateCreater {
         cTAbstractNum.setAbstractNumId(BigInteger.valueOf(0));
 
         CTLvl cTLvl0 = cTAbstractNum.addNewLvl();
+        cTLvl0.addNewPStyle().setVal("Heading1");
         cTLvl0.setIlvl(BigInteger.ZERO);
         cTLvl0.addNewNumFmt().setVal(STNumberFormat.DECIMAL);
         cTLvl0.addNewLvlText().setVal("%1");
@@ -194,9 +203,9 @@ public class TemplateCreater {
                                                 ParagraphParams paragraphParams) {
         XWPFParagraph paragraph = doc.createParagraph();
         paragraph.setStyle(style);
-        if (paragraphParams.isUnderline()) {
-            paragraph.setBorderBottom(Borders.APPLES);
-        }
+        //if (paragraphParams.isUnderline()) {
+        //    paragraph.setBorderBottom(Borders.APPLES);
+        //}
         paragraph.setAlignment(paragraphParams.getAlignment());
         paragraph.setNumID(numId);
         paragraph.setSpacingAfter(100);
@@ -204,10 +213,10 @@ public class TemplateCreater {
         ctDecimalNumber.setVal(numLevel);
         XWPFRun run = paragraph.createRun();
         run.setText("Header");
-        run.setBold(paragraphParams.isBold());
-        run.setFontFamily(Fonts.getFontString(paragraphParams.getFont()));
-        run.setFontSize(paragraphParams.getFontSize());
-        run.setColor(Colors.getColorCode(paragraphParams.getTextColor()));
+        //run.setBold(paragraphParams.isBold());
+        //run.setFontFamily(Fonts.getFontString(paragraphParams.getFont()));
+        //run.setFontSize(paragraphParams.getFontSize());
+        //run.setColor(Colors.getColorCode(paragraphParams.getTextColor()));
 
     }
 
@@ -306,12 +315,67 @@ public class TemplateCreater {
         }
     }
 
+    public static byte[] hexToBytes(String hexString) {
+        HexBinaryAdapter adapter = new HexBinaryAdapter();
+        byte[] bytes = adapter.unmarshal(hexString);
+        return bytes;
+    }
+
     public void createTemplate(TempParams tempParams, TitleParams titleParams, List<ParagraphParams> paragraphParamsList, TableParams tableParams) throws IOException, XmlException {
         FileInputStream fis = new FileInputStream(new File("Empty.docx"));
         XWPFDocument temp = new XWPFDocument(fis);
         XWPFDocument document = new XWPFDocument();
         XWPFStyles styles = document.createStyles();
         styles.setStyles(temp.getStyle());
+
+        styles = document.getStyles();
+        XWPFStyle style1 = styles.getStyle("Heading1");
+        XWPFStyle style2 = styles.getStyle("Heading2");
+        XWPFStyle style3 = styles.getStyle("Heading3");
+        XWPFStyle style4 = styles.getStyle("Heading4");
+        XWPFStyle style5 = styles.getStyle("Heading5");
+        List<XWPFStyle> styleList = Arrays.asList(style1, style2, style3, style4, style5);
+
+        CTStyle ctStyle1 = style1.getCTStyle();
+        CTPPr ppr = ctStyle1.getPPr();
+        CTOnOff ctOnOffPB = CTOnOff.Factory.newInstance();
+        ctOnOffPB.setVal(STOnOff.ON);
+        ppr.setPageBreakBefore(ctOnOffPB);
+
+        for (int i = 0; i < 5; ++i) {
+            CTStyle ctStyle = styleList.get(i).getCTStyle();
+            CTRPr rpr = ctStyle.getRPr();
+            //color
+            CTColor color = CTColor.Factory.newInstance();
+            color.setVal(hexToBytes(Colors.getColorCode(paragraphParamsList.get(i).getTextColor())));
+            rpr.setColor(color);
+            //font
+            CTFonts fonts = CTFonts.Factory.newInstance();
+            fonts.setAscii(Fonts.getFontString(paragraphParamsList.get(i).getFont()));
+            rpr.setRFonts(fonts);
+            CTHpsMeasure size = CTHpsMeasure.Factory.newInstance();
+            size.setVal(new BigInteger(String.valueOf(paragraphParamsList.get(i).getFontSize() * 2)));
+            rpr.setSz(size);
+            CTOnOff ctOnOffBold = CTOnOff.Factory.newInstance();
+            ctOnOffBold.setVal(STOnOff.OFF);
+            CTOnOff ctOnOffItalic = CTOnOff.Factory.newInstance();
+            ctOnOffItalic.setVal(STOnOff.OFF);
+            CTUnderline ctUnderline = CTUnderline.Factory.newInstance();
+            ctUnderline.setVal(STUnderline.NONE);
+            if (paragraphParamsList.get(i).isBold()) {
+                ctOnOffBold.setVal(STOnOff.ON);
+            }
+            if (paragraphParamsList.get(i).isItalic()) {
+                ctOnOffItalic.setVal(STOnOff.ON);
+            }
+            if (paragraphParamsList.get(i).isUnderline()) {
+                ctUnderline.setVal(STUnderline.SINGLE);
+            }
+            rpr.setB(ctOnOffBold);
+            rpr.setI(ctOnOffItalic);
+            rpr.setU(ctUnderline);
+            ctStyle.setRPr(rpr);
+        }
 
         if (tempParams.isNumeration()) {
             XWPFFooter footer = document.createFooter(HeaderFooterType.FIRST);
