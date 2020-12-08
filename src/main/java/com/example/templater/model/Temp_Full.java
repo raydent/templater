@@ -2,7 +2,53 @@ package com.example.templater.model;
 
 public class Temp_Full {
 
-    //For the headers
+    //For the title page
+    private String title_type;
+    private String title_name;
+    private String title_organization;
+    private String title_description;
+    private String title_alignment;
+
+    //For the name
+    private String title_name_font;
+    private String title_name_font_size;
+    private String title_name_bold;
+    private String title_name_italic;
+    private String title_name_underline;
+    private String title_name_text_color;
+    private String title_name_text_highlight_color;
+
+    //For the organization
+    private String title_organization_font;
+    private String title_organization_font_size;
+    private String title_organization_bold;
+    private String title_organization_italic;
+    private String title_organization_underline;
+    private String title_organization_text_color;
+    private String title_organization_text_highlight_color;
+
+    //For the description
+    private String title_description_font;
+    private String title_description_font_size;
+    private String title_description_bold;
+    private String title_description_italic;
+    private String title_description_underline;
+    private String title_description_text_color;
+    private String title_description_text_highlight_color;
+
+    //For both types (date)/(date+name)
+    private String title_type_font;
+    private String title_type_font_size;
+    private String title_type_bold;
+    private String title_type_italic;
+    private String title_type_underline;
+    private String title_type_text_color;
+    private String title_type_text_highlight_color;
+    private String title_type_alignment;
+
+
+
+    //For headers
     private String header;
     private String footer;
     private String title_page;
@@ -71,6 +117,280 @@ public class Temp_Full {
 
     private String table_bold;
     private String table_italic;
+
+
+    public String getTitle_type() {
+        return title_type;
+    }
+
+    public void setTitle_type(String title_type) {
+        this.title_type = title_type;
+    }
+
+    public String getTitle_name() {
+        return title_name;
+    }
+
+    public void setTitle_name(String title_name) {
+        this.title_name = title_name;
+    }
+
+    public String getTitle_organization() {
+        return title_organization;
+    }
+
+    public void setTitle_organization(String title_organization) {
+        this.title_organization = title_organization;
+    }
+
+    public String getTitle_description() {
+        return title_description;
+    }
+
+    public void setTitle_description(String title_description) {
+        this.title_description = title_description;
+    }
+
+    public String getTitle_alignment() {
+        return title_alignment;
+    }
+
+    public void setTitle_alignment(String title_alignment) {
+        this.title_alignment = title_alignment;
+    }
+
+    public String getTitle_name_font() {
+        return title_name_font;
+    }
+
+    public void setTitle_name_font(String title_name_font) {
+        this.title_name_font = title_name_font;
+    }
+
+    public String getTitle_name_font_size() {
+        return title_name_font_size;
+    }
+
+    public void setTitle_name_font_size(String title_name_font_size) {
+        this.title_name_font_size = title_name_font_size;
+    }
+
+    public String getTitle_name_bold() {
+        return title_name_bold;
+    }
+
+    public void setTitle_name_bold(String title_name_bold) {
+        this.title_name_bold = title_name_bold;
+    }
+
+    public String getTitle_name_italic() {
+        return title_name_italic;
+    }
+
+    public void setTitle_name_italic(String title_name_italic) {
+        this.title_name_italic = title_name_italic;
+    }
+
+    public String getTitle_name_underline() {
+        return title_name_underline;
+    }
+
+    public void setTitle_name_underline(String title_name_underline) {
+        this.title_name_underline = title_name_underline;
+    }
+
+    public String getTitle_name_text_color() {
+        return title_name_text_color;
+    }
+
+    public void setTitle_name_text_color(String title_name_text_color) {
+        this.title_name_text_color = title_name_text_color;
+    }
+
+    public String getTitle_name_text_highlight_color() {
+        return title_name_text_highlight_color;
+    }
+
+    public void setTitle_name_text_highlight_color(String title_name_text_highlight_color) {
+        this.title_name_text_highlight_color = title_name_text_highlight_color;
+    }
+
+    public String getTitle_organization_font() {
+        return title_organization_font;
+    }
+
+    public void setTitle_organization_font(String title_organization_font) {
+        this.title_organization_font = title_organization_font;
+    }
+
+    public String getTitle_organization_font_size() {
+        return title_organization_font_size;
+    }
+
+    public void setTitle_organization_font_size(String title_organization_font_size) {
+        this.title_organization_font_size = title_organization_font_size;
+    }
+
+    public String getTitle_organization_bold() {
+        return title_organization_bold;
+    }
+
+    public void setTitle_organization_bold(String title_organization_bold) {
+        this.title_organization_bold = title_organization_bold;
+    }
+
+    public String getTitle_organization_italic() {
+        return title_organization_italic;
+    }
+
+    public void setTitle_organization_italic(String title_organization_italic) {
+        this.title_organization_italic = title_organization_italic;
+    }
+
+    public String getTitle_organization_underline() {
+        return title_organization_underline;
+    }
+
+    public void setTitle_organization_underline(String title_organization_underline) {
+        this.title_organization_underline = title_organization_underline;
+    }
+
+    public String getTitle_organization_text_color() {
+        return title_organization_text_color;
+    }
+
+    public void setTitle_organization_text_color(String title_organization_text_color) {
+        this.title_organization_text_color = title_organization_text_color;
+    }
+
+    public String getTitle_organization_text_highlight_color() {
+        return title_organization_text_highlight_color;
+    }
+
+    public void setTitle_organization_text_highlight_color(String title_organization_text_highlight_color) {
+        this.title_organization_text_highlight_color = title_organization_text_highlight_color;
+    }
+
+    public String getTitle_description_font() {
+        return title_description_font;
+    }
+
+    public void setTitle_description_font(String title_description_font) {
+        this.title_description_font = title_description_font;
+    }
+
+    public String getTitle_description_font_size() {
+        return title_description_font_size;
+    }
+
+    public void setTitle_description_font_size(String title_description_font_size) {
+        this.title_description_font_size = title_description_font_size;
+    }
+
+    public String getTitle_description_bold() {
+        return title_description_bold;
+    }
+
+    public void setTitle_description_bold(String title_description_bold) {
+        this.title_description_bold = title_description_bold;
+    }
+
+    public String getTitle_description_italic() {
+        return title_description_italic;
+    }
+
+    public void setTitle_description_italic(String title_description_italic) {
+        this.title_description_italic = title_description_italic;
+    }
+
+    public String getTitle_description_underline() {
+        return title_description_underline;
+    }
+
+    public void setTitle_description_underline(String title_description_underline) {
+        this.title_description_underline = title_description_underline;
+    }
+
+    public String getTitle_description_text_color() {
+        return title_description_text_color;
+    }
+
+    public void setTitle_description_text_color(String title_description_text_color) {
+        this.title_description_text_color = title_description_text_color;
+    }
+
+    public String getTitle_description_text_highlight_color() {
+        return title_description_text_highlight_color;
+    }
+
+    public void setTitle_description_text_highlight_color(String title_description_text_highlight_color) {
+        this.title_description_text_highlight_color = title_description_text_highlight_color;
+    }
+
+    public String getTitle_type_font() {
+        return title_type_font;
+    }
+
+    public void setTitle_type_font(String title_type_font) {
+        this.title_type_font = title_type_font;
+    }
+
+    public String getTitle_type_font_size() {
+        return title_type_font_size;
+    }
+
+    public void setTitle_type_font_size(String title_type_font_size) {
+        this.title_type_font_size = title_type_font_size;
+    }
+
+    public String getTitle_type_bold() {
+        return title_type_bold;
+    }
+
+    public void setTitle_type_bold(String title_type_bold) {
+        this.title_type_bold = title_type_bold;
+    }
+
+    public String getTitle_type_italic() {
+        return title_type_italic;
+    }
+
+    public void setTitle_type_italic(String title_type_italic) {
+        this.title_type_italic = title_type_italic;
+    }
+
+    public String getTitle_type_underline() {
+        return title_type_underline;
+    }
+
+    public void setTitle_type_underline(String title_type_underline) {
+        this.title_type_underline = title_type_underline;
+    }
+
+    public String getTitle_type_text_color() {
+        return title_type_text_color;
+    }
+
+    public void setTitle_type_text_color(String title_type_text_color) {
+        this.title_type_text_color = title_type_text_color;
+    }
+
+    public String getTitle_type_text_highlight_color() {
+        return title_type_text_highlight_color;
+    }
+
+    public void setTitle_type_text_highlight_color(String title_type_text_highlight_color) {
+        this.title_type_text_highlight_color = title_type_text_highlight_color;
+    }
+
+    public String getTitle_type_alignment() {
+        return title_type_alignment;
+    }
+
+    public void setTitle_type_alignment(String title_type_alignment) {
+        this.title_type_alignment = title_type_alignment;
+    }
+
 
     public String getHeader() {
         return header;

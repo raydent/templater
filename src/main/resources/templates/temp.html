@@ -16,6 +16,7 @@
     <div class="col-md-12">
         <select name="cargo_name" id="cargo_name" class="form-control">
             <option value="-----">----- ----</option>
+            <option value="base">Title Page</option>
             <option value="first">Header 1</option>
             <option value="second">Header 2</option>
             <option value="third">Header 3</option>
@@ -50,6 +51,169 @@
     </div>
 
     <div class="col-md-12">
+
+        <div  id="Title_Page" >
+
+
+            <select th:field="*{temp.title_alignment}">
+                <option selected value="middle">Alignment</option>
+                <option value="left">left</option>
+                <option value="right">right</option>
+                <option value="middle">middle</option>
+                <option value="width">width</option>
+            </select><br>
+
+          <div id="Name">
+
+
+            <label>Input name</label>
+            <input type="text" th:field="*{temp.title_name}"><br>
+
+
+            <select th:field="*{temp.title_name_font}">
+                <option  value="Times New Roman" selected>Font</option>
+                <option value="Times New Roman">Times New Roman</option>
+                <option value="Arial">Arial</option>
+            </select>
+
+            <select th:field="*{temp.title_name_font_size}">
+                <option selected value="11" d>Font size</option>
+                <option value="12">12</option>
+                <option value="14">14</option>
+            </select>
+
+            <label><input type="checkbox" value="1" th:field="*{temp.title_name_bold}"><span>Bold</span></label>
+
+
+            <label><input type="checkbox" value="1" th:field="*{temp.title_name_italic}"><span>Italic</span></label>
+
+
+            <label><input type="checkbox" value="1" th:field="*{temp.title_name_underline}"><span>Underline</span></label><br>
+
+
+
+
+            <label>Text color <input type="color" value="black" th:field="*{temp.title_name_text_color}"></label><br>
+            <label>Text highlight color <input type="color" value="black" th:field="*{temp.title_name_text_highlight_color}"></label><br>
+
+            </div>
+
+
+            <div if="Organization">
+
+
+            <label>Input Organization</label>
+            <input type="text" th:field="*{temp.title_organization}"><br>
+
+                <select th:field="*{temp.title_organization_font}">
+                    <option  value="Times New Roman" selected>Font</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Arial">Arial</option>
+                </select>
+
+                <select th:field="*{temp.title_organization_font_size}">
+                    <option selected value="11" d>Font size</option>
+                    <option value="12">12</option>
+                    <option value="14">14</option>
+                </select>
+
+                <label><input type="checkbox" value="1" th:field="*{temp.title_organization_bold}"><span>Bold</span></label>
+
+
+                <label><input type="checkbox" value="1" th:field="*{temp.title_organization_italic}"><span>Italic</span></label>
+
+
+                <label><input type="checkbox" value="1" th:field="*{temp.title_organization_underline}"><span>Underline</span></label><br>
+
+
+
+
+                <label>Text color <input type="color" value="black" th:field="*{temp.title_organization_text_color}"></label><br>
+                <label>Text highlight color <input type="color" value="black" th:field="*{temp.title_organization_text_highlight_color}"></label><br>
+
+            </div>
+
+
+            <div id="Description">
+            <label>Input Description</label>
+            <input type="text" th:field="*{temp.title_description}"><br>
+
+                <select th:field="*{temp.title_description_font}">
+                    <option  value="Times New Roman" selected>Font</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Arial">Arial</option>
+                </select>
+
+                <select th:field="*{temp.title_description_font_size}">
+                    <option selected value="11" d>Font size</option>
+                    <option value="12">12</option>
+                    <option value="14">14</option>
+                </select>
+
+                <label><input type="checkbox" value="1" th:field="*{temp.title_description_bold}"><span>Bold</span></label>
+
+
+                <label><input type="checkbox" value="1" th:field="*{temp.title_description_italic}"><span>Italic</span></label>
+
+
+                <label><input type="checkbox" value="1" th:field="*{temp.title_description_underline}"><span>Underline</span></label><br>
+
+
+
+
+                <label>Text color <input type="color" value="black" th:field="*{temp.title_description_text_color}"></label><br>
+                <label>Text highlight color <input type="color" value="black" th:field="*{temp.title_description_text_highlight_color}"></label><br>
+
+
+            </div>
+
+            <div id="Type">
+            <select th:field="*{temp.title_type}">
+                <option  value="1" selected>Type</option>
+                <option value="1">With date</option>
+                <option value="2">With date and name</option>
+            </select>
+
+                <br><select th:field="*{temp.title_type_alignment}">
+                    <option selected value="middle">Alignment</option>
+                    <option value="left">left</option>
+                    <option value="right">right</option>
+                    <option value="middle">middle</option>
+                    <option value="width">width</option>
+                </select><br>
+
+                <select th:field="*{temp.title_type_font}">
+                    <option  value="Times New Roman" selected>Font</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Arial">Arial</option>
+                </select>
+
+                <select th:field="*{temp.title_type_font_size}">
+                    <option selected value="11" d>Font size</option>
+                    <option value="12">12</option>
+                    <option value="14">14</option>
+                </select>
+
+                <label><input type="checkbox" value="1" th:field="*{temp.title_type_bold}"><span>Bold</span></label>
+
+
+                <label><input type="checkbox" value="1" th:field="*{temp.title_type_italic}"><span>Italic</span></label>
+
+
+                <label><input type="checkbox" value="1" th:field="*{temp.title_type_underline}"><span>Underline</span></label><br>
+
+
+
+
+                <label>Text color <input type="color" value="black" th:field="*{temp.title_type_text_color}"></label><br>
+                <label>Text highlight color <input type="color" value="black" th:field="*{temp.title_type_text_highlight_color}"></label><br>
+
+
+            </div>
+
+        </div>
+
+
         <div  id="Header1" >
 
             <select th:field="*{temp.h1_font}">
@@ -276,8 +440,18 @@
 <script>
     $(document).ready(function() {
         $('#cargo_name').change(function() {
+            if($(this).val() === "base")
+            {
+                $("#Title_Page").css("display", "block");
+                $("#Header1").css("display", "none");
+                $("#Header2").css("display", "none");
+                $("#Header3").css("display", "none");
+                $("#Header4").css("display", "none");
+                $("#Header5").css("display", "none");
+            }
             if($(this).val() === "first")
             {
+                $("#Title_Page").css("display", "none");
                 $("#Header1").css("display", "block");
                 $("#Header2").css("display", "none");
                 $("#Header3").css("display", "none");
@@ -286,6 +460,7 @@
             }
             if($(this).val() === "second")
             {
+                $("#Title_Page").css("display", "none");
                 $("#Header1").css("display", "none");
                 $("#Header2").css("display", "block");
                 $("#Header3").css("display", "none");
@@ -294,6 +469,7 @@
             }
             if($(this).val() === "third")
             {
+                $("#Title_Page").css("display", "none");
                 $("#Header1").css("display", "none");
                 $("#Header2").css("display", "none");
                 $("#Header3").css("display", "block");
@@ -302,6 +478,7 @@
             }
             if($(this).val() === "fourth")
             {
+                $("#Title_Page").css("display", "none");
                 $("#Header1").css("display", "none");
                 $("#Header2").css("display", "none");
                 $("#Header3").css("display", "none");
@@ -310,6 +487,7 @@
             }
             if($(this).val() === "fifth")
             {
+                $("#Title_Page").css("display", "none");
                 $("#Header1").css("display", "none");
                 $("#Header2").css("display", "none");
                 $("#Header3").css("display", "none");
