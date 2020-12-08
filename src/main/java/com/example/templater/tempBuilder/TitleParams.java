@@ -2,7 +2,7 @@ package com.example.templater.tempBuilder;
 
 import com.example.templater.model.Temp;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
-
+//заглушка
 public class TitleParams {
     private int type;
     private ParagraphParams firstLine;
