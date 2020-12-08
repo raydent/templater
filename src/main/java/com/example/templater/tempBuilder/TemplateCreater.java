@@ -1,19 +1,11 @@
 package com.example.templater.tempBuilder;
 
-import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.wp.usermodel.HeaderFooterType;
-import org.apache.poi.xssf.model.Styles;
 import org.apache.poi.xwpf.usermodel.*;
-import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
-import org.openxmlformats.schemas.drawingml.x2006.diagram.STBooleans;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTStringImpl;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.STNumberFormatImpl;
-import org.springframework.format.annotation.NumberFormat;
 
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
-import java.awt.*;
 import java.io.*;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -23,17 +15,17 @@ public class TemplateCreater {
     public XWPFDocument createTitlePage(XWPFDocument document, TitleParams titleParams, Fields fields) {
         //создание поля Date в правом верхнем углу
         if (titleParams.getType() != 1) {
-            XWPFTable table = document.createTable();
+            XWPFTable table = document.createTable();;
             table.setTableAlignment(TableRowAlign.RIGHT);
             table.removeBorders();
             CTTblWidth width = table.getCTTbl().addNewTblPr().addNewTblW();
             width.setType(STTblWidth.DXA);
-            width.setW(BigInteger.valueOf(1000));
+            width.setW(BigInteger.valueOf(1600));
             XWPFTableRow tableRow = table.getRow(0);
             XWPFTableCell cell = tableRow.getCell(0);
             cell.setColor("4682B4");
-            cell.getParagraphs().get(0).setSpacingAfter(700);
-            XWPFParagraph p = cell.addParagraph();
+            XWPFParagraph p = cell.getParagraphs().get(0);
+            p.setSpacingBefore(600);
             p.setAlignment(ParagraphAlignment.RIGHT);
             p.setIndentationFirstLine(200);
             p.setIndentationRight(70);
@@ -47,7 +39,6 @@ public class TemplateCreater {
 
         //создание заголовка
         XWPFParagraph emptyP = document.createParagraph();
-        emptyP.createRun();
         emptyP.setSpacingAfter(3200);
 
         XWPFTable table = document.createTable();
@@ -203,9 +194,6 @@ public class TemplateCreater {
                                                 ParagraphParams paragraphParams) {
         XWPFParagraph paragraph = doc.createParagraph();
         paragraph.setStyle(style);
-        //if (paragraphParams.isUnderline()) {
-        //    paragraph.setBorderBottom(Borders.APPLES);
-        //}
         paragraph.setAlignment(paragraphParams.getAlignment());
         paragraph.setNumID(numId);
         paragraph.setSpacingAfter(100);
@@ -213,10 +201,6 @@ public class TemplateCreater {
         ctDecimalNumber.setVal(numLevel);
         XWPFRun run = paragraph.createRun();
         run.setText("Header");
-        //run.setBold(paragraphParams.isBold());
-        //run.setFontFamily(Fonts.getFontString(paragraphParams.getFont()));
-        //run.setFontSize(paragraphParams.getFontSize());
-        //run.setColor(Colors.getColorCode(paragraphParams.getTextColor()));
 
     }
 
@@ -321,6 +305,21 @@ public class TemplateCreater {
         return bytes;
     }
 
+   /* private static STTextAlignment.Enum getSTTextAlignment(ParagraphAlignment alignment) {
+        switch (alignment) {
+            case LEFT: {
+                return STTextAlignment.
+            }
+            case CENTER: {
+                return
+            }
+            case RIGHT: {
+                return
+            }
+        }
+        return
+    }*/
+
     public void createTemplate(TempParams tempParams, TitleParams titleParams, List<ParagraphParams> paragraphParamsList, TableParams tableParams) throws IOException, XmlException {
         FileInputStream fis = new FileInputStream(new File("Empty.docx"));
         XWPFDocument temp = new XWPFDocument(fis);
@@ -334,17 +333,30 @@ public class TemplateCreater {
         XWPFStyle style3 = styles.getStyle("Heading3");
         XWPFStyle style4 = styles.getStyle("Heading4");
         XWPFStyle style5 = styles.getStyle("Heading5");
-        List<XWPFStyle> styleList = Arrays.asList(style1, style2, style3, style4, style5);
+        XWPFStyle hStyle = styles.getStyle("Header");
+        XWPFStyle fStyle = styles.getStyle("Footer");
+        List<XWPFStyle> styleList = Arrays.asList(style1, style2, style3, style4, style5, hStyle, fStyle);
 
         CTStyle ctStyle1 = style1.getCTStyle();
         CTPPr ppr = ctStyle1.getPPr();
         CTOnOff ctOnOffPB = CTOnOff.Factory.newInstance();
         ctOnOffPB.setVal(STOnOff.ON);
         ppr.setPageBreakBefore(ctOnOffPB);
+        CTPBdr ctpBdr = CTPBdr.Factory.newInstance();
+        CTBorder ctBorder = CTBorder.Factory.newInstance();
+        ctBorder.setVal(STBorder.APPLES);
+        ctpBdr.setBottom(ctBorder);
+        ppr.setPBdr(ctpBdr);
 
-        for (int i = 0; i < 5; ++i) {
+        for (int i = 0; i < styleList.size(); ++i) {
+            if (paragraphParamsList.get(i) == null) {
+                continue;
+            }
             CTStyle ctStyle = styleList.get(i).getCTStyle();
             CTRPr rpr = ctStyle.getRPr();
+            if (rpr == null) {
+                rpr = ctStyle.addNewRPr();
+            }
             //color
             CTColor color = CTColor.Factory.newInstance();
             color.setVal(hexToBytes(Colors.getColorCode(paragraphParamsList.get(i).getTextColor())));
@@ -377,13 +389,38 @@ public class TemplateCreater {
             ctStyle.setRPr(rpr);
         }
 
+        if (tempParams.isHeader()) {
+            XWPFHeader header = document.createHeader(HeaderFooterType.DEFAULT);
+            XWPFParagraph paragraph = header.getParagraphArray(0);
+            if (paragraph == null) {
+                paragraph = header.createParagraph();
+            }
+            paragraph.setStyle("Header");
+            ParagraphParams params = paragraphParamsList.get(paragraphParamsList.size() - 3);
+            paragraph.setAlignment(params.getAlignment());
+            XWPFRun run = paragraph.createRun();
+            run.setText("Header text");
+            if (params.isBold()) {
+                run.setBold(true);
+            }
+            if (params.isItalic()) {
+                run .setItalic(true);
+            }
+            if (params.isUnderline()) {
+                run.setUnderline(UnderlinePatterns.SINGLE);
+            }
+            run.setColor(Colors.getColorCode(params.getTextColor()));
+            run.setFontFamily(Fonts.getFontString(params.getFont()));
+            run.setFontSize(params.getFontSize());
+        }
+
         if (tempParams.isNumeration()) {
             XWPFFooter footer = document.createFooter(HeaderFooterType.FIRST);
             XWPFParagraph paragraph = footer.getParagraphArray(0);
-            if (paragraph == null)
+            if (paragraph == null) {
                 paragraph = footer.createParagraph();
+            }
             paragraph.setAlignment(ParagraphAlignment.RIGHT);
-            XWPFRun run = paragraph.createRun();
             paragraph.getCTP().addNewFldSimple().setInstr("PAGE \\* ARABIC MERGEFORMAT");
         }
 
@@ -401,6 +438,25 @@ public class TemplateCreater {
 
             ctSectPrLastSect.unsetTitlePg();
         }
+
+        if (tempParams.isFooter()) {
+            XWPFFooter footer = document.getFooterArray(0);
+            if (footer == null) {
+                footer = document.createFooter(HeaderFooterType.DEFAULT);
+            }
+            XWPFParagraph paragraph = footer.createParagraph();
+            ParagraphParams params = paragraphParamsList.get(paragraphParamsList.size() - 2);
+            paragraph.setStyle("Footer");
+            paragraph.setAlignment(params.getAlignment());
+            XWPFRun run = paragraph.createRun();
+            run.setText("© 2020 Netcracker Technology Corp.\tCONFIDENTIAL AND PROPRIETARY\n");
+            XWPFParagraph paragraph1 = footer.createParagraph();
+            paragraph1.setStyle("Footer");
+            paragraph1.setAlignment(params.getAlignment());
+            run = paragraph1.createRun();
+            run.setText("Disclose and distribute solely to those individuals with a need to know.");
+        }
+
         try {
             FileOutputStream fos = new FileOutputStream("Template.docx");
             document.write(fos);

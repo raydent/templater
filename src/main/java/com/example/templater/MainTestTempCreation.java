@@ -9,10 +9,12 @@ import java.util.List;
 public class MainTestTempCreation {
     public static void main(String... s){
         TemplateCreater templateCreater = new TemplateCreater();
-        TempParams tempParams = TempParams.getDefaultTemp3Params();
-        TitleParams titleParams = TitleParams.getDefaultTemp3TitleParams();
-        List<ParagraphParams> paragraphParamsList = ParagraphParams.getDefaultTemp3ParParams();
-        TableParams tableParams = TableParams.getDefaultTemplate3TableParams();
+        TempParams tempParams = TempParams.getDefaultTemp2Params();
+        TitleParams titleParams = TitleParams.getDefaultTemp2TitleParams();
+        // порядок элементов (соблюдать строго): header 1, header 2, header 3, ..., header n (n <= 5), header(верхний колонтитул),
+        // footer, textField. Последние три элемента должны быть: два колонтитула(null оба если нет), textField.
+        List<ParagraphParams> paragraphParamsList = ParagraphParams.getDefaultTemp2ParParams();
+        TableParams tableParams = TableParams.getDefaultTemplate2TableParams();
         try {
             templateCreater.createTemplate(tempParams, titleParams, paragraphParamsList, tableParams);
         } catch (IOException | XmlException e) {

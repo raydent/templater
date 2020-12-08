@@ -83,7 +83,7 @@ public class TempParams {
     }
 
     public static TempParams getDefaultTemp2Params() {
-        return new TempParams(true, false, false, false, 1.15, Fields.average);
+        return new TempParams(true, true, true, false, 1.15, Fields.average);
     }
     public static TempParams getDefaultTemp3Params() {
         return new TempParams(true, true, false, false, 1.15, Fields.average);

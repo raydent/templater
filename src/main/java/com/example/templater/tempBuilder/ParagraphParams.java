@@ -109,7 +109,7 @@ public class ParagraphParams {
 
 
     public static List<ParagraphParams> getDefaultTemp1ParParams() {
-        ParagraphParams heading1 = new ParagraphParams(Fonts.Calibri, 20, true, false, true,
+        ParagraphParams heading1 = new ParagraphParams(Fonts.Calibri, 20, true, false, false,
                 ParagraphAlignment.LEFT, Colors.black, Colors.black);
         ParagraphParams heading2 = new ParagraphParams(Fonts.Calibri, 14, true, false, false,
                 ParagraphAlignment.LEFT, Colors.black, Colors.black);
@@ -127,12 +127,14 @@ public class ParagraphParams {
         list.add(heading3);
         list.add(heading4);
         list.add(heading5);
+        list.add(null); //header
+        list.add(null); //footer
         list.add(textField);
         return list;
     }
 
     public static List<ParagraphParams> getDefaultTemp2ParParams() {
-        ParagraphParams heading1 = new ParagraphParams(Fonts.Calibria, 14, true, false, true,
+        ParagraphParams heading1 = new ParagraphParams(Fonts.Calibria, 14, true, false, false,
                 ParagraphAlignment.LEFT, Colors.blue, Colors.blue);
         ParagraphParams heading2 = new ParagraphParams(Fonts.Calibria, 12, true, false, false,
                 ParagraphAlignment.LEFT, Colors.blue, Colors.blue);
@@ -142,6 +144,8 @@ public class ParagraphParams {
                 ParagraphAlignment.LEFT, Colors.steel_blue, Colors.steel_blue);
         ParagraphParams heading5 = new ParagraphParams(Fonts.Calibria, 11, false, false, false,
                 ParagraphAlignment.LEFT, Colors.blue, Colors.blue);
+        ParagraphParams footer = new ParagraphParams(Fonts.Calibria, 11, false, false, false,
+                ParagraphAlignment.CENTER, Colors.gray, Colors.gray);
         ParagraphParams textField = new ParagraphParams(Fonts.Calibria, 11, false, false, false,
                 ParagraphAlignment.LEFT, Colors.black, Colors.black);
         List<ParagraphParams> list = new ArrayList<ParagraphParams>();
@@ -150,12 +154,14 @@ public class ParagraphParams {
         list.add(heading3);
         list.add(heading4);
         list.add(heading5);
+        list.add(null);
+        list.add(footer);
         list.add(textField);
         return list;
     }
 
     public static List<ParagraphParams> getDefaultTemp3ParParams() {
-        ParagraphParams heading1 = new ParagraphParams(Fonts.Arial, 18, true, false, true,
+        ParagraphParams heading1 = new ParagraphParams(Fonts.Arial, 18, true, false, false,
                 ParagraphAlignment.LEFT, Colors.black, Colors.black);
         ParagraphParams heading2 = new ParagraphParams(Fonts.Arial, 16, true, false, false,
                 ParagraphAlignment.LEFT, Colors.black, Colors.black);
@@ -173,6 +179,8 @@ public class ParagraphParams {
         list.add(heading3);
         list.add(heading4);
         list.add(heading5);
+        list.add(null); //header
+        list.add(null); //footer
         list.add(textField);
         return list;
     }
