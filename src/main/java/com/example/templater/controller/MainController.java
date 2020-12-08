@@ -170,7 +170,7 @@ public class MainController {
                             @ModelAttribute("generalTemp") Temp generalTemp) {
         //System.out.println(temp4.getBold());
         //Необходим особый стиль для заглавной страницы?
-
+        int foo = 0;//Заглушка
         ParagraphParams firstParagraph = new ParagraphParams(temp1);
         ParagraphParams secondParagraph = new ParagraphParams(temp2);
         ParagraphParams thirdParagraph = new ParagraphParams(temp3);
