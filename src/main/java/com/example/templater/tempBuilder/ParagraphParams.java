@@ -5,7 +5,7 @@ import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//заглушка
 public class ParagraphParams {
     private Fonts font = Fonts.Calibri;
     private Integer fontSize = 14;

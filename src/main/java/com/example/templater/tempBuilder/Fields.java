@@ -3,7 +3,7 @@ package com.example.templater.tempBuilder;
 
 import java.util.Arrays;
 import java.util.List;
-
+//заглушка
 public enum Fields {
     narrow,
     average,
