@@ -1,5 +1,5 @@
 package com.example.templater.tempBuilder;
-
+//заглушка
 public enum Colors {
     yellow,
     turquoise,

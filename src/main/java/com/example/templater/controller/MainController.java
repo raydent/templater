@@ -103,17 +103,17 @@ public class MainController {
 
 
     public byte[] saveTest(Temp temp1,
-                            Temp temp2,
-                            Temp temp3,
-                            Temp temp4,
-                            Temp temp5,
-                            Temp firstLineTemp,
-                            Temp secondLineTemp,
-                            Temp thirdLineTemp,
-                            Temp dateColomnTemp,
-                            Temp nameFieldTemp,
-                            Temp dateFieldTemp,
-                            Temp generalTemp) {
+                           Temp temp2,
+                           Temp temp3,
+                           Temp temp4,
+                           Temp temp5,
+                           Temp firstLineTemp,
+                           Temp secondLineTemp,
+                           Temp thirdLineTemp,
+                           Temp dateColomnTemp,
+                           Temp nameFieldTemp,
+                           Temp dateFieldTemp,
+                           Temp generalTemp) {
         //System.out.println(temp4.getBold());
         //Необходим особый стиль для заглавной страницы?
 
@@ -170,7 +170,7 @@ public class MainController {
                             @ModelAttribute("generalTemp") Temp generalTemp) {
         //System.out.println(temp4.getBold());
         //Необходим особый стиль для заглавной страницы?
-
+        int foo = 0;//Заглушка
         ParagraphParams firstParagraph = new ParagraphParams(temp1);
         ParagraphParams secondParagraph = new ParagraphParams(temp2);
         ParagraphParams thirdParagraph = new ParagraphParams(temp3);

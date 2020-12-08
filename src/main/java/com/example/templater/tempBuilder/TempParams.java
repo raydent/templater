@@ -1,7 +1,7 @@
 package com.example.templater.tempBuilder;
 
 import com.example.templater.model.Temp;
-
+//заглушка
 public class TempParams {
     private boolean title_page = true;
     private boolean numeration = true;

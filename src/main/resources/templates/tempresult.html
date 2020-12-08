@@ -6,32 +6,119 @@
 </head>
 <body>
 <h1>Result</h1>
-<p th:text="'Font: ' + ${temp1.font}" />
-<p th:text="'Alignment: ' + ${temp1.alignment}" />
-<p th:text="'Font: ' + ${temp1.font}" />
-<p th:text="'Font size: ' + ${temp1.font_size}" />
-<p th:text="'Interval: ' + ${temp1.interval}" />
-<p th:text="'Bold: ' + ${temp1.bold}" />
-<p th:text="'Italic: ' + ${temp1.italic}" />
-<p th:text="'Underline: ' + ${temp1.underline}" />
-<p th:text="'Striken: ' + ${temp1.striken}" />
-<p th:text="'Alignment: ' + ${temp1.alignment}" />
-<p th:text="'Color: ' + ${temp1.color}" />
-<p th:text="'Fields: ' + ${temp1.fields}" />
-<p th:text="'Title pag: ' + ${temp1.title_page}" />
-<p th:text="'Numeration: ' + ${temp1.numeration}" />
-<p th:text="'Footer: ' + ${temp1.footer}" />
-<p th:text="'Header: ' + ${temp1.header}" />
-<p th:text="'Heading cell text color: ' + ${temp1.heading_cell_text_color}" />
-<p th:text="'Heading cell color: ' + ${temp1.heading_cell_color}" />
-<p th:text="'Cell border color: ' + ${temp1.cell_border_color}" />
-<p th:text="'Common cell color: ' + ${temp1.common_cell_color}" />
-<p th:text="'Table Font: ' + ${temp1.t_font}" />
-<p th:text="'Table Font Size: ' + ${temp1.t_font_size}" />
-<p th:text="'Table Bold: ' + ${temp1.t_bold}" />
-<p th:text="'Table Italic: ' + ${temp1.t_italic}" />
-<p th:text="'Table Underline: ' + ${temp1.t_underline}" />
-<p th:text="'Table Striken: ' + ${temp1.t_striken}" />
 
+<h2>Global parapms</h2>
+<p th:text="'Fields: ' + ${temp.fields}" />
+<p th:text="'Title page: ' + ${temp.title_page}" />
+<p th:text="'Numeration: ' + ${temp.numeration}" />
+<p th:text="'Footer: ' + ${temp.footer}" />
+<p th:text="'Header: ' + ${temp.header}" />
+<p th:text="'Interval: ' + ${temp.interval}" />
+
+<h2>Table parapms</h2>
+<p th:text="'Heading cell text color: ' + ${temp.table_heading_cell_text_color}" />
+<p th:text="'Heading cell color: ' + ${temp.table_heading_cell_color}" />
+<p th:text="'Cell border color: ' + ${temp.table_cell_border_color}" />
+<p th:text="'Common cell color: ' + ${temp.table_common_cell_color}" />
+<p th:text="'Table Font: ' + ${temp.table_font}" />
+<p th:text="'Table Font Size: ' + ${temp.table_font_size}" />
+<p th:text="'Table Bold: ' + ${temp.table_bold}" />
+<p th:text="'Table Italic: ' + ${temp.table_italic}" />
+
+<h2>Local parapms</h2>
+
+<h3>Title Page Name</h3>
+<p th:text="'Name: ' + ${temp.title_name}" />
+<p th:text="'Font: ' + ${temp.title_name_font}" />
+<p th:text="'Font size: ' + ${temp.title_name_font_size}" />
+<p th:text="'Bold: ' + ${temp.title_name_bold}" />
+<p th:text="'Italic: ' + ${temp.title_name_italic}" />
+<p th:text="'Underline: ' + ${temp.title_name_underline}" />
+<p th:text="'Color: ' + ${temp.title_name_text_color}" />
+<p th:text="'Color: ' + ${temp.title_name_text_highlight_color}" />
+
+
+<h3>Title Page Organization</h3>
+<p th:text="'Organization: ' + ${temp.title_organization}" />
+<p th:text="' Font: ' + ${temp.title_organization_font}" />
+<p th:text="'Font size: ' + ${temp.title_organization_font_size}" />
+<p th:text="'Bold: ' + ${temp.title_organization_bold}" />
+<p th:text="'Italic: ' + ${temp.title_organization_italic}" />
+<p th:text="'Underline: ' + ${temp.title_organization_underline}" />
+<p th:text="'Color: ' + ${temp.title_organization_text_color}" />
+<p th:text="'Color: ' + ${temp.title_organization_text_highlight_color}" />
+
+<h3>Title Page Description</h3>
+<p th:text="'Description: ' + ${temp.title_description}" />
+<p th:text="'Font: ' + ${temp.title_description_font}" />
+<p th:text="'Font size: ' + ${temp.title_description_font_size}" />
+<p th:text="'Bold: ' + ${temp.title_description_bold}" />
+<p th:text="'Italic: ' + ${temp.title_description_italic}" />
+<p th:text="'Underline: ' + ${temp.title_description_underline}" />
+<p th:text="'Color: ' + ${temp.title_description_text_color}" />
+<p th:text="'Color: ' + ${temp.title_description_text_highlight_color}" />
+
+<h3>Title Page Types</h3>
+<p th:text="'Type: ' + ${temp.title_type}" />
+<p th:text="'Alignment: ' + ${temp.title_type_alignment}" />
+<p th:text="' Font: ' + ${temp.title_type_font}" />
+<p th:text="'Font size: ' + ${temp.title_type_font_size}" />
+<p th:text="'Bold: ' + ${temp.title_type_bold}" />
+<p th:text="'Italic: ' + ${temp.title_type_italic}" />
+<p th:text="'Underline: ' + ${temp.title_type_underline}" />
+<p th:text="'Color: ' + ${temp.title_type_text_color}" />
+<p th:text="'Color: ' + ${temp.title_type_text_highlight_color}" />
+
+
+<h3>First Header</h3>
+<p th:text="' Font: ' + ${temp.h1_font}" />
+<p th:text="'Font size: ' + ${temp.h1_font_size}" />
+<p th:text="'Bold: ' + ${temp.h1_bold}" />
+<p th:text="'Italic: ' + ${temp.h1_italic}" />
+<p th:text="'Underline: ' + ${temp.h1_underline}" />
+<p th:text="'Alignment: ' + ${temp.h1_alignment}" />
+<p th:text="'Color: ' + ${temp.h1_text_color}" />
+<p th:text="'Color: ' + ${temp.h1_text_highlight_color}" />
+
+
+<h3>Second Header</h3>
+<p th:text="' Font: ' + ${temp.h2_font}" />
+<p th:text="'Font size: ' + ${temp.h2_font_size}" />
+<p th:text="'Bold: ' + ${temp.h2_bold}" />
+<p th:text="'Italic: ' + ${temp.h2_italic}" />
+<p th:text="'Underline: ' + ${temp.h2_underline}" />
+<p th:text="'Alignment: ' + ${temp.h2_alignment}" />
+<p th:text="'Color: ' + ${temp.h2_text_color}" />
+<p th:text="'Color: ' + ${temp.h2_text_highlight_color}" />
+
+<h3>Third Header</h3>
+<p th:text="' Font: ' + ${temp.h3_font}" />
+<p th:text="'Font size: ' + ${temp.h3_font_size}" />
+<p th:text="'Bold: ' + ${temp.h3_bold}" />
+<p th:text="'Italic: ' + ${temp.h3_italic}" />
+<p th:text="'Underline: ' + ${temp.h3_underline}" />
+<p th:text="'Alignment: ' + ${temp.h3_alignment}" />
+<p th:text="'Color: ' + ${temp.h3_text_color}" />
+<p th:text="'Color: ' + ${temp.h3_text_highlight_color}" />
+
+<h3>Fourth Header</h3>
+<p th:text="' Font: ' + ${temp.h4_font}" />
+<p th:text="'Font size: ' + ${temp.h4_font_size}" />
+<p th:text="'Bold: ' + ${temp.h4_bold}" />
+<p th:text="'Italic: ' + ${temp.h4_italic}" />
+<p th:text="'Underline: ' + ${temp.h4_underline}" />
+<p th:text="'Alignment: ' + ${temp.h4_alignment}" />
+<p th:text="'Color: ' + ${temp.h4_text_color}" />
+<p th:text="'Color: ' + ${temp.h4_text_highlight_color}" />
+
+<h3>Fifth Header</h3>
+<p th:text="' Font: ' + ${temp.h5_font}" />
+<p th:text="'Font size: ' + ${temp.h5_font_size}" />
+<p th:text="'Bold: ' + ${temp.h5_bold}" />
+<p th:text="'Italic: ' + ${temp.h5_italic}" />
+<p th:text="'Underline: ' + ${temp.h5_underline}" />
+<p th:text="'Alignment: ' + ${temp.h5_alignment}" />
+<p th:text="'Color: ' + ${temp.h5_text_color}" />
+<p th:text="'Color: ' + ${temp.h5_text_highlight_color}" />
 </body>
 </html>

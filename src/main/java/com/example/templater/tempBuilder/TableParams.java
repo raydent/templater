@@ -5,7 +5,7 @@ import com.example.templater.model.Temp;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
-
+//заглушка
 public class TableParams {
     private int rows = 2;
     private int coloms = 2;
