@@ -30,7 +30,7 @@
             <option value="3.0">3.0</option>
         </select><br>
         <select th:field="*{temp.fields}">
-            <option selected value="middle">Fields</option>
+            <option selected value="average">Fields</option>
             <option value="narrow">narrow</option>
             <option value="average">average</option>
             <option value="wide">wide</option>
@@ -56,11 +56,11 @@
 
 
             <select th:field="*{temp.title_alignment}">
-                <option selected value="middle">Alignment</option>
-                <option value="left">left</option>
-                <option value="right">right</option>
-                <option value="middle">middle</option>
-                <option value="width">width</option>
+                <option selected value="CENTER">Alignment</option>
+                <option value="LEFT">left</option>
+                <option value="RIGHT">right</option>
+                <option value="CENTER">middle</option>
+                <option value="WIDTH">width</option>
             </select><br>
 
           <div id="Name">
@@ -71,8 +71,8 @@
 
 
             <select th:field="*{temp.title_name_font}">
-                <option  value="Times New Roman" selected>Font</option>
-                <option value="Times New Roman">Times New Roman</option>
+                <option  value="Times_New_Roman" selected>Font</option>
+                <option value="Times_New_Roman">Times New Roman</option>
                 <option value="Arial">Arial</option>
             </select>
 
@@ -106,8 +106,8 @@
             <input type="text" th:field="*{temp.title_organization}"><br>
 
                 <select th:field="*{temp.title_organization_font}">
-                    <option  value="Times New Roman" selected>Font</option>
-                    <option value="Times New Roman">Times New Roman</option>
+                    <option  value="Times_New_Roman" selected>Font</option>
+                    <option value="Times_New_Roman">Times New Roman</option>
                     <option value="Arial">Arial</option>
                 </select>
 
@@ -139,8 +139,8 @@
             <input type="text" th:field="*{temp.title_description}"><br>
 
                 <select th:field="*{temp.title_description_font}">
-                    <option  value="Times New Roman" selected>Font</option>
-                    <option value="Times New Roman">Times New Roman</option>
+                    <option  value="Times_New_Roman" selected>Font</option>
+                    <option value="Times_New_Roman">Times New Roman</option>
                     <option value="Arial">Arial</option>
                 </select>
 
@@ -175,16 +175,16 @@
             </select>
 
                 <br><select th:field="*{temp.title_type_alignment}">
-                    <option selected value="middle">Alignment</option>
-                    <option value="left">left</option>
-                    <option value="right">right</option>
-                    <option value="middle">middle</option>
-                    <option value="width">width</option>
+                    <option selected value="CENTER">Alignment</option>
+                    <option value="LEFT">left</option>
+                    <option value="RIGHT">right</option>
+                    <option value="CENTER">middle</option>
+                    <option value="WIDTH">width</option>
                 </select><br>
 
                 <select th:field="*{temp.title_type_font}">
-                    <option  value="Times New Roman" selected>Font</option>
-                    <option value="Times New Roman">Times New Roman</option>
+                    <option  value="Times_New_Roman" selected>Font</option>
+                    <option value="Times_New_Roman">Times New Roman</option>
                     <option value="Arial">Arial</option>
                 </select>
 
@@ -217,8 +217,8 @@
         <div  id="Header1" >
 
             <select th:field="*{temp.h1_font}">
-                <option  value="Times New Roman" selected>Font</option>
-                <option value="Times New Roman">Times New Roman</option>
+                <option  value="Times_New_Roman" selected>Font</option>
+                <option value="Times_New_Roman">Times New Roman</option>
                 <option value="Arial">Arial</option>
             </select>
 
@@ -239,11 +239,11 @@
 
 
             <select th:field="*{temp.h1_alignment}">
-                <option selected value="middle">Alignment</option>
-                <option value="left">left</option>
-                <option value="right">right</option>
-                <option value="middle">middle</option>
-                <option value="width">width</option>
+                <option selected value="CENTER">Alignment</option>
+                <option value="LEFT">left</option>
+                <option value="RIGHT">right</option>
+                <option value="CENTER">middle</option>
+                <option value="WIDTH">width</option>
             </select><br>
 
             <label>Text color <input type="color" value="black" th:field="*{temp.h1_text_color}"></label><br>
@@ -253,8 +253,8 @@
 
         <div  id="Header2" >
             <select th:field="*{temp.h2_font}">
-                <option  value="Times New Roman" selected>Font</option>
-                <option value="Times New Roman">Times New Roman</option>
+                <option  value="Times_New_Roman" selected>Font</option>
+                <option value="Times_New_Roman">Times New Roman</option>
                 <option value="Arial">Arial</option>
             </select>
 
@@ -277,11 +277,11 @@
 
 
             <select th:field="*{temp.h2_alignment}">
-                <option selected value="middle">Alignment</option>
-                <option value="left">left</option>
-                <option value="right">right</option>
-                <option value="middle">middle</option>
-                <option value="width">width</option>
+                <option selected value="CENTER">Alignment</option>
+                <option value="LEFT">left</option>
+                <option value="RIGHT">right</option>
+                <option value="CENTER">middle</option>
+                <option value="WIDTH">width</option>
             </select><br>
 
             <label>Text color <input type="color" value="black" th:field="*{temp.h2_text_color}"></label><br>
@@ -291,8 +291,8 @@
 
         <div  id="Header3" >
             <select th:field="*{temp.h3_font}">
-                <option  value="Times New Roman" selected>Font</option>
-                <option value="Times New Roman">Times New Roman</option>
+                <option  value="Times_New_Roman" selected>Font</option>
+                <option value="Times_New_Roman">Times New Roman</option>
                 <option value="Arial">Arial</option>
             </select>
 
@@ -315,11 +315,11 @@
 
 
             <select th:field="*{temp.h3_alignment}">
-                <option selected value="middle">Alignment</option>
-                <option value="left">left</option>
-                <option value="right">right</option>
-                <option value="middle">middle</option>
-                <option value="width">width</option>
+                <option selected value="CENTER">Alignment</option>
+                <option value="LEFT">left</option>
+                <option value="RIGHT">right</option>
+                <option value="CENTER">middle</option>
+                <option value="WIDTH">width</option>
             </select><br>
 
             <label>Text color <input type="color" value="black" th:field="*{temp.h3_text_color}"></label><br>
@@ -329,8 +329,8 @@
 
         <div  id="Header4" >
             <select th:field="*{temp.h4_font}">
-                <option  value="Times New Roman" selected>Font</option>
-                <option value="Times New Roman">Times New Roman</option>
+                <option  value="Times_New_Roman" selected>Font</option>
+                <option value="Times_New_Roman">Times New Roman</option>
                 <option value="Arial">Arial</option>
             </select>
 
@@ -353,11 +353,11 @@
 
 
             <select th:field="*{temp.h4_alignment}">
-                <option selected value="middle">Alignment</option>
-                <option value="left">left</option>
-                <option value="right">right</option>
-                <option value="middle">middle</option>
-                <option value="width">width</option>
+                <option selected value="CENTER">Alignment</option>
+                <option value="LEFT">left</option>
+                <option value="RIGHT">right</option>
+                <option value="CENTER">middle</option>
+                <option value="WIDTH">width</option>
             </select><br>
 
             <label>Text color <input type="color" value="black" th:field="*{temp.h4_text_color}"></label><br>
@@ -367,8 +367,8 @@
 
         <div  id="Header5" >
             <select th:field="*{temp.h5_font}">
-                <option  value="Times New Roman" selected>Font</option>
-                <option value="Times New Roman">Times New Roman</option>
+                <option  value="Times_New_Roman" selected>Font</option>
+                <option value="Times_New_Roman">Times New Roman</option>
                 <option value="Arial">Arial</option>
             </select>
 
@@ -391,11 +391,11 @@
 
 
             <select th:field="*{temp.h5_alignment}">
-                <option selected value="middle">Alignment</option>
-                <option value="left">left</option>
-                <option value="right">right</option>
-                <option value="middle">middle</option>
-                <option value="width">width</option>
+                <option selected value="CENTER">Alignment</option>
+                <option value="LEFT">left</option>
+                <option value="RIGHT">right</option>
+                <option value="CENTER">middle</option>
+                <option value="WIDTH">width</option>
             </select><br>
 
             <label>Text color <input type="color" value="black" th:field="*{temp.h5_text_color}"></label><br>
@@ -411,8 +411,8 @@
             <label>Cell border color<input type="color"  value="#95A5A6" th:field="*{temp.table_cell_border_color}"></label><br>
             <label>Common cell color<input type="color"  value="#FDFEFE" th:field="*{temp.table_common_cell_color}"></label><br>
             <select th:field="*{temp.table_font}">
-                <option selected value="Times New Roman">Font</option>
-                <option value="Times New Roman">Times New Roman</option>
+                <option selected value="Times_New_Roman">Font</option>
+                <option value="Times_New_Roman">Times New Roman</option>
                 <option value="Arial">Arial</option>
             </select><br>
 

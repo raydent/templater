@@ -1,6 +1,8 @@
 package com.example.templater.tempBuilder;
 
-import com.example.templater.model.Temp;
+
+import com.example.templater.model.Temp_Full;
+
 //заглушка
 public class TempParams {
     private boolean title_page = true;
@@ -21,13 +23,13 @@ public class TempParams {
         this.field = field;
     }
 
-    public TempParams(Temp generalTemp){
-        setInterval_between_lines(Double.valueOf(generalTemp.getInterval()));
-        setHeader(generalTemp.getHeader().equals("1"));
-        setField(Fields.valueOf(generalTemp.getFields()));
-        setTitle_page(generalTemp.getTitle_page().equals("1"));
-        setFooter(generalTemp.getFooter().equals("1"));
-        setNumeration(generalTemp.getNumeration().equals("1"));
+    public TempParams(Temp_Full temp){
+        this.title_page = temp.getTitle_page().equals("1");
+        this.numeration = temp.getNumeration().equals("1");
+        this.footer = temp.getFooter().equals("1");
+        this.header = temp.getHeader().equals("1");
+        this.interval_between_lines = Double.valueOf(temp.getInterval());
+        this.field = Fields.valueOf(temp.getFields());
     }
 
     public boolean isTitle_page() {
