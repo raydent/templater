@@ -6,6 +6,7 @@ import com.example.templater.model.User;
 import com.example.templater.service.IUserService;
 import com.example.templater.tempBuilder.*;
 import org.apache.commons.compress.utils.IOUtils;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -87,8 +88,10 @@ public class MainController {
         ParagraphParams thirdParagraph = new ParagraphParams(temp, 3);
         ParagraphParams fourthParagraph = new ParagraphParams(temp, 4);
         ParagraphParams fifthParagraph = new ParagraphParams(temp, 5);
+        ParagraphParams textField = new ParagraphParams(Fonts.Arial, 14, false, false, false,
+                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
         List<ParagraphParams> paragraphParamsList = Arrays.asList(firstParagraph, secondParagraph,
-                thirdParagraph, fourthParagraph, fifthParagraph);
+                thirdParagraph, fourthParagraph, fifthParagraph, null, null, textField);
 
 
 
@@ -105,7 +108,7 @@ public class MainController {
         byte[] bytes = null;
         try {
             templateCreater.createTemplate(tempParams, titleParams, paragraphParamsList, tableParams);
-            file = new File("Empty.docx");
+            file = new File("Template.docx");
             fis = new FileInputStream(file);
             bytes = IOUtils.toByteArray(fis);
             fis.close();

@@ -63,6 +63,7 @@ public class ParagraphParams {
                 this.alignment = ParagraphAlignment.valueOf(temp.getH2_alignment());
                 this.textHighlightColor = temp.getH2_text_highlight_color().substring(1);
                 this.textColor = temp.getH2_text_color().substring(1);
+                break;
             case(3):
                 this.font = Fonts.valueOf(temp.getH3_font());
                 this.fontSize = Integer.valueOf(temp.getH3_font_size());
@@ -72,6 +73,7 @@ public class ParagraphParams {
                 this.alignment = ParagraphAlignment.valueOf(temp.getH3_alignment());
                 this.textHighlightColor = temp.getH3_text_highlight_color().substring(1);
                 this.textColor = temp.getH3_text_color().substring(1);
+                break;
             case(4):
                 this.font = Fonts.valueOf(temp.getH4_font());
                 this.fontSize = Integer.valueOf(temp.getH4_font_size());
@@ -81,6 +83,7 @@ public class ParagraphParams {
                 this.alignment = ParagraphAlignment.valueOf(temp.getH4_alignment());
                 this.textHighlightColor = temp.getH4_text_highlight_color().substring(1);
                 this.textColor = temp.getH4_text_color().substring(1);
+                break;
             default:
                 this.font = Fonts.valueOf(temp.getH5_font());
                 this.fontSize = Integer.valueOf(temp.getH5_font_size());

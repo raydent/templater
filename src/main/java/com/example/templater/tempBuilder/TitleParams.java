@@ -28,21 +28,45 @@ public class TitleParams {
 
     public TitleParams(Temp_Full temp){
         this.type = Integer.valueOf(temp.getTitle_type());
-        this.firstLine = new ParagraphParams(temp.getTitle_organization_font(),
-                temp.getTitle_organization_font_size(),
-                temp.getTitle_organization_bold(), temp.getTitle_organization_italic(),
-                temp.getTitle_organization_underline(), "LEFT", temp.getTitle_organization_text_highlight_color().substring(1),
-                temp.getTitle_organization_text_color().substring(1));
-        this.secondLine = new ParagraphParams(temp.getTitle_name_font(),
-                temp.getTitle_name_font_size(),
-                temp.getTitle_name_bold(), temp.getTitle_name_italic(),
-                temp.getTitle_name_underline(), "LEFT", temp.getTitle_name_text_highlight_color().substring(1),
-                temp.getTitle_name_text_color().substring(1));
-        this.thirdLine = new ParagraphParams(temp.getTitle_description_font(),
-                temp.getTitle_description_font_size(),
-                temp.getTitle_description_bold(), temp.getTitle_description_italic(),
-                temp.getTitle_description_underline(), "LEFT", temp.getTitle_description_text_highlight_color().substring(1),
-                temp.getTitle_description_text_color().substring(1));
+        switch (type){
+            case(1):
+                this.firstLine = new ParagraphParams(temp.getTitle_organization_font(),
+                        temp.getTitle_organization_font_size(),
+                        temp.getTitle_organization_bold(), temp.getTitle_organization_italic(),
+                        temp.getTitle_organization_underline(), "LEFT", temp.getTitle_organization_text_highlight_color().substring(1),
+                        temp.getTitle_organization_text_color().substring(1));
+                this.secondLine = new ParagraphParams(temp.getTitle_name_font(),
+                        temp.getTitle_name_font_size(),
+                        temp.getTitle_name_bold(), temp.getTitle_name_italic(),
+                        temp.getTitle_name_underline(), "LEFT", temp.getTitle_name_text_highlight_color().substring(1),
+                        temp.getTitle_name_text_color().substring(1));
+                this.thirdLine = new ParagraphParams(temp.getTitle_description_font(),
+                        temp.getTitle_description_font_size(),
+                        temp.getTitle_description_bold(), temp.getTitle_description_italic(),
+                        temp.getTitle_description_underline(), "LEFT", temp.getTitle_description_text_highlight_color().substring(1),
+                        temp.getTitle_description_text_color().substring(1));
+                break;
+            case (2):
+                break;
+            case (3):
+                this.firstLine = new ParagraphParams(temp.getTitle_type_font(),
+                        temp.getTitle_type_font_size(),
+                        temp.getTitle_type_bold(), temp.getTitle_type_italic(),
+                        temp.getTitle_type_underline(), "LEFT", temp.getTitle_type_text_highlight_color().substring(1),
+                        temp.getTitle_type_text_color().substring(1));
+                this.thirdLine = new ParagraphParams(temp.getTitle_name_font(),
+                        temp.getTitle_name_font_size(),
+                        temp.getTitle_name_bold(), temp.getTitle_name_italic(),
+                        temp.getTitle_name_underline(), "LEFT", temp.getTitle_name_text_highlight_color().substring(1),
+                        temp.getTitle_name_text_color().substring(1));
+                this.secondLine = new ParagraphParams(temp.getTitle_description_font(),
+                        temp.getTitle_description_font_size(),
+                        temp.getTitle_description_bold(), temp.getTitle_description_italic(),
+                        temp.getTitle_description_underline(), "LEFT", temp.getTitle_description_text_highlight_color().substring(1),
+                        temp.getTitle_description_text_color().substring(1));
+                break;
+
+        }
         this.dateColomn = new ParagraphParams(temp.getTitle_type_font(),
                 temp.getTitle_type_font_size(),
                 temp.getTitle_type_bold(), temp.getTitle_type_italic(),

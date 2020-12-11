@@ -78,6 +78,7 @@ public class TemplateCreater {
                 break;
             }
             case 2 :
+                break;
             case 3: {
                 run.setText("Document's name");
                 run.setFontFamily(Fonts.getFontString(titleParams.getFirstLine().getFont()));
@@ -130,6 +131,8 @@ public class TemplateCreater {
     }
 
     public XWPFDocument createFieldText(XWPFDocument document, ParagraphParams paragraphParams) {
+        if (paragraphParams == null)
+            return document;
         XWPFParagraph paragraph = document.createParagraph();
         paragraph.setAlignment(paragraphParams.getAlignment());
         paragraph.setSpacingAfter(150);
@@ -138,6 +141,16 @@ public class TemplateCreater {
         run.setColor(paragraphParams.getTextColor());
         run.setFontFamily(Fonts.getFontString(paragraphParams.getFont()));
         run.setFontSize(paragraphParams.getFontSize());
+
+        if (paragraphParams.isBold()) {
+            run.setBold(true);
+        }
+        if (paragraphParams.isItalic()) {
+            run.setItalic(true);
+        }
+        if (paragraphParams.isUnderline()) {
+            run.setUnderline(UnderlinePatterns.SINGLE);
+        }
 
         return document;
     }

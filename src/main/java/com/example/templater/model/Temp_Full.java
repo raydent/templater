@@ -126,7 +126,7 @@ public class Temp_Full {
     private String table_bold;
     private String table_italic;
 
-    public void replaceCheckboxNulls(){
+    public void replaceCheckboxNulls() {
         if (title_page == null) title_page = "0";
         if (numeration == null) numeration = "0";
         if (footer == null) footer = "0";
@@ -161,6 +161,7 @@ public class Temp_Full {
         if (table_bold == null) table_bold = "0";
         if (table_italic == null) table_italic = "0";
     }
+
     public String getTitle_type() {
         return title_type;
     }
