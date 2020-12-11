@@ -4,6 +4,7 @@ package com.example.templater.controller;
 import com.example.templater.model.Temp_Full;
 import com.example.templater.model.User;
 import com.example.templater.service.IUserService;
+import com.example.templater.service.TemplateService;
 import com.example.templater.tempBuilder.*;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
@@ -27,7 +28,8 @@ public class MainController {
     private IUserService userService;
     @Autowired
     private AuthenticationManager authenticationManager;
-
+    @Autowired
+    private TemplateService templateService;
 
     final String defaultDirectoryName = "C:\\files\\";
     final String defaultFileName = "test.docx";
@@ -83,6 +85,7 @@ public class MainController {
     public byte[] saveBooks(@ModelAttribute("temp") Temp_Full temp) {
 
         temp.replaceCheckboxNulls();
+        templateService.saveTemplate(temp);
         ParagraphParams firstParagraph = new ParagraphParams(temp, 1);
         ParagraphParams secondParagraph = new ParagraphParams(temp, 2);
         ParagraphParams thirdParagraph = new ParagraphParams(temp, 3);

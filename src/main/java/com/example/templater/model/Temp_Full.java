@@ -1,57 +1,98 @@
 package com.example.templater.model;
 
-import com.example.templater.tempBuilder.*;
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.springframework.data.annotation.Transient;
 
-import javax.swing.*;
-import java.math.BigInteger;
+import javax.persistence.*;
 import java.util.Arrays;
 import java.util.List;
 
+@Entity
+@Table(name = "template_data")
 public class Temp_Full {
 
     //For the title page
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private int id;
+    private int user_id;
     private String title_type;
     private String title_name;
     private String title_organization;
     private String title_description;
     private String title_alignment;
 
+
+    @OneToMany(mappedBy = "temp_full", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Header> headers;
+    @OneToMany(mappedBy = "temp_full", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TitleHeader> title_headers;
+    @OneToOne(mappedBy = "temp_full", cascade = CascadeType.ALL, orphanRemoval = true)
+    private TempTable table;
+
     //For the name
+    @Transient
     private String title_name_font;
+    @Transient
     private String title_name_font_size;
+    @Transient
     private String title_name_bold;
+    @Transient
     private String title_name_italic;
+    @Transient
     private String title_name_underline;
+    @Transient
     private String title_name_text_color;
+    @Transient
     private String title_name_text_highlight_color;
 
     //For the organization
+    @Transient
     private String title_organization_font;
+    @Transient
     private String title_organization_font_size;
+    @Transient
     private String title_organization_bold;
+    @Transient
     private String title_organization_italic;
+    @Transient
     private String title_organization_underline;
+    @Transient
     private String title_organization_text_color;
+    @Transient
     private String title_organization_text_highlight_color;
 
     //For the description
+    @Transient
     private String title_description_font;
+    @Transient
     private String title_description_font_size;
+    @Transient
     private String title_description_bold;
+    @Transient
     private String title_description_italic;
+    @Transient
     private String title_description_underline;
+    @Transient
     private String title_description_text_color;
+    @Transient
     private String title_description_text_highlight_color;
 
     //For both types (date)/(date+name)
+    @Transient
     private String title_type_font;
+    @Transient
     private String title_type_font_size;
+    @Transient
     private String title_type_bold;
+    @Transient
     private String title_type_italic;
+    @Transient
     private String title_type_underline;
+    @Transient
     private String title_type_text_color;
+    @Transient
     private String title_type_text_highlight_color;
+    @Transient
     private String title_type_alignment;
 
 
@@ -65,53 +106,93 @@ public class Temp_Full {
     private String fields;
 
     //Header 1
+    @Transient
     private String h1_font;
+    @Transient
     private String h1_font_size;
+    @Transient
     private String h1_bold;
+    @Transient
     private String h1_italic;
+    @Transient
     private String h1_underline;
+    @Transient
     private String h1_alignment;
+    @Transient
     private String h1_text_color;
+    @Transient
     private String h1_text_highlight_color;
 
     //Header 2
+    @Transient
     private String h2_font;
+    @Transient
     private String h2_font_size;
+    @Transient
     private String h2_bold;
+    @Transient
     private String h2_italic;
+    @Transient
     private String h2_underline;
+    @Transient
     private String h2_alignment;
+    @Transient
     private String h2_text_color;
+    @Transient
     private String h2_text_highlight_color;
 
     //Header 3
+    @Transient
     private String h3_font;
+    @Transient
     private String h3_font_size;
+    @Transient
     private String h3_bold;
+    @Transient
     private String h3_italic;
+    @Transient
     private String h3_underline;
+    @Transient
     private String h3_alignment;
+    @Transient
     private String h3_text_color;
+    @Transient
     private String h3_text_highlight_color;
 
     //Header 4
+    @Transient
     private String h4_font;
+    @Transient
     private String h4_font_size;
+    @Transient
     private String h4_bold;
+    @Transient
     private String h4_italic;
+    @Transient
     private String h4_underline;
+    @Transient
     private String h4_alignment;
+    @Transient
     private String h4_text_color;
+    @Transient
     private String h4_text_highlight_color;
 
     //Header 5
+    @Transient
     private String h5_font;
+    @Transient
     private String h5_font_size;
+    @Transient
     private String h5_bold;
+    @Transient
     private String h5_italic;
+    @Transient
     private String h5_underline;
+    @Transient
     private String h5_alignment;
+    @Transient
     private String h5_text_color;
+    @Transient
     private String h5_text_highlight_color;
 
     //For the table
@@ -125,6 +206,79 @@ public class Temp_Full {
 
     private String table_bold;
     private String table_italic;
+
+    public List<Header> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(List<Header> headers) {
+        this.headers = headers;
+    }
+
+    public List<TitleHeader> getTitle_headers() {
+        return title_headers;
+    }
+
+    public void setTitle_headers(List<TitleHeader> title_headers) {
+        this.title_headers = title_headers;
+    }
+
+    public TempTable getTable() {
+        return table;
+    }
+
+    public void setTable(TempTable table) {
+        this.table = table;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
+    public void fillTitleHeaders() {
+        //String type, String font, String font_size, String bold, String italic, String underline, String text_color, String text_highlight_color
+        //name, organization, description, type
+        TitleHeader title_header_name = new TitleHeader("name", title_name_font, title_name_font_size,
+                title_name_bold, title_name_italic, title_name_underline, title_name_text_color, title_name_text_highlight_color);
+        TitleHeader title_header_organisation = new TitleHeader("organization", title_organization_font, title_organization_font_size,
+                title_organization_bold, title_organization_italic, title_organization_underline, title_organization_text_color, title_organization_text_highlight_color);
+        TitleHeader title_header_description = new TitleHeader("description", title_description_font, title_description_font_size,
+                title_description_bold, title_description_italic, title_description_underline, title_description_text_color, title_description_text_highlight_color);
+        TitleHeader title_header_type = new TitleHeader("type", title_type_font, title_type_font_size,
+                title_type_bold, title_type_italic, title_type_underline, title_type_text_color, title_type_text_highlight_color);
+        title_headers = Arrays.asList(title_header_name, title_header_organisation, title_header_description, title_header_type);
+    }
+
+    public void fillHeaders() {
+        Header header1 = new Header(1, h1_font, h1_font_size, h1_bold,
+                h1_italic, h1_underline, h1_alignment, h1_text_color, h1_text_highlight_color);
+        Header header2 = new Header(2, h2_font, h2_font_size, h2_bold,
+                h2_italic, h2_underline, h2_alignment, h2_text_color, h2_text_highlight_color);
+        Header header3 = new Header(3, h3_font, h3_font_size, h3_bold,
+                h3_italic, h3_underline, h3_alignment, h3_text_color, h3_text_highlight_color);
+        Header header4 = new Header(4, h4_font, h4_font_size, h4_bold,
+                h4_italic, h4_underline, h4_alignment, h4_text_color, h4_text_highlight_color);
+        Header header5 = new Header(5, h5_font, h5_font_size, h5_bold,
+                h5_italic, h5_underline, h5_alignment, h5_text_color, h5_text_highlight_color);
+        headers = Arrays.asList(header1, header2, header3, header4, header5);
+    }
+
+    public void fillTable(){
+        //String table_heading_cell_text_color, String table_heading_cell_color, String table_cell_border_color, String table_common_cell_color, String table_font, String table_font_size, String table_bold, String table_italic
+        table = new TempTable(table_heading_cell_text_color, table_heading_cell_color, table_cell_border_color, table_common_cell_color, table_font, table_font_size, table_bold, table_italic);
+    }
 
     public void replaceCheckboxNulls() {
         if (title_page == null) title_page = "0";
