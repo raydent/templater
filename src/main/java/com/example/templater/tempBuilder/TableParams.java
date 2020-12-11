@@ -1,6 +1,6 @@
 package com.example.templater.tempBuilder;
 
-import com.example.templater.model.Temp;
+//import com.example.templater.model.Temp;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -37,7 +37,7 @@ public class TableParams {
         CommonCellColor = commonCellColor;
     }
 
-    public TableParams(Temp temp){
+    /*public TableParams(Temp temp){
         this.rows = 2;//Заплатка
         this.coloms = 2; // заплатка
         this.width = Arrays.asList(BigInteger.valueOf(5000), BigInteger.valueOf(5000)); // заплатка
@@ -49,7 +49,7 @@ public class TableParams {
         this.headingCellColor = Colors.valueOf(temp.getHeading_cell_color());
         this.borderColor = Colors.valueOf(temp.getCell_border_color());
     }
-
+*/
     public List<BigInteger> getWidth() {
         return width;
     }

@@ -130,6 +130,8 @@ public class TemplateCreater {
     }
 
     public XWPFDocument createFieldText(XWPFDocument document, ParagraphParams paragraphParams) {
+        if (paragraphParams == null)
+            return document;
         XWPFParagraph paragraph = document.createParagraph();
         paragraph.setAlignment(paragraphParams.getAlignment());
         paragraph.setSpacingAfter(150);
@@ -138,7 +140,15 @@ public class TemplateCreater {
         run.setColor(Colors.getColorCode(paragraphParams.getTextColor()));
         run.setFontFamily(Fonts.getFontString(paragraphParams.getFont()));
         run.setFontSize(paragraphParams.getFontSize());
-
+        if (paragraphParams.isBold()) {
+            run.setBold(true);
+        }
+        if (paragraphParams.isItalic()) {
+            run.setItalic(true);
+        }
+        if (paragraphParams.isUnderline()) {
+            run.setUnderline(UnderlinePatterns.SINGLE);
+        }
         return document;
     }
 
