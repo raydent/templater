@@ -1,6 +1,6 @@
 package com.example.templater.tempBuilder;
 
-import com.example.templater.model.Temp;
+//import com.example.templater.model.Temp;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 //заглушка
 public class TitleParams {
@@ -14,7 +14,7 @@ public class TitleParams {
 
     public TitleParams() {}
 
-    public TitleParams(int type, Temp firstLineTemp, Temp secondLineTemp, Temp thirdLineTemp,
+   /* public TitleParams(int type, Temp firstLineTemp, Temp secondLineTemp, Temp thirdLineTemp,
                        Temp dateColomnTemp, Temp nameFieldTemp, Temp dateFieldTemp){
 
         ParagraphParams firstLine = new ParagraphParams(firstLineTemp);
@@ -31,7 +31,7 @@ public class TitleParams {
         this.dateColomn = dateColomn;
         this.nameField = nameField;
         this.dateField = dateField;
-    }
+    }*/
 
     public TitleParams(int type, ParagraphParams firstLine, ParagraphParams secondLine, ParagraphParams thirdLine,
                        ParagraphParams dateColomn, ParagraphParams nameField, ParagraphParams dateField) {
