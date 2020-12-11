@@ -196,15 +196,24 @@ public class Temp_Full {
     private String h5_text_highlight_color;
 
     //For the table
+
+    @Transient
     private String table_heading_cell_text_color;
+    @Transient
     private String table_heading_cell_color;
+    @Transient
     private String table_cell_border_color;
+    @Transient
     private String table_common_cell_color;
 
+    @Transient
     private String table_font;
+    @Transient
     private String table_font_size;
 
+    @Transient
     private String table_bold;
+    @Transient
     private String table_italic;
 
     public List<Header> getHeaders() {
