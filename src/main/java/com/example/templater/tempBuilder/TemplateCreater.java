@@ -32,7 +32,7 @@ public class TemplateCreater {
             p.setStyle("NoSpacing");
             XWPFRun run = p.createRun();
             run.setText("Date");
-            run.setColor(Colors.getColorCode(titleParams.getDateColomn().getTextColor()));
+            run.setColor(titleParams.getDateColomn().getTextColor());
             run.setFontFamily(Fonts.getFontString(titleParams.getDateColomn().getFont()));
             run.setFontSize(titleParams.getDateColomn().getFontSize());
         }
@@ -66,31 +66,32 @@ public class TemplateCreater {
                 Fonts font = titleParams.getFirstLine().getFont();
                 run.setFontFamily(Fonts.getFontString(titleParams.getFirstLine().getFont()));
                 run.setFontSize(titleParams.getFirstLine().getFontSize());
-                run.setColor(Colors.getColorCode(titleParams.getFirstLine().getTextColor()));
+                run.setColor(titleParams.getFirstLine().getTextColor());
                 run2.setText("Document's name");
                 run2.setFontFamily(Fonts.getFontString(titleParams.getSecondLine().getFont()));
                 run2.setFontSize(titleParams.getSecondLine().getFontSize());
-                run2.setColor(Colors.getColorCode(titleParams.getSecondLine().getTextColor()));
+                run2.setColor(titleParams.getSecondLine().getTextColor());
                 run3.setText("Description");
                 run3.setFontFamily(Fonts.getFontString(titleParams.getThirdLine().getFont()));
                 run3.setFontSize(titleParams.getThirdLine().getFontSize());
-                run3.setColor(Colors.getColorCode(titleParams.getThirdLine().getTextColor()));
+                run3.setColor(titleParams.getThirdLine().getTextColor());
                 break;
             }
             case 2 :
+                break;
             case 3: {
                 run.setText("Document's name");
                 run.setFontFamily(Fonts.getFontString(titleParams.getFirstLine().getFont()));
                 run.setFontSize(titleParams.getFirstLine().getFontSize());
-                run.setColor(Colors.getColorCode(titleParams.getFirstLine().getTextColor()));
+                run.setColor(titleParams.getFirstLine().getTextColor());
                 run2.setText("DESCRIPTION");
                 run2.setFontFamily(Fonts.getFontString(titleParams.getSecondLine().getFont()));
                 run2.setFontSize(titleParams.getSecondLine().getFontSize());
-                run2.setColor(Colors.getColorCode(titleParams.getSecondLine().getTextColor()));
+                run2.setColor(titleParams.getSecondLine().getTextColor());
                 run3.setText("NAME");
                 run3.setFontFamily(Fonts.getFontString(titleParams.getThirdLine().getFont()));
                 run3.setFontSize(titleParams.getThirdLine().getFontSize());
-                run3.setColor(Colors.getColorCode(titleParams.getThirdLine().getTextColor()));
+                run3.setColor(titleParams.getThirdLine().getTextColor());
                 break;
             }
         }
@@ -109,7 +110,7 @@ public class TemplateCreater {
             run.setText("Name");
             run.setFontFamily(Fonts.getFontString(titleParams.getNameField().getFont()));
             run.setFontSize(titleParams.getNameField().getFontSize());
-            run.setColor(Colors.getColorCode(titleParams.getNameField().getTextColor()));
+            run.setColor(titleParams.getNameField().getTextColor());
 
             XWPFTableRow table1RowTwo = table1.createRow();
             table1RowTwo.getCell(0).getParagraphs().get(0).setStyle("NoSpacing");
@@ -117,7 +118,7 @@ public class TemplateCreater {
             run.setText("Date");
             run.setFontFamily(Fonts.getFontString(titleParams.getDateField().getFont()));
             run.setFontSize(titleParams.getDateField().getFontSize());
-            run.setColor(Colors.getColorCode(titleParams.getDateField().getTextColor()));
+            run.setColor(titleParams.getDateField().getTextColor());
         }
 
         //установка полей на странице
@@ -137,9 +138,10 @@ public class TemplateCreater {
         paragraph.setSpacingAfter(150);
         XWPFRun run = paragraph.createRun();
         run.setText("Text");
-        run.setColor(Colors.getColorCode(paragraphParams.getTextColor()));
+        run.setColor(paragraphParams.getTextColor());
         run.setFontFamily(Fonts.getFontString(paragraphParams.getFont()));
         run.setFontSize(paragraphParams.getFontSize());
+
         if (paragraphParams.isBold()) {
             run.setBold(true);
         }
@@ -149,6 +151,7 @@ public class TemplateCreater {
         if (paragraphParams.isUnderline()) {
             run.setUnderline(UnderlinePatterns.SINGLE);
         }
+
         return document;
     }
 
@@ -248,7 +251,7 @@ public class TemplateCreater {
             XWPFTableRow tableRow = table.getRow(i);
             for (int j = 0; j < tableParams.getColoms(); ++j) {
                 if (i == 0) {
-                    tableRow.getCell(j).setColor(Colors.getColorCode(tableParams.getHeadingCellColor()));
+                    tableRow.getCell(j).setColor(tableParams.getHeadingCellColor());
                 }
                 run = tableRow.getCell(j).getParagraphs().get(0).createRun();
                 run.setText(" ");
@@ -369,7 +372,7 @@ public class TemplateCreater {
             }
             //color
             CTColor color = CTColor.Factory.newInstance();
-            color.setVal(hexToBytes(Colors.getColorCode(paragraphParamsList.get(i).getTextColor())));
+            color.setVal(hexToBytes(paragraphParamsList.get(i).getTextColor()));
             rpr.setColor(color);
             //font
             CTFonts fonts = CTFonts.Factory.newInstance();
@@ -419,7 +422,7 @@ public class TemplateCreater {
             if (params.isUnderline()) {
                 run.setUnderline(UnderlinePatterns.SINGLE);
             }
-            run.setColor(Colors.getColorCode(params.getTextColor()));
+            run.setColor(params.getTextColor());
             run.setFontFamily(Fonts.getFontString(params.getFont()));
             run.setFontSize(params.getFontSize());
         }

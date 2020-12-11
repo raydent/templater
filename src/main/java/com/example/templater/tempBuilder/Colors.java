@@ -15,6 +15,7 @@ public enum Colors {
     aqua_dark,
     aqua;
 
+
     public static String getColorCode(Colors color) {
         switch (color) {
             case black: return "000000";
@@ -32,4 +33,5 @@ public enum Colors {
             default: return "transparent";
         }
     }
+
 }

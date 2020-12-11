@@ -1,29 +1,30 @@
 package com.example.templater.tempBuilder;
 
-//import com.example.templater.model.Temp;
+
+import com.example.templater.model.Temp_Full;
 
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
-//заглушка
+
 public class TableParams {
     private int rows = 2;
     private int coloms = 2;
     private List<BigInteger> width = Arrays.asList(BigInteger.valueOf(5000), BigInteger.valueOf(5000));
-    private Colors headingCellTextColor = Colors.black;
+    private String headingCellTextColor = Colors.getColorCode(Colors.black);
     private Fonts headingTextFont = Fonts.Calibri;
     private boolean headingTextBold = false;
     private boolean headingTextItalic = false;
     private Integer headingTextFontSize = 11;
-    private Colors headingCellColor = Colors.gray;
-    private Colors borderColor = Colors.gray;
-    private Colors CommonCellColor = Colors.transparent;
+    private String headingCellColor = Colors.getColorCode(Colors.gray);
+    private String borderColor = Colors.getColorCode(Colors.gray);
+    private String CommonCellColor = Colors.getColorCode(Colors.transparent);
 
     public TableParams() {}
 
-    public TableParams(int rows, int coloms, List<BigInteger> width, Colors headingCellTextColor, Fonts headingTextFont,
+    public TableParams(int rows, int coloms, List<BigInteger> width, String headingCellTextColor, Fonts headingTextFont,
                        boolean headingTextBold, boolean headingTextItalic, Integer headingTextFontSize,
-                       Colors headingCellColor, Colors borderColor, Colors commonCellColor) {
+                       String headingCellColor, String borderColor, String commonCellColor) {
         this.rows = rows;
         this.coloms = coloms;
         this.width = width;
@@ -37,19 +38,20 @@ public class TableParams {
         CommonCellColor = commonCellColor;
     }
 
-    /*public TableParams(Temp temp){
-        this.rows = 2;//Заплатка
-        this.coloms = 2; // заплатка
-        this.width = Arrays.asList(BigInteger.valueOf(5000), BigInteger.valueOf(5000)); // заплатка
-        this.headingCellTextColor = Colors.valueOf(temp.getHeading_cell_text_color());
-        this.headingTextFont = Fonts.valueOf(temp.getT_font());
-        this.headingTextBold = temp.getT_bold().equals("1");
-        this.headingTextItalic = temp.getT_italic().equals("1");
-        this.headingTextFontSize = Integer.valueOf(temp.getT_font_size());
-        this.headingCellColor = Colors.valueOf(temp.getHeading_cell_color());
-        this.borderColor = Colors.valueOf(temp.getCell_border_color());
+    public TableParams(Temp_Full temp){
+        this.rows = 2;
+        this.coloms = 2;
+        this.width = Arrays.asList(BigInteger.valueOf(5000), BigInteger.valueOf(5000));
+        this.headingCellTextColor = temp.getTable_heading_cell_text_color().substring(1);
+        this.headingTextFont = Fonts.valueOf(temp.getTable_font());
+        this.headingTextBold = temp.getTable_bold().equals("1");
+        this.headingTextItalic = temp.getTable_italic().equals("1");
+        this.headingTextFontSize = Integer.valueOf(temp.getTable_font_size());
+        this.headingCellColor = temp.getTable_heading_cell_color().substring(1);
+        this.borderColor = temp.getTable_cell_border_color().substring(1);
+        this.CommonCellColor = temp.getTable_common_cell_color().substring(1);
     }
-*/
+
     public List<BigInteger> getWidth() {
         return width;
     }
@@ -74,11 +76,11 @@ public class TableParams {
         this.coloms = coloms;
     }
 
-    public Colors getHeadingCellTextColor() {
+    public String getHeadingCellTextColor() {
         return headingCellTextColor;
     }
 
-    public void setHeadingCellTextColor(Colors headingCellTextColor) {
+    public void setHeadingCellTextColor(String headingCellTextColor) {
         this.headingCellTextColor = headingCellTextColor;
     }
 
@@ -114,43 +116,43 @@ public class TableParams {
         this.headingTextFontSize = headingTextFontSize;
     }
 
-    public Colors getHeadingCellColor() {
+    public String getHeadingCellColor() {
         return headingCellColor;
     }
 
-    public void setHeadingCellColor(Colors headingCellColor) {
+    public void setHeadingCellColor(String headingCellColor) {
         this.headingCellColor = headingCellColor;
     }
 
-    public Colors getBorderColor() {
+    public String getBorderColor() {
         return borderColor;
     }
 
-    public void setBorderColor(Colors borderColor) {
+    public void setBorderColor(String borderColor) {
         this.borderColor = borderColor;
     }
 
-    public Colors getCommonCellColor() {
+    public String getCommonCellColor() {
         return CommonCellColor;
     }
 
-    public void setCommonCellColor(Colors commonCellColor) {
+    public void setCommonCellColor(String commonCellColor) {
         CommonCellColor = commonCellColor;
     }
 
     public static TableParams getDefaultTemplate1TableParams() {
         return new TableParams(2, 2, Arrays.asList(BigInteger.valueOf(5000), BigInteger.valueOf(5000)),
-                Colors.black, Fonts.Calibri, true, false, 11,
-                Colors.gray, Colors.blue, Colors.transparent);
+                Colors.getColorCode(Colors.black), Fonts.Calibri, true, false, 11,
+                Colors.getColorCode(Colors.gray), Colors.getColorCode(Colors.blue), Colors.getColorCode(Colors.transparent));
     }
     public static TableParams getDefaultTemplate2TableParams() {
         return new TableParams(2, 2, Arrays.asList(BigInteger.valueOf(1500), BigInteger.valueOf(7000)),
-                Colors.black, Fonts.Calibri, true, false, 11,
-                Colors.gray, Colors.blue, Colors.transparent);
+                Colors.getColorCode(Colors.black), Fonts.Calibri, true, false, 11,
+                Colors.getColorCode(Colors.gray), Colors.getColorCode(Colors.blue), Colors.getColorCode(Colors.transparent));
     }
     public static TableParams getDefaultTemplate3TableParams() {
         return new TableParams(3, 3, Arrays.asList(BigInteger.valueOf(3500), BigInteger.valueOf(3500), BigInteger.valueOf(3500)),
-                Colors.black, Fonts.Calibri, true, false, 11,
-                Colors.gray, Colors.blue, Colors.transparent);
+                Colors.getColorCode(Colors.black), Fonts.Calibri, true, false, 11,
+                Colors.getColorCode(Colors.gray), Colors.getColorCode(Colors.blue), Colors.getColorCode(Colors.transparent));
     }
 }

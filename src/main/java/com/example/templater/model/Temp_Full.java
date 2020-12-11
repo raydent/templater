@@ -1,5 +1,13 @@
 package com.example.templater.model;
 
+import com.example.templater.tempBuilder.*;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+
+import javax.swing.*;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
+
 public class Temp_Full {
 
     //For the title page
@@ -118,6 +126,41 @@ public class Temp_Full {
     private String table_bold;
     private String table_italic;
 
+    public void replaceCheckboxNulls() {
+        if (title_page == null) title_page = "0";
+        if (numeration == null) numeration = "0";
+        if (footer == null) footer = "0";
+        if (header == null) header = "0";
+        if (title_name_bold == null) title_name_bold = "0";
+        if (title_name_italic == null) title_name_italic = "0";
+        if (title_name_underline == null) title_name_underline = "0";
+        if (title_organization_bold == null) title_organization_bold = "0";
+        if (title_organization_italic == null) title_organization_italic = "0";
+        if (title_organization_underline == null) title_organization_underline = "0";
+        if (title_description_bold == null) title_description_bold = "0";
+        if (title_description_italic == null) title_description_italic = "0";
+        if (title_description_underline == null) title_description_underline = "0";
+        if (title_type_bold == null) title_type_bold = "0";
+        if (title_type_italic == null) title_type_italic = "0";
+        if (title_type_underline == null) title_type_underline = "0";
+        if (h1_bold == null) h1_bold = "0";
+        if (h1_italic == null) h1_italic = "0";
+        if (h1_underline == null) h1_underline = "0";
+        if (h2_bold == null) h2_bold = "0";
+        if (h2_italic == null) h2_italic = "0";
+        if (h2_underline == null) h2_underline = "0";
+        if (h3_bold == null) h3_bold = "0";
+        if (h3_italic == null) h3_italic = "0";
+        if (h3_underline == null) h3_underline = "0";
+        if (h4_bold == null) h4_bold = "0";
+        if (h4_italic == null) h4_italic = "0";
+        if (h4_underline == null) h4_underline = "0";
+        if (h5_bold == null) h5_bold = "0";
+        if (h5_italic == null) h5_italic = "0";
+        if (h5_underline == null) h5_underline = "0";
+        if (table_bold == null) table_bold = "0";
+        if (table_italic == null) table_italic = "0";
+    }
 
     public String getTitle_type() {
         return title_type;
