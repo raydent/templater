@@ -1,6 +1,6 @@
 package com.example.templater.model;
 
-import org.springframework.data.annotation.Transient;
+//import org.springframework.data.annotation.Transient;
 
 import javax.persistence.*;
 import java.util.Arrays;
