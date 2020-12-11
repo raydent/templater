@@ -11,8 +11,8 @@ public class MainTestTempCreation {
         TemplateCreater templateCreater = new TemplateCreater();
         TempParams tempParams = TempParams.getDefaultTemp2Params();
         TitleParams titleParams = TitleParams.getDefaultTemp2TitleParams();
-        // порядок элементов (соблюдать строго): header 1, header 2, header 3, ..., header n (n <= 5), header(верхний колонтитул),
-        // footer, textField. Последние три элемента должны быть: два колонтитула(null оба если нет), textField.
+        // порядок элементов (соблюдать строго): header 1, header 2, header 3, header 4, header 5 (если нет хедера то null),
+        // header(верхний колонтитул) (null если нет),footer (null если нет), textField (null, если нет).
         List<ParagraphParams> paragraphParamsList = ParagraphParams.getDefaultTemp2ParParams();
         TableParams tableParams = TableParams.getDefaultTemplate2TableParams();
         try {
