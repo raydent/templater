@@ -231,6 +231,17 @@ public class TemplateCreater {
         document = createFieldText(document, paragraphParamsList.get(paragraphParamsList.size() - 1));
 
         XWPFTable table = document.createTable(tableParams.getRows(), tableParams.getColoms());
+
+        STHexColor color = STHexColor.Factory.newInstance();
+        color.setStringValue(tableParams.getBorderColor());
+        CTTblBorders borders= table.getCTTbl().getTblPr().getTblBorders();
+        borders.getLeft().setColor(color);
+        borders.getBottom().setColor(color);
+        borders.getRight().setColor(color);
+        borders.getTop().setColor(color);
+        borders.getInsideH().setColor(color);
+        borders.getInsideV().setColor(color);
+
         table.setTableAlignment(TableRowAlign.LEFT);
         CTTblLayoutType t = table.getCTTbl().getTblPr().addNewTblLayout();
         t.setType(STTblLayoutType.FIXED);
@@ -253,15 +264,28 @@ public class TemplateCreater {
                 if (i == 0) {
                     tableRow.getCell(j).setColor(tableParams.getHeadingCellColor());
                 }
+                else {
+                    tableRow.getCell(j).setColor(tableParams.getCommonCellColor());
+                }
                 run = tableRow.getCell(j).getParagraphs().get(0).createRun();
                 run.setText(" ");
                 if (i == 0) {
                     run.setFontFamily(Fonts.getFontString(tableParams.getHeadingTextFont()));
                     run.setFontSize(tableParams.getHeadingTextFontSize());
-                    run.setBold(true);
+                    run.setColor(tableParams.getHeadingCellTextColor());
+                    if (tableParams.isHeadingTextBold()) {
+                        run.setBold(true);
+                    }
+                    if (tableParams.isHeadingTextItalic()) {
+                        run.setItalic(true);
+                    }
                 }
-                run.setFontFamily("Calibri");
-                run.setFontSize(11);
+                else {
+                    run.setFontFamily(Fonts.getFontString(tableParams.getHeadingTextFont()));
+                    run.setFontSize(tableParams.getHeadingTextFontSize());
+                    run.setColor(tableParams.getHeadingCellTextColor());
+                }
+
             }
         }
 
@@ -437,7 +461,10 @@ public class TemplateCreater {
             paragraph.getCTP().addNewFldSimple().setInstr("PAGE \\* ARABIC MERGEFORMAT");
         }
 
-        document = createTitlePage(document, titleParams, tempParams.getField());
+
+        if (tempParams.isTitle_page()) {
+            document = createTitlePage(document, titleParams, tempParams.getField());
+        }
         document = createDefaultMainPage(document, tempParams, paragraphParamsList, tempParams.getField(), tableParams);
 
         if (tempParams.isNumeration()) {
