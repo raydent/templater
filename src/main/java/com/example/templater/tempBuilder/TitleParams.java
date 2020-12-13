@@ -47,7 +47,6 @@ public class TitleParams {
                         temp.getTitle_description_text_color().substring(1));
                 break;
             case (2):
-                break;
             case (3):
                 this.firstLine = new ParagraphParams(temp.getTitle_type_font(),
                         temp.getTitle_type_font_size(),
