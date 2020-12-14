@@ -47,6 +47,7 @@
 
         <label><input type="checkbox" value="1" th:field="*{temp.header}"><span>Header</span></label><br>
 
+        <hr  align="left" width="400px">
         <label><b>Local params</b></label><br>
     </div>
 
@@ -56,7 +57,7 @@
 
 
             <select th:field="*{temp.title_alignment}">
-                <option selected value="CENTER">Alignment</option>
+                <option selected value="LEFT">Alignment</option>
                 <option value="LEFT">left</option>
                 <option value="RIGHT">right</option>
                 <option value="CENTER">middle</option>
@@ -64,10 +65,9 @@
             </select><br>
 
           <div id="Name">
+              <hr  align="left" width="400px">
+              <label><b>Name params</b></label><br>
 
-
-            <label>Input name</label>
-            <input type="text" th:field="*{temp.title_name}"><br>
 
 
             <select th:field="*{temp.title_name_font}">
@@ -100,10 +100,9 @@
 
 
             <div if="Organization">
+                <hr  align="left" width="400px">
+                <label><b>Organization params</b></label><br>
 
-
-            <label>Input Organization</label>
-            <input type="text" th:field="*{temp.title_organization}"><br>
 
                 <select th:field="*{temp.title_organization_font}">
                     <option  value="Times_New_Roman" selected>Font</option>
@@ -135,8 +134,8 @@
 
 
             <div id="Description">
-            <label>Input Description</label>
-            <input type="text" th:field="*{temp.title_description}"><br>
+                <hr  align="left" width="400px">
+                <label><b>Description params</b></label><br>
 
                 <select th:field="*{temp.title_description_font}">
                     <option  value="Times_New_Roman" selected>Font</option>
@@ -168,6 +167,8 @@
             </div>
 
             <div id="Type">
+                <hr  align="left" width="400px">
+                <label><b>Type params</b></label><br>
             <select th:field="*{temp.title_type}">
                 <option  value="1" selected>Type</option>
                 <option value="1">With date</option>
@@ -175,7 +176,7 @@
             </select>
 
                 <br><select th:field="*{temp.title_type_alignment}">
-                    <option selected value="CENTER">Alignment</option>
+                    <option selected value="LEFT">Alignment</option>
                     <option value="LEFT">left</option>
                     <option value="RIGHT">right</option>
                     <option value="CENTER">middle</option>
@@ -239,7 +240,7 @@
 
 
             <select th:field="*{temp.h1_alignment}">
-                <option selected value="CENTER">Alignment</option>
+                <option selected value="LEFT">Alignment</option>
                 <option value="LEFT">left</option>
                 <option value="RIGHT">right</option>
                 <option value="CENTER">middle</option>
@@ -277,7 +278,7 @@
 
 
             <select th:field="*{temp.h2_alignment}">
-                <option selected value="CENTER">Alignment</option>
+                <option selected value="LEFT">Alignment</option>
                 <option value="LEFT">left</option>
                 <option value="RIGHT">right</option>
                 <option value="CENTER">middle</option>
@@ -315,7 +316,7 @@
 
 
             <select th:field="*{temp.h3_alignment}">
-                <option selected value="CENTER">Alignment</option>
+                <option selected value="LEFT">Alignment</option>
                 <option value="LEFT">left</option>
                 <option value="RIGHT">right</option>
                 <option value="CENTER">middle</option>
@@ -353,7 +354,7 @@
 
 
             <select th:field="*{temp.h4_alignment}">
-                <option selected value="CENTER">Alignment</option>
+                <option selected value="LEFT">Alignment</option>
                 <option value="LEFT">left</option>
                 <option value="RIGHT">right</option>
                 <option value="CENTER">middle</option>
@@ -391,7 +392,7 @@
 
 
             <select th:field="*{temp.h5_alignment}">
-                <option selected value="CENTER">Alignment</option>
+                <option selected value="LEFT">Alignment</option>
                 <option value="LEFT">left</option>
                 <option value="RIGHT">right</option>
                 <option value="CENTER">middle</option>
@@ -405,6 +406,7 @@
 
         <div id="Table">
 
+            <hr  align="left" width="400px">
             <label><b>Table params</b></label><br>
             <label>Heading cell text color<input type="color"  value="black" th:field="*{temp.table_heading_cell_text_color}"></label><br>
             <label>Heading cell color<input type="color"  value="#95A5A6" th:field="*{temp.table_heading_cell_color}"></label><br>
