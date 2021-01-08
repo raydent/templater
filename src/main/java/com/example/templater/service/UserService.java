@@ -1,6 +1,7 @@
 package com.example.templater.service;
 
 import com.example.templater.model.Role;
+import com.example.templater.model.Temp_Full;
 import com.example.templater.model.User;
 import com.example.templater.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.security.taglibs.authz.JspAuthorizeTag;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class UserService implements IUserService {
@@ -58,5 +60,11 @@ public class UserService implements IUserService {
     @Override
     public void deleteUserById(Integer id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Temp_Full> getTemplatesListByName(String name) {
+        User user = userRepository.findUserByUsername(name);
+        return user.getTemp_FullList();
     }
 }

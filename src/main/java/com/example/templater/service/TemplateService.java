@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 @Transactional
@@ -20,5 +21,8 @@ public class TemplateService {
     public Temp_Full saveTemplate(Temp_Full template) {
         entityManager.persist(template);
         return template;
+    }
+    public Temp_Full getById(int userId){
+        return entityManager.find(Temp_Full.class, userId);
     }
 }

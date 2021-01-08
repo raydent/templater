@@ -30,6 +30,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Temp_Full> temp_FullList;
 
+
+
     public String getConfirmationPassword() {
         return confirmationPassword;
     }

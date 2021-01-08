@@ -6,6 +6,7 @@ import com.example.templater.model.User;
 import com.example.templater.service.IUserService;
 import com.example.templater.service.TemplateService;
 import com.example.templater.tempBuilder.*;
+import com.sun.xml.bind.v2.runtime.output.SAXOutput;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +92,16 @@ public class MainController {
         user.addTemp_Full(temp);
         userService.saveUserUnsafe(user);
         //templateService.saveTemplate(temp);
+    }
+
+    //function for testing selecting templates from db
+    @PostMapping(value = "/temp", params = "get")
+    public void getTemplates(@ModelAttribute("temp") Temp_Full temp,
+                             Authentication authentication){
+        String username = authentication.getName();
+        List<Temp_Full> temps = userService.getTemplatesListByName(username);
+        System.out.println(temps.size());
+        System.out.println(temps.get(1).getTable().getTable_cell_border_color());
     }
 
     @PostMapping(value = "/temp", params = "download", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
