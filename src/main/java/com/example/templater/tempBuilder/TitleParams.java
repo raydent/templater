@@ -150,7 +150,7 @@ public class TitleParams {
                 ParagraphAlignment.LEFT, Colors.getColorCode(Colors.steel_blue), Colors.getColorCode(Colors.steel_blue));
         ParagraphParams paramsDateField = new ParagraphParams(Fonts.Calibri, 14, false, false, false,
                 ParagraphAlignment.LEFT, Colors.getColorCode(Colors.steel_blue), Colors.getColorCode(Colors.steel_blue));
-        return new TitleParams(1, paramsFirstLine, paramsSecondLine, paramsThirdLine, null, paramsNameField, paramsDateField);
+        return new TitleParams(2, paramsFirstLine, paramsSecondLine, paramsThirdLine, null, paramsNameField, paramsDateField);
     }
 
     public static TitleParams getDefaultTemp2TitleParams() {
@@ -162,7 +162,7 @@ public class TitleParams {
                 ParagraphAlignment.LEFT, Colors.getColorCode(Colors.aqua), Colors.getColorCode(Colors.aqua));
         ParagraphParams dateColomn = new ParagraphParams(Fonts.Calibria, 12, false, false, false,
                 ParagraphAlignment.LEFT, Colors.getColorCode(Colors.white), Colors.getColorCode(Colors.white));
-        return new TitleParams(2, paramsFirstLine, paramsSecondLine, paramsThirdLine, dateColomn, null, null);
+        return new TitleParams(1, paramsFirstLine, paramsSecondLine, paramsThirdLine, dateColomn, null, null);
     }
     public static TitleParams getDefaultTemp3TitleParams() {
         ParagraphParams paramsFirstLine = new ParagraphParams(Fonts.Arial, 36, false, false, false,
@@ -174,7 +174,7 @@ public class TitleParams {
 
         ParagraphParams dateColomn = new ParagraphParams(Fonts.Arial, 12, false, false, false,
                 ParagraphAlignment.LEFT, Colors.getColorCode(Colors.white), Colors.getColorCode(Colors.white));
-        return new TitleParams(3, paramsFirstLine, paramsSecondLine, paramsThirdLine, dateColomn, null, null);
+        return new TitleParams(1, paramsFirstLine, paramsSecondLine, paramsThirdLine, dateColomn, null, null);
     }
 
 }

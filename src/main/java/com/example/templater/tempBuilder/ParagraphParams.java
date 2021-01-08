@@ -208,7 +208,7 @@ public class ParagraphParams {
         list.add(heading4);
         list.add(heading5);
         list.add(null);
-        list.add(footer);
+        list.add(null);
         list.add(textField);
         return list;
     }

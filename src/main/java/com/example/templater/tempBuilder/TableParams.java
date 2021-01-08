@@ -143,16 +143,16 @@ public class TableParams {
     public static TableParams getDefaultTemplate1TableParams() {
         return new TableParams(2, 2, Arrays.asList(BigInteger.valueOf(5000), BigInteger.valueOf(5000)),
                 Colors.getColorCode(Colors.black), Fonts.Calibri, true, false, 11,
-                Colors.getColorCode(Colors.gray), Colors.getColorCode(Colors.blue), Colors.getColorCode(Colors.transparent));
+                Colors.getColorCode(Colors.gray), Colors.getColorCode(Colors.blue), Colors.getColorCode(Colors.gray));
     }
     public static TableParams getDefaultTemplate2TableParams() {
         return new TableParams(2, 2, Arrays.asList(BigInteger.valueOf(1500), BigInteger.valueOf(7000)),
                 Colors.getColorCode(Colors.black), Fonts.Calibri, true, false, 11,
-                Colors.getColorCode(Colors.gray), Colors.getColorCode(Colors.blue), Colors.getColorCode(Colors.transparent));
+                Colors.getColorCode(Colors.gray), Colors.getColorCode(Colors.blue), Colors.getColorCode(Colors.gray));
     }
     public static TableParams getDefaultTemplate3TableParams() {
         return new TableParams(3, 3, Arrays.asList(BigInteger.valueOf(3500), BigInteger.valueOf(3500), BigInteger.valueOf(3500)),
                 Colors.getColorCode(Colors.black), Fonts.Calibri, true, false, 11,
-                Colors.getColorCode(Colors.gray), Colors.getColorCode(Colors.blue), Colors.getColorCode(Colors.transparent));
+                Colors.getColorCode(Colors.gray), Colors.getColorCode(Colors.blue), Colors.getColorCode(Colors.gray));
     }
 }
