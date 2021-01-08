@@ -6,10 +6,12 @@ import com.example.templater.model.User;
 import com.example.templater.service.IUserService;
 import com.example.templater.service.TemplateService;
 import com.example.templater.tempBuilder.*;
+import com.sun.xml.bind.v2.runtime.output.SAXOutput;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -80,12 +82,34 @@ public class MainController {
     }
 
 
-    @PostMapping(value = "/temp", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+    @PostMapping(value = "/temp", params = "save")
+    public void saveTemplate(@ModelAttribute("temp") Temp_Full temp,
+                             Authentication authentication){
+        temp.replaceCheckboxNulls();
+        String username = authentication.getName();
+        User user = userService.getUserByName(username);
+        temp.fillAllDBParams(user);
+        user.addTemp_Full(temp);
+        userService.saveUserUnsafe(user);
+        //templateService.saveTemplate(temp);
+    }
+
+    //function for testing selecting templates from db
+    @PostMapping(value = "/temp", params = "get")
+    public void getTemplates(@ModelAttribute("temp") Temp_Full temp,
+                             Authentication authentication){
+        String username = authentication.getName();
+        List<Temp_Full> temps = userService.getTemplatesListByName(username);
+        System.out.println(temps.size());
+        System.out.println(temps.get(1).getTable().getTable_cell_border_color());
+    }
+
+    @PostMapping(value = "/temp", params = "download", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     @ResponseBody
-    public byte[] saveBooks(@ModelAttribute("temp") Temp_Full temp) {
+    public byte[] downloadTemplate(@ModelAttribute("temp") Temp_Full temp,
+                            Authentication authentication) {
 
         temp.replaceCheckboxNulls();
-        templateService.saveTemplate(temp);
         ParagraphParams firstParagraph = new ParagraphParams(temp, 1);
         ParagraphParams secondParagraph = new ParagraphParams(temp, 2);
         ParagraphParams thirdParagraph = new ParagraphParams(temp, 3);
@@ -95,7 +119,6 @@ public class MainController {
                 ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
         List<ParagraphParams> paragraphParamsList = Arrays.asList(firstParagraph, secondParagraph,
                 thirdParagraph, fourthParagraph, fifthParagraph, null, null, textField);
-
 
 
         TitleParams titleParams = new TitleParams(temp);
@@ -119,10 +142,6 @@ public class MainController {
             e.printStackTrace();
         }
         return bytes;
-        //FileInputStream fis = new FileInputStream(file);
-//        return (//TempParams tempParams, TitleParams titleParams, List< ParagraphParams > paragraphParamsList, TableParams
-//        tableParams
-        //return "tempresult";
     }
 
 

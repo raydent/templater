@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 @Transactional
@@ -18,18 +19,10 @@ public class TemplateService {
     @PersistenceContext
     private EntityManager entityManager;
     public Temp_Full saveTemplate(Temp_Full template) {
-        template.fillHeaders();
-        template.fillTable();
-        template.fillTitleHeaders();
-        template.replaceCheckboxNulls();
-        template.getTable().setTemp_full(template);
-        for (TitleHeader titleHeader : template.getTitle_headers()) {
-            titleHeader.setTemp_full(template);
-        }
-        for (Header header : template.getHeaders()) {
-            header.setTemp_full(template);
-        }
         entityManager.persist(template);
         return template;
+    }
+    public Temp_Full getById(int userId){
+        return entityManager.find(Temp_Full.class, userId);
     }
 }

@@ -7,5 +7,6 @@ public interface IUserService extends UserDetailsService {
     User getUserById(Integer id);
     User getUserByName(String name);
     boolean saveUser(User user);
+    void saveUserUnsafe(User user);
     void deleteUserById(Integer id);
 }
