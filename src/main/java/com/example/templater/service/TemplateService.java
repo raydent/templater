@@ -18,17 +18,6 @@ public class TemplateService {
     @PersistenceContext
     private EntityManager entityManager;
     public Temp_Full saveTemplate(Temp_Full template) {
-        template.fillHeaders();
-        template.fillTable();
-        template.fillTitleHeaders();
-        template.replaceCheckboxNulls();
-        template.getTable().setTemp_full(template);
-        for (TitleHeader titleHeader : template.getTitle_headers()) {
-            titleHeader.setTemp_full(template);
-        }
-        for (Header header : template.getHeaders()) {
-            header.setTemp_full(template);
-        }
         entityManager.persist(template);
         return template;
     }

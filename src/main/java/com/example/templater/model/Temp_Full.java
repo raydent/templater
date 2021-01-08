@@ -14,7 +14,7 @@ public class Temp_Full {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
-    private int user_id;
+    //private int user_id;
     private String title_type;
     private String title_name;
     private String title_organization;
@@ -28,6 +28,10 @@ public class Temp_Full {
     private List<TitleHeader> title_headers;
     @OneToOne(mappedBy = "temp_full", cascade = CascadeType.ALL, orphanRemoval = true)
     private TempTable table;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "users_id")
+    private User user;
 
     //For the name
     @Transient
@@ -216,6 +220,25 @@ public class Temp_Full {
     @Transient
     private String table_italic;
 
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void fillAllDBParams(User user){
+        fillHeaders();
+        fillTable();
+        fillTitleHeaders();
+        replaceCheckboxNulls();
+        table.setTemp_full(this);
+        for (TitleHeader titleHeader : getTitle_headers()) {
+            titleHeader.setTemp_full(this);
+        }
+        for (Header header : getHeaders()) {
+            header.setTemp_full(this);
+        }
+        setUser(user);
+    }
     public List<Header> getHeaders() {
         return headers;
     }
@@ -248,13 +271,13 @@ public class Temp_Full {
         this.id = id;
     }
 
-    public int getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
-    }
+//    public int getUser_id() {
+//        return user_id;
+//    }
+//
+//    public void setUser_id(int user_id) {
+//        this.user_id = user_id;
+//    }
 
     public void fillTitleHeaders() {
         //String type, String font, String font_size, String bold, String italic, String underline, String text_color, String text_highlight_color

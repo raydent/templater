@@ -51,6 +51,11 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public void saveUserUnsafe(User user) {
+        userRepository.save(user);
+    }
+
+    @Override
     public void deleteUserById(Integer id) {
         userRepository.deleteById(id);
     }

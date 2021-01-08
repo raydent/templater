@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -26,6 +27,9 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Temp_Full> temp_FullList;
+
     public String getConfirmationPassword() {
         return confirmationPassword;
     }
@@ -34,6 +38,13 @@ public class User implements UserDetails {
         this.confirmationPassword = confirmationPassword;
     }
 
+    public void addTemp_Full(Temp_Full temp_full){
+        temp_FullList.add(temp_full);
+    }
+
+    public List<Temp_Full> getTemp_FullList() {
+        return temp_FullList;
+    }
 
     public void setUsername(String username) {
         this.username = username;

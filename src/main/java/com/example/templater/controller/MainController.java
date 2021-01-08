@@ -10,6 +10,7 @@ import org.apache.commons.compress.utils.IOUtils;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -80,12 +81,24 @@ public class MainController {
     }
 
 
-    @PostMapping(value = "/temp", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+    @PostMapping(value = "/temp", params = "save")
+    public void saveTemplate(@ModelAttribute("temp") Temp_Full temp,
+                             Authentication authentication){
+        temp.replaceCheckboxNulls();
+        String username = authentication.getName();
+        User user = userService.getUserByName(username);
+        temp.fillAllDBParams(user);
+        user.addTemp_Full(temp);
+        userService.saveUserUnsafe(user);
+        //templateService.saveTemplate(temp);
+    }
+
+    @PostMapping(value = "/temp", params = "download", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     @ResponseBody
-    public byte[] saveBooks(@ModelAttribute("temp") Temp_Full temp) {
+    public byte[] downloadTemplate(@ModelAttribute("temp") Temp_Full temp,
+                            Authentication authentication) {
 
         temp.replaceCheckboxNulls();
-        templateService.saveTemplate(temp);
         ParagraphParams firstParagraph = new ParagraphParams(temp, 1);
         ParagraphParams secondParagraph = new ParagraphParams(temp, 2);
         ParagraphParams thirdParagraph = new ParagraphParams(temp, 3);
@@ -95,7 +108,6 @@ public class MainController {
                 ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
         List<ParagraphParams> paragraphParamsList = Arrays.asList(firstParagraph, secondParagraph,
                 thirdParagraph, fourthParagraph, fifthParagraph, null, null, textField);
-
 
 
         TitleParams titleParams = new TitleParams(temp);
@@ -119,10 +131,6 @@ public class MainController {
             e.printStackTrace();
         }
         return bytes;
-        //FileInputStream fis = new FileInputStream(file);
-//        return (//TempParams tempParams, TitleParams titleParams, List< ParagraphParams > paragraphParamsList, TableParams
-//        tableParams
-        //return "tempresult";
     }
 
 
