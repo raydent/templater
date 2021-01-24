@@ -18,4 +18,15 @@ public enum Fonts {
             default: return "Calibri";
         }
     }
+    public static Fonts getFontEnum(String str) {
+        switch (str) {
+            case "Arial": return Arial;
+            case "Tahoma": return Tahoma;
+            case "Calibri": return Calibri;
+            case "Times New Roman": return Times_New_Roman;
+            case "Kambria": return Kambria;
+            case "Calibria": return Calibria;
+            default: return Calibri;
+        }
+    }
 }

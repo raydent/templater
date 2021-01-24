@@ -15,8 +15,10 @@ public class ParagraphParams {
     private boolean italic = false;
     private boolean underline = false;
     private ParagraphAlignment alignment = ParagraphAlignment.LEFT;
-    private String textHighlightColor = Colors.getColorCode(Colors.black);
+    private String textHighlightColor;
     private String textColor = Colors.getColorCode(Colors.black);
+
+    public ParagraphParams() {}
 
     public ParagraphParams(Fonts font, Integer fontSize, boolean bold, boolean italic, boolean underline,
                            ParagraphAlignment alignment, String textHighlightColor, String textColor) {

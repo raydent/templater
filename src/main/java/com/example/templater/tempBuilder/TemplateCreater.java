@@ -66,7 +66,6 @@ public class TemplateCreater {
         switch (titleParams.getType()) {
             case 1: {
                 run.setText("Organisation");
-                Fonts font = titleParams.getFirstLine().getFont();
                 run.setFontFamily(Fonts.getFontString(titleParams.getFirstLine().getFont()));
                 run.setFontSize(titleParams.getFirstLine().getFontSize());
                 run.setColor(titleParams.getFirstLine().getTextColor());
@@ -388,13 +387,6 @@ public class TemplateCreater {
         ctpBdr.setBottom(ctBorder);
         ppr.setPBdr(ctpBdr);
 
-        CTSpacing spacing = CTSpacing.Factory.newInstance();
-        spacing.setAfter(BigInteger.valueOf(0));
-        spacing.setBefore(BigInteger.valueOf(0));
-        spacing.setLineRule(STLineSpacingRule.AUTO);
-        spacing.setLine(BigInteger.valueOf((long) tempParams.getInterval_between_lines() * 240));
-        ctStyle1.getPPr().setSpacing(spacing);
-
         for (int i = 0; i < styleList.size(); ++i) {
             if (paragraphParamsList.get(i) == null) {
                 continue;
@@ -404,6 +396,11 @@ public class TemplateCreater {
             if (rpr == null) {
                 rpr = ctStyle.addNewRPr();
             }
+            CTSpacing spacing = CTSpacing.Factory.newInstance();
+            spacing.setAfter(BigInteger.valueOf(0));
+            spacing.setBefore(BigInteger.valueOf(0));
+            spacing.setLineRule(STLineSpacingRule.AUTO);
+            spacing.setLine(BigInteger.valueOf((long) tempParams.getInterval_between_lines() * 240));
             ctStyle.getPPr().setSpacing(spacing);
 
             //color

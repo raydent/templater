@@ -18,7 +18,7 @@ public class TableParams {
     private Integer headingTextFontSize = 11;
     private String headingCellColor = Colors.getColorCode(Colors.gray);
     private String borderColor = Colors.getColorCode(Colors.gray);
-    private String CommonCellColor = Colors.getColorCode(Colors.transparent);
+    private String CommonCellColor;
 
     public TableParams() {}
 
