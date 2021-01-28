@@ -16,7 +16,7 @@ public class TemplateCreater {
     public XWPFDocument createTitlePage(XWPFDocument document, TitleParams titleParams, Fields fields) {
         //создание поля Date в правом верхнем углу
         if (titleParams.getType() == 1) {
-            XWPFTable table = document.createTable();;
+            XWPFTable table = document.createTable();
             table.setTableAlignment(TableRowAlign.RIGHT);
             table.removeBorders();
             CTTblWidth width = table.getCTTbl().addNewTblPr().addNewTblW();
@@ -36,13 +36,20 @@ public class TemplateCreater {
             run.setColor(titleParams.getDateColomn().getTextColor());
             run.setFontFamily(Fonts.getFontString(titleParams.getDateColomn().getFont()));
             run.setFontSize(titleParams.getDateColomn().getFontSize());
+            if (titleParams.getDateColomn().isBold()) {
+                run.setBold(true);
+            }
+            if (titleParams.getDateColomn().isItalic()) {
+                run.setItalic(true);
+            }
+            if (titleParams.getDateColomn().isUnderline()) {
+                run.setUnderline(UnderlinePatterns.SINGLE);
+            }
         }
 
-        //создание заголовка
-        XWPFParagraph emptyP = document.createParagraph();
-        emptyP.setSpacingAfter(3200);
-
         XWPFTable table = document.createTable();
+        table.getCTTbl().getTblPr().addNewTblpPr().setVertAnchor(STVAnchor.TEXT);
+        table.getCTTbl().getTblPr().getTblpPr().setTblpY(BigInteger.valueOf(2500));
         CTJc jc = table.getCTTbl().getTblPr().addNewJc();
         jc.setVal(STJc.LEFT);
         table.setTableAlignment(TableRowAlign.LEFT);
@@ -63,6 +70,34 @@ public class TemplateCreater {
         XWPFRun run = tableRowOne.getCell(0).getParagraphs().get(0).createRun();
         XWPFRun run2 = tableRowTwo.getCell(0).getParagraphs().get(0).createRun();
         XWPFRun run3 = tableRowThree.getCell(0).getParagraphs().get(0).createRun();
+        if (titleParams.getFirstLine().isBold()) {
+            run.setBold(true);
+        }
+        if (titleParams.getFirstLine().isItalic()) {
+            run.setItalic(true);
+        }
+        if (titleParams.getFirstLine().isUnderline()) {
+            run.setUnderline(UnderlinePatterns.SINGLE);
+        }
+        if (titleParams.getSecondLine().isBold()) {
+            run2.setBold(true);
+        }
+        if (titleParams.getSecondLine().isItalic()) {
+            run2.setItalic(true);
+        }
+        if (titleParams.getSecondLine().isUnderline()) {
+            run2.setUnderline(UnderlinePatterns.SINGLE);
+        }
+        if (titleParams.getThirdLine().isBold()) {
+            run3.setBold(true);
+        }
+        if (titleParams.getThirdLine().isItalic()) {
+            run3.setItalic(true);
+        }
+        if (titleParams.getThirdLine().isUnderline()) {
+            run3.setUnderline(UnderlinePatterns.SINGLE);
+        }
+
         switch (titleParams.getType()) {
             case 1: {
                 run.setText("Organisation");
@@ -99,10 +134,9 @@ public class TemplateCreater {
 
         //создание полей Name и Date снизу титульника
         if (titleParams.getType() != 1) {
-            XWPFParagraph emptyP1 = document.createParagraph();
-            emptyP1.createRun();
-            emptyP1.setSpacingAfter(7200);
             XWPFTable table1 = document.createTable();
+            table1.getCTTbl().getTblPr().addNewTblpPr().setVertAnchor(STVAnchor.TEXT);
+            table1.getCTTbl().getTblPr().getTblpPr().setTblpY(BigInteger.valueOf(10500));
             table1.setTableAlignment(TableRowAlign.LEFT);
             table1.removeBorders();
             XWPFTableRow table1RowOne = table1.getRow(0);
@@ -112,6 +146,15 @@ public class TemplateCreater {
             run.setFontFamily(Fonts.getFontString(titleParams.getNameField().getFont()));
             run.setFontSize(titleParams.getNameField().getFontSize());
             run.setColor(titleParams.getNameField().getTextColor());
+            if (titleParams.getNameField().isBold()) {
+                run.setBold(true);
+            }
+            if (titleParams.getNameField().isItalic()) {
+                run.setItalic(true);
+            }
+            if (titleParams.getNameField().isUnderline()) {
+                run.setUnderline(UnderlinePatterns.SINGLE);
+            }
 
             XWPFTableRow table1RowTwo = table1.createRow();
             table1RowTwo.getCell(0).getParagraphs().get(0).setStyle("NoSpacing");
@@ -120,6 +163,15 @@ public class TemplateCreater {
             run.setFontFamily(Fonts.getFontString(titleParams.getDateField().getFont()));
             run.setFontSize(titleParams.getDateField().getFontSize());
             run.setColor(titleParams.getDateField().getTextColor());
+            if (titleParams.getDateField().isBold()) {
+                run.setBold(true);
+            }
+            if (titleParams.getDateField().isItalic()) {
+                run.setItalic(true);
+            }
+            if (titleParams.getDateField().isUnderline()) {
+                run.setUnderline(UnderlinePatterns.SINGLE);
+            }
         }
 
         //установка полей на странице
@@ -132,8 +184,12 @@ public class TemplateCreater {
     }
 
     public XWPFDocument createFieldText(XWPFDocument document, ParagraphParams paragraphParams, double number) {
-        if (paragraphParams == null)
+        if (paragraphParams == null) {
+            XWPFParagraph paragraph = document.createParagraph();
+            XWPFRun run = paragraph.createRun();
+            run.setText("Text");
             return document;
+        }
         XWPFParagraph paragraph = document.createParagraph();
         paragraph.setAlignment(paragraphParams.getAlignment());
         paragraph.setSpacingAfter(150);
@@ -153,7 +209,6 @@ public class TemplateCreater {
         if (paragraphParams.isUnderline()) {
             run.setUnderline(UnderlinePatterns.SINGLE);
         }
-
         return document;
     }
 
@@ -171,6 +226,7 @@ public class TemplateCreater {
         cTLvl0.addNewSuff().setVal(STLevelSuffix.SPACE);
 
         CTLvl cTLvl1 = cTAbstractNum.addNewLvl();
+        cTLvl1.addNewPStyle().setVal("Heading2");
         cTLvl1.setIlvl(BigInteger.ONE);
         cTLvl1.addNewNumFmt().setVal(STNumberFormat.DECIMAL);
         cTLvl1.addNewLvlText().setVal("%1.%2");
@@ -178,6 +234,7 @@ public class TemplateCreater {
         cTLvl1.addNewSuff().setVal(STLevelSuffix.SPACE);
 
         CTLvl cTLvl2 = cTAbstractNum.addNewLvl();
+        cTLvl2.addNewPStyle().setVal("Heading3");
         cTLvl2.setIlvl(BigInteger.TWO);
         cTLvl2.addNewNumFmt().setVal(STNumberFormat.DECIMAL);
         cTLvl2.addNewLvlText().setVal("%1.%2.%3");
@@ -185,6 +242,7 @@ public class TemplateCreater {
         cTLvl2.addNewSuff().setVal(STLevelSuffix.SPACE);
 
         CTLvl cTLvl3 = cTAbstractNum.addNewLvl();
+        cTLvl3.addNewPStyle().setVal("Heading4");
         cTLvl3.setIlvl(BigInteger.valueOf(3));
         cTLvl3.addNewNumFmt().setVal(STNumberFormat.DECIMAL);
         cTLvl3.addNewLvlText().setVal("%1.%2.%3.%4");
@@ -192,6 +250,7 @@ public class TemplateCreater {
         cTLvl3.addNewSuff().setVal(STLevelSuffix.SPACE);
 
         CTLvl cTLvl4 = cTAbstractNum.addNewLvl();
+        cTLvl4.addNewPStyle().setVal("Heading5");
         cTLvl4.setIlvl(BigInteger.valueOf(4));
         cTLvl4.addNewNumFmt().setVal(STNumberFormat.DECIMAL);
         cTLvl4.addNewLvlText().setVal("%1.%2.%3.%4.%5");
@@ -210,10 +269,10 @@ public class TemplateCreater {
         XWPFParagraph paragraph = doc.createParagraph();
         paragraph.setStyle(style);
         paragraph.setAlignment(paragraphParams.getAlignment());
-        paragraph.setNumID(numId);
+        //paragraph.setNumID(numId);
         paragraph.setSpacingAfter(100);
-        CTDecimalNumber ctDecimalNumber = paragraph.getCTP().getPPr().getNumPr().addNewIlvl();
-        ctDecimalNumber.setVal(numLevel);
+        //CTDecimalNumber ctDecimalNumber = paragraph.getCTP().getPPr().getNumPr().addNewIlvl();
+        //ctDecimalNumber.setVal(numLevel);
         XWPFRun run = paragraph.createRun();
         run.setText("Header");
     }
@@ -405,7 +464,10 @@ public class TemplateCreater {
 
             //color
             CTColor color = CTColor.Factory.newInstance();
-            color.setVal(hexToBytes(paragraphParamsList.get(i).getTextColor()));
+            STHexColor col = STHexColor.Factory.newInstance();
+            col.setStringValue(paragraphParamsList.get(i).getTextColor());
+            color.setVal(col);
+            //color.setVal(hexToBytes(paragraphParamsList.get(i).getTextColor()));
             rpr.setColor(color);
             //CTHighlight highlight = CTHighlight.Factory.newInstance();
             //highlight.setVal(STHighlightColor.BLUE);

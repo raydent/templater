@@ -2,7 +2,7 @@ package com.example.templater.tempBuilder;
 
 import com.example.templater.model.Temp_Full;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
-//заглушка
+
 public class TitleParams {
     private int type;
     private ParagraphParams firstLine;
@@ -137,6 +137,19 @@ public class TitleParams {
 
     public void setDateField(ParagraphParams dateField) {
         this.dateField = dateField;
+    }
+
+    @Override
+    public String toString() {
+        return "TitleParams{" +
+                "type=" + type +
+                ", firstLine=" + firstLine +
+                ", secondLine=" + secondLine +
+                ", thirdLine=" + thirdLine +
+                ", dateColomn=" + dateColomn +
+                ", nameField=" + nameField +
+                ", dateField=" + dateField +
+                '}';
     }
 
     public static TitleParams getDefaultTemp1TitleParams() {

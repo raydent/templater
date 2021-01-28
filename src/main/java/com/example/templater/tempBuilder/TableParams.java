@@ -140,6 +140,23 @@ public class TableParams {
         CommonCellColor = commonCellColor;
     }
 
+    @Override
+    public String toString() {
+        return "TableParams{" +
+                "rows=" + rows +
+                ", coloms=" + coloms +
+                /*", width=" + width +*/
+                ", headingCellTextColor='" + headingCellTextColor + '\'' +
+                ", headingTextFont=" + headingTextFont +
+                ", headingTextBold=" + headingTextBold +
+                ", headingTextItalic=" + headingTextItalic +
+                ", headingTextFontSize=" + headingTextFontSize +
+                ", headingCellColor='" + headingCellColor + '\'' +
+                ", borderColor='" + borderColor + '\'' +
+                ", CommonCellColor='" + CommonCellColor + '\'' +
+                '}';
+    }
+
     public static TableParams getDefaultTemplate1TableParams() {
         return new TableParams(2, 2, Arrays.asList(BigInteger.valueOf(5000), BigInteger.valueOf(5000)),
                 Colors.getColorCode(Colors.black), Fonts.Calibri, true, false, 11,

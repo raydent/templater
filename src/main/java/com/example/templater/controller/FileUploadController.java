@@ -1,6 +1,7 @@
 package com.example.templater.controller;
 
 import com.example.templater.model.Temp_Full;
+import com.example.templater.tempBuilder.AllTempParams;
 import com.example.templater.tempBuilder.TempParamsGetter;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,10 +21,10 @@ public class FileUploadController {
     @PostMapping
     public void upload(@RequestParam("file") MultipartFile file) {
         System.out.println("uploaded file " + file.getOriginalFilename());
-        try {
-            Temp_Full temp_full = TempParamsGetter.getTempParams(file);
+        /*try {
+            AllTempParams all = TempParamsGetter.getTempParams(file);
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }

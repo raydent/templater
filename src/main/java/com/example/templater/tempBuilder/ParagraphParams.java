@@ -162,6 +162,19 @@ public class ParagraphParams {
         this.textColor = textColor;
     }
 
+    @Override
+    public String toString() {
+        return "ParagraphParams{" +
+                "font=" + font +
+                ", fontSize=" + fontSize +
+                ", bold=" + bold +
+                ", italic=" + italic +
+                ", underline=" + underline +
+                ", alignment=" + alignment +
+                ", textHighlightColor='" + textHighlightColor + '\'' +
+                ", textColor='" + textColor + '\'' +
+                '}';
+    }
 
     public static List<ParagraphParams> getDefaultTemp1ParParams() {
         ParagraphParams heading1 = new ParagraphParams(Fonts.Calibri, 20, true, false, false,
