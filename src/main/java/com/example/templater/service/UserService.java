@@ -1,5 +1,6 @@
 package com.example.templater.service;
 
+import com.example.templater.model.Department;
 import com.example.templater.model.Role;
 import com.example.templater.model.Temp_Full;
 import com.example.templater.model.User;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class UserService implements IUserService {
@@ -65,6 +68,12 @@ public class UserService implements IUserService {
     @Override
     public List<Temp_Full> getTemplatesListByName(String name) {
         User user = userRepository.findUserByUsername(name);
-        return user.getTemp_FullList();
+        List<Temp_Full> userTemplates = user.getTemp_FullList();
+        Department department = user.getDepartment();
+        if (department != null && department.getManagerId() != user.getId()){
+            List<Temp_Full> managerTemplates = getUserById(department.getManagerId()).getTemp_FullList();
+            userTemplates = Stream.concat(userTemplates.stream(), managerTemplates.stream()).collect(Collectors.toList());
+        }
+        return userTemplates;
     }
 }

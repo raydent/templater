@@ -30,7 +30,17 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Temp_Full> temp_FullList;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "departments_id")
+    private Department department;
 
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
 
     public String getConfirmationPassword() {
         return confirmationPassword;
@@ -72,6 +82,9 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public void addRoles(Role role){
+        this.roles.add(role);
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();

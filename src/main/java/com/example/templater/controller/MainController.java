@@ -1,25 +1,36 @@
 package com.example.templater.controller;
 
 
+import com.example.templater.model.Department;
+import com.example.templater.model.Role;
 import com.example.templater.model.Temp_Full;
 import com.example.templater.model.User;
 import com.example.templater.service.IUserService;
 import com.example.templater.service.TemplateService;
 import com.example.templater.tempBuilder.*;
-import com.sun.xml.bind.v2.runtime.output.SAXOutput;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.http.HttpClient;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,6 +60,33 @@ public class MainController {
         return "login";
     }
 
+    @RequestMapping(value = "/angular/login", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody
+    User angularLogin(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
+        String header = httpServletRequest.getHeader("authorization");
+        String usernameAndPass = new String(Base64.getDecoder().decode(header.substring(header.indexOf(' ') + 1)));
+        String username = usernameAndPass.substring(0, usernameAndPass.indexOf(':'));
+        String password = usernameAndPass.substring(usernameAndPass.indexOf(':') + 1);
+
+        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UsernamePasswordAuthenticationToken authReq
+                = new UsernamePasswordAuthenticationToken(username, password);
+        User user = new User();
+
+        try {
+            Authentication auth = authenticationManager.authenticate(authReq);
+            SecurityContext sc = SecurityContextHolder.getContext();
+            sc.setAuthentication(auth);
+            System.out.println(auth.isAuthenticated());
+        }
+        catch (Exception e){
+            //e.printStackTrace();
+            return user;
+        }
+        user.setUsername(username);
+        user.setPassword(password);
+        return user;
+    }
 
 
     @GetMapping("/403")
@@ -71,8 +109,45 @@ public class MainController {
         return IOUtils.toByteArray(fis);
     }
 
+    @GetMapping("/department") //admin's functional to create department
+    public String getCreateDepartment(Model model) {
+        Department d = new Department();
+        model.addAttribute("departmentForm", d);
+        return "department";
+    }
 
+    @PostMapping("/department")
+    public String addUserToDepartment(@ModelAttribute("department") Department department, Authentication authentication){
+        Integer id = department.getManagerId();
+        User manager = userService.getUserById(id);
+        if (manager == null){
+            return "department";
+        }
+        manager.setDepartment(department);
+        manager.addRoles(new Role(3L, "ROLE_MANAGER"));
+        userService.saveUserUnsafe(manager);
+        return "redirect:/user";
+    }
 
+    @GetMapping("/managing")
+    public String managingForm(Model model) {
+        User usernameForm = new User();
+        model.addAttribute("usernameForm", usernameForm);
+        return "managing";
+    }
+
+    @PostMapping("/managing")
+    public String addUserToDepartment(@ModelAttribute("usernameForm") User usernameForm, Authentication authentication){
+        User manager = userService.getUserByName(authentication.getName());
+        User user = userService.getUserByName(usernameForm.getUsername());
+        if (user == null || manager == null){
+            System.out.println(user + " " + manager);
+            return "managing";
+        }
+        user.setDepartment(manager.getDepartment());
+        userService.saveUserUnsafe(user);
+        return "redirect:/user";
+    }
 
     @GetMapping("/temp")
     public String tempForm(Model model) {

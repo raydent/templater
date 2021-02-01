@@ -1,0 +1,25 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="en">
+<head>
+    <title> Login</title>
+<body>
+
+
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <div class="fadeIn first">
+            <label id="lable">Add user</label>
+        </div>
+
+        <form th:userDto="${usernameForm}" th:action="@{/managing}" th:method="post">
+            <input type="text" id="login" class="fadeIn second" name="username" placeholder="Username" required autofocus
+                   th:field="*{usernameForm.username}">
+            <!--span class="validation_message" th:if="${name != null}">
+                             [[${name}]]
+                    </span-->
+            <input id="button-sub" type="submit" class="fadeIn fourth" value="Submit">
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
