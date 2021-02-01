@@ -70,9 +70,12 @@ public class UserService implements IUserService {
         User user = userRepository.findUserByUsername(name);
         List<Temp_Full> userTemplates = user.getTemp_FullList();
         Department department = user.getDepartment();
-        if (department != null && department.getManagerId() != user.getId()){
+        if (department != null && !department.getManagerId().equals(user.getId())) {
             List<Temp_Full> managerTemplates = getUserById(department.getManagerId()).getTemp_FullList();
             userTemplates = Stream.concat(userTemplates.stream(), managerTemplates.stream()).collect(Collectors.toList());
+        }
+        for (int i = 0; i < userTemplates.size(); i++){
+            System.out.println(userTemplates.get(i).getId());
         }
         return userTemplates;
     }
