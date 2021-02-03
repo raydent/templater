@@ -29,10 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.http.HttpClient;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 //test
 @Controller
@@ -60,18 +57,12 @@ public class MainController {
         return "login";
     }
 
-    @RequestMapping(value = "/angular/login", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody
-    User angularLogin(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
-        String header = httpServletRequest.getHeader("authorization");
-        String usernameAndPass = new String(Base64.getDecoder().decode(header.substring(header.indexOf(' ') + 1)));
+    User checkUserByCredentials(String credentials){
+        String usernameAndPass = new String(Base64.getDecoder().decode(credentials.substring(credentials.indexOf(' ') + 1)));
         String username = usernameAndPass.substring(0, usernameAndPass.indexOf(':'));
         String password = usernameAndPass.substring(usernameAndPass.indexOf(':') + 1);
-
-        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UsernamePasswordAuthenticationToken authReq
                 = new UsernamePasswordAuthenticationToken(username, password);
-        User user = new User();
 
         try {
             Authentication auth = authenticationManager.authenticate(authReq);
@@ -81,13 +72,34 @@ public class MainController {
         }
         catch (Exception e){
             //e.printStackTrace();
-            return user;
+            return null;
         }
+        User user = new User();
         user.setUsername(username);
         user.setPassword(password);
         return user;
     }
 
+    @RequestMapping(value = "/angular/login", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody
+    User angularLogin(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        String credentials = httpServletRequest.getHeader("authorization");
+        return checkUserByCredentials(credentials);
+    }
+
+    @RequestMapping(value = "/angular/save", method = RequestMethod.GET, produces = "application/json")
+    public
+    Temp_Full saveTemplateAngular(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+        User user = checkUserByCredentials(httpServletRequest.getHeader("authorization"));
+        if (user == null){
+            return null;
+        }
+        System.out.println("Saving");
+        System.out.println(httpServletRequest.getHeader("t"));
+        System.out.println(httpServletRequest.getHeader("authorization"));
+        System.out.println(httpServletRequest.getHeader("Authorization"));
+        return new Temp_Full();
+    }
 
     @GetMapping("/403")
     public String error403() {
@@ -169,6 +181,7 @@ public class MainController {
         //templateService.saveTemplate(temp);
     }
 
+
     //function for testing selecting templates from db
     @PostMapping(value = "/temp", params = "get")
     public void getTemplates(@ModelAttribute("temp") Temp_Full temp,
@@ -178,6 +191,7 @@ public class MainController {
         System.out.println(temps.size());
         System.out.println(temps.get(1).getTable().getTable_cell_border_color());
     }
+
 
     @PostMapping(value = "/temp", params = "download", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     @ResponseBody
