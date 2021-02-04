@@ -1,4 +1,4 @@
-package com.example.templater.tempBuilder;
+package com.example.templater.documentService.tempBuilder;
 
 public enum Fonts {
     Calibri,

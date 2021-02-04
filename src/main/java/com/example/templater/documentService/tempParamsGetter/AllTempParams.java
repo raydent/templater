@@ -1,4 +1,9 @@
-package com.example.templater.tempBuilder;
+package com.example.templater.documentService.tempParamsGetter;
+
+import com.example.templater.documentService.tempBuilder.ParagraphParams;
+import com.example.templater.documentService.tempBuilder.TableParams;
+import com.example.templater.documentService.tempBuilder.TempParams;
+import com.example.templater.documentService.tempBuilder.TitleParams;
 
 import java.util.List;
 

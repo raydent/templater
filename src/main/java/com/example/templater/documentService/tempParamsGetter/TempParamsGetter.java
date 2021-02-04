@@ -1,8 +1,11 @@
-package com.example.templater.tempBuilder;
+package com.example.templater.documentService.tempParamsGetter;
 
+import com.example.templater.documentService.docCombine.HeadingsMatcher;
+import com.example.templater.documentService.tempBuilder.*;
+import org.apache.poi.ooxml.POIXMLRelation;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.core.parameters.P;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -246,20 +249,79 @@ public class TempParamsGetter {
         return all;
     }
 
-    public static List<XWPFParagraph> getHeadingsList(XWPFDocument document) {
-        List<XWPFParagraph> parList = new ArrayList<>();
-        List<XWPFParagraph> allParList = document.getParagraphs();
-        for (XWPFParagraph p : allParList) {
-            String style = p.getStyle();
-            if (style != null && (style.equals("Heading1") || (style.equals("Heading2")) || (style.equals("Heading3"))
-                    || (style.equals("Heading4")) || (style.equals("Heading5")))) {
-                parList.add(p);
+    public static List<HeadingWithText> getHeadingsList(XWPFDocument document) {
+        List<HeadingWithText> headingList = new ArrayList<>();
+        List<XWPFParagraph> pList = document.getParagraphs();
+        List<Integer> indexes = new ArrayList<>();
+        for (int i = 0; i < pList.size(); ++i) {
+            String style = pList.get(i).getStyle();
+            if (style != null && (style.equals("Heading1") || style.equals("Heading2") || style.equals("Heading3")
+                    || style.equals("Heading4") || style.equals("Heading5"))) {
+                HeadingWithText hwt = new HeadingWithText();
+                hwt.setHeading(pList.get(i));
+                headingList.add(hwt);
+                indexes.add(i);
+                }
+            }
+        int headingNumber = 0;
+        List<XWPFTable> tables = document.getTables();
+        for (int i = 0; i < indexes.size(); ++i) {
+            int currentH = indexes.get(i);
+            if (currentH != indexes.get(indexes.size() - 1)) {
+                List<XWPFParagraph> text = new ArrayList<>();
+                int nextH = indexes.get(i + 1);
+                for (int j = currentH + 1; j < nextH; ++j) {
+                    text.add(pList.get(j));
+                }
+                headingList.get(headingNumber).setText(text);
+                if (tables != null && !tables.isEmpty()) {
+                    List <XWPFTable> foundTables = new ArrayList<>();
+                    int currentHPos = document.getPosOfParagraph(pList.get(currentH));
+                    int nexHPos = document.getPosOfParagraph(pList.get(nextH));
+                    for (XWPFTable t : tables) {
+                        int tablePos = document.getPosOfTable(t);
+                        if (tablePos > currentHPos && tablePos < nexHPos) {
+                            foundTables.add(t);
+                        }
+                    }
+                    headingList.get(headingNumber).setTables(foundTables);
+                }
+                ++headingNumber;
+            }
+            else {
+                List<XWPFParagraph> text = new ArrayList<>();
+                for (int j = currentH + 1; j < pList.size(); ++j) {
+                    text.add(pList.get(j));
+                }
+                headingList.get(headingNumber).setText(text);
+                if (tables != null && !tables.isEmpty()) {
+                    List <XWPFTable> foundTables = new ArrayList<>();
+                    int currentHPos = document.getPosOfParagraph(pList.get(currentH));
+                    for (XWPFTable t : tables) {
+                        int tablePos = document.getPosOfTable(t);
+                        if (tablePos > currentHPos) {
+                            foundTables.add(t);
+                        }
+                    }
+                    headingList.get(headingNumber).setTables(foundTables);
+                }
             }
         }
-        return parList;
+        return headingList;
     }
 
-    public static int getParNumLevel(XWPFParagraph paragraph) {
+    public static List<HeadingWithText> getMainHeadingsList(XWPFDocument document) {
+        List<HeadingWithText> result = new ArrayList<>();
+        List<HeadingWithText> hList = getHeadingsList(document);
+        for (HeadingWithText hwt : hList) {
+            if (hwt.getHeading().getStyle() != null && hwt.getHeading().getStyle().equals("Heading1")) {
+                result.add(hwt);
+            }
+        }
+        return result;
+    }
+
+    public static int getHeadingNumLevel(XWPFParagraph paragraph) {
         String style = paragraph.getStyle();
         if (style != null) {
             switch (style) {
@@ -270,26 +332,66 @@ public class TempParamsGetter {
                 case "Heading5": return 4;
             }
         }
-        return 5;
+        return 6;
     }
 
-    public static int getSubParAmount(List<XWPFParagraph> parList, XWPFParagraph paragraph) {
-        int level = getParNumLevel(paragraph);
-        int i = 0;
-        for (i = 0; i < parList.size(); ++i) {
-            if (parList.get(i).equals(paragraph)) {
+    public static List<XWPFParagraph> getSubHeadings(List<XWPFParagraph> parList, XWPFParagraph paragraph) {
+        int level = getHeadingNumLevel(paragraph);
+        int currentH = 0;
+        for (currentH = 0; currentH < parList.size(); ++currentH) {
+            if (parList.get(currentH).equals(paragraph)) {
                 break;
             }
         }
-        if (i == parList.size() - 1) {
-            return 0;
-        }
-        int count = 0;
-        for (int j = i; j < parList.size(); ++j) {
-            if (getParNumLevel(parList.get(j)) == level + 1) {
-                ++count;
+        int nextH = parList.size();
+        for (int k = currentH + 1; k < parList.size(); ++k) {
+            if (getHeadingNumLevel(parList.get(k)) == level) {
+                nextH = k;
+                break;
             }
         }
-        return count;
+        if (currentH == parList.size() - 1) {
+            List<XWPFParagraph> subHList = new ArrayList<>();
+            subHList.add(null);
+            return subHList;
+        }
+        List<XWPFParagraph> subHList = new ArrayList<>();
+        for (int j = currentH + 1; j < nextH; ++j) {
+            if (getHeadingNumLevel(parList.get(j)) == level + 1) {
+                subHList.add(parList.get(j));
+            }
+        }
+        return subHList;
+    }
+
+    public static HeadingContent getHeadingContent(XWPFDocument document, XWPFParagraph heading) {
+        HeadingContent hc = new HeadingContent();
+        List<HeadingWithText> hList = TempParamsGetter.getHeadingsList(document);
+        int level = getHeadingNumLevel(heading);
+        int currentH = 0;
+        for (currentH = 0; currentH < hList.size(); ++currentH) {
+            if (hList.get(currentH).getHeading().equals(heading)) {
+                break;
+            }
+        }
+        int nextH = hList.size();
+        for (int k = currentH + 1; k < hList.size(); ++k) {
+            if (getHeadingNumLevel(hList.get(k).getHeading()) == level) {
+                nextH = k;
+                break;
+            }
+        }
+        if (currentH == hList.size() - 1
+                || getHeadingNumLevel(hList.get(currentH + 1).getHeading()) == level - 1) {
+            hc.setSubHList(null);
+        }
+        else {
+            List<HeadingWithText> hwtList = new ArrayList<>();
+            for (int j = currentH + 1; j < nextH; ++j) {
+                hwtList.add(hList.get(j));
+            }
+            hc.setSubHList(hwtList);
+        }
+        return hc;
     }
 }

@@ -1,9 +1,8 @@
-package com.example.templater.tempBuilder;
+package com.example.templater.documentService.tempBuilder;
 
 import org.apache.poi.wp.usermodel.HeaderFooterType;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlException;
-import org.openxmlformats.schemas.officeDocument.x2006.math.CTXAlign;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
