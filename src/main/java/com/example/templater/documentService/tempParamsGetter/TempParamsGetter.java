@@ -16,12 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TempParamsGetter {
-    public static AllTempParams getTempParams(File file) throws IOException {
-        //XWPFDocument document = new XWPFDocument(file.getInputStream());
 
-        FileInputStream is = new FileInputStream(file);
-        XWPFDocument document = new XWPFDocument(is);
-
+    public static AllTempParams getTempParams(XWPFDocument document) {
         AllTempParams all = new AllTempParams();
         TempParams tempParams = new TempParams();
         TitleParams titleParams = new TitleParams();
@@ -50,9 +46,15 @@ public class TempParamsGetter {
             params.setFont(Fonts.getFontEnum(ctrPr.getRFonts().getAscii()));
             params.setFontSize(ctrPr.getSz().getVal().intValue() / 2);
             params.setTextColor(ctrPr.getColor().xgetVal().getStringValue());
-            params.setBold(ctrPr.getB().getVal().equals(STOnOff.ON));
-            params.setItalic(ctrPr.getI().getVal().equals(STOnOff.ON));
-            params.setUnderline(ctrPr.getU().getVal().equals(STUnderline.SINGLE));
+            if (ctrPr.getB() != null && ctrPr.getB().getVal() != null) {
+                params.setBold(ctrPr.getB().getVal().equals(STOnOff.ON));
+            }
+            if (ctrPr.getI() != null && ctrPr.getI().getVal() != null) {
+                params.setItalic(ctrPr.getI().getVal().equals(STOnOff.ON));
+            }
+            if (ctrPr.getU() != null && ctrPr.getU().getVal() != null) {
+                params.setUnderline(ctrPr.getU().getVal().equals(STUnderline.SINGLE));
+            }
             //params.setTextHighlightColor();
             //params.setAlignment();
             paramsList.add(params);
@@ -74,13 +76,13 @@ public class TempParamsGetter {
             tempParams.setFooter(false);
             tempParams.setNumeration(false);
         }
-        else if (fList.get(fList.size() - 1).getListParagraph().size() == 2){
+        else if (fList.get(fList.size() - 1).getListParagraph().size() == 3){
             tempParams.setFooter(true);
             tempParams.setNumeration(true);
         }
         else {
-            XWPFFooter f = fList.get(0);
-            if (f.getParagraphArray(0).getCTP().getFldSimpleArray(0) != null) {
+            XWPFFooter f = fList.get(fList.size() - 1);
+            if (f.getParagraphs().size() == 1) {
                 tempParams.setNumeration(true);
                 tempParams.setFooter(false);
             }
@@ -235,7 +237,14 @@ public class TempParamsGetter {
                 tableParams.setHeadingTextItalic(run.isItalic());
                 tableParams.setHeadingTextFontSize(run.getFontSize());
                 tableParams.setHeadingCellColor(cells.get(0).getColor());
-                STHexColor color = table.getCTTbl().getTblPr().getTblBorders().getTop().xgetColor();
+                STHexColor color;
+                if (table.getCTTbl().getTblPr().isSetTblBorders()) {
+                    color = table.getCTTbl().getTblPr().getTblBorders().getTop().xgetColor();
+                }
+                else {
+                    color = STHexColor.Factory.newInstance();
+                    color.setStringValue("000000");
+                }
                 tableParams.setBorderColor(color.getStringValue());
                 if (table.getNumberOfRows() > 1) {
                     tableParams.setCommonCellColor(table.getRow(1).getCell(0).getColor());
@@ -247,6 +256,11 @@ public class TempParamsGetter {
         all.setParamsList(paramsList);
         all.setTableParams(tableParams);
         return all;
+    }
+    public static AllTempParams getTempParams(File file) throws IOException {
+        FileInputStream is = new FileInputStream(file);
+        XWPFDocument document = new XWPFDocument(is);
+        return getTempParams(document);
     }
 
     public static List<HeadingWithText> getHeadingsList(XWPFDocument document) {
@@ -364,9 +378,9 @@ public class TempParamsGetter {
         return subHList;
     }
 
-    public static HeadingContent getHeadingContent(XWPFDocument document, XWPFParagraph heading) {
+
+    public static HeadingContent getHeadingContent(List<HeadingWithText> hList, XWPFParagraph heading) {
         HeadingContent hc = new HeadingContent();
-        List<HeadingWithText> hList = TempParamsGetter.getHeadingsList(document);
         int level = getHeadingNumLevel(heading);
         int currentH = 0;
         for (currentH = 0; currentH < hList.size(); ++currentH) {
@@ -394,4 +408,9 @@ public class TempParamsGetter {
         }
         return hc;
     }
+    public static HeadingContent getHeadingContent(XWPFDocument document, XWPFParagraph heading) {
+        List<HeadingWithText> hList = TempParamsGetter.getHeadingsList(document);
+        return getHeadingContent(hList, heading);
+    }
+
 }

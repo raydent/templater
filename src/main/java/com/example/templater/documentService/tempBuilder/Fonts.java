@@ -19,6 +19,9 @@ public enum Fonts {
         }
     }
     public static Fonts getFontEnum(String str) {
+        if (str == null) {
+            return Calibri;
+        }
         switch (str) {
             case "Arial": return Arial;
             case "Tahoma": return Tahoma;

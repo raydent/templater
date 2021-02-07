@@ -1,16 +1,23 @@
 package com.example.templater.documentService.docCombine;
 
 import com.example.templater.documentService.tempBuilder.TempParams;
+import com.example.templater.documentService.tempBuilder.TemplateCreater;
+import com.example.templater.documentService.tempParamsGetter.AllTempParams;
 import com.example.templater.documentService.tempParamsGetter.HeadingContent;
 import com.example.templater.documentService.tempParamsGetter.HeadingWithText;
 import com.example.templater.documentService.tempParamsGetter.TempParamsGetter;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 import org.springframework.security.core.parameters.P;
+import org.thymeleaf.templatemode.TemplateMode;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,54 +42,217 @@ public class DocCombiner {
     }
 
 
-    public XWPFDocument combineDocs(List<XWPFDocument> documentList) {
+    public XWPFDocument combineDocs(List<XWPFDocument> documentList) throws CustomException, IOException, XmlException {
         if (documentList == null) {
             return null;
         }
+
         XWPFDocument document = documentList.get(0);
+        if (documentList.size() == 1) {
+            return document;
+        }
+        document = new XWPFDocument();
+        XWPFStyles styles = document.createStyles();
+        styles.setStyles(documentList.get(0).getStyle());
+        TemplateCreater creater = new TemplateCreater();
+        AllTempParams allTempParams = TempParamsGetter.getTempParams(documentList.get(0));
+        if (allTempParams.getTempParams().isTitle_page()) {
+            document = creater.createTitlePage(document, allTempParams.getTitleParams(), allTempParams.getTempParams().getField());
+        }
+        if (allTempParams.getTempParams().isHeader()) {
+            document = creater.createHeader(document, null);
+        }
+        if (allTempParams.getTempParams().isNumeration()) {
+            document = creater.createNumeration(document);
+        }
+        if (allTempParams.getTempParams().isFooter()) {
+            document = creater.createFooter(document, null);
+        }
+
+        List<HeadingWithText> levelListMain = TempParamsGetter.getHeadingsList(documentList.get(0));
+        checkSameHeadingsException(documentList.get(0));
         for (int i = 1; i < documentList.size(); ++i) {
-            List<HeadingWithText> mainHList = TempParamsGetter.getMainHeadingsList(document);
-            List<HeadingWithText> mainHListTBA = TempParamsGetter.getMainHeadingsList(documentList.get(i));
-            for (HeadingWithText mH : mainHList) {
-                List<Integer> scores = new ArrayList<>();
-                for (HeadingWithText mHTBA : mainHListTBA) {
-                    HeadingsMatcher matcher = new HeadingsMatcher();
-                    int score = matcher.headingsMatch(document.getParagraphs(),
-                            documentList.get(i).getParagraphs(), mH.getHeading(), mHTBA.getHeading());
-                    scores.add(score);
-                }
-                int maxI = getIterByMaxValue(scores);
-                if (scores.get(maxI) >= 100) {
-                    document = combineMainHeadings(document, documentList.get(i), mH, mainHListTBA.get(maxI));
-                    mainHListTBA.remove(maxI);
-                }
-            }
-            if (!mainHListTBA.isEmpty()) {
-                UnresolvedHeadings unres = new UnresolvedHeadings();
-                List<HeadingWithText> headings = new ArrayList<>(mainHListTBA);
-                unres.setDocument(documentList.get(i));
-                unres.setHeadings(headings);
-                if (unresolvedMainHeadings == null) {
-                    unresolvedMainHeadings = new ArrayList<>();
-                }
-                unresolvedMainHeadings.add(unres);
-            }
+            XWPFDocument doc = documentList.get(i);
+            checkSameHeadingsException(doc);
+            List<HeadingWithText> levelListToMerge = TempParamsGetter.getHeadingsList(doc);
+            levelListMain = combineMainHeadings(levelListMain, levelListToMerge);
         }
 
-        if (unresolvedMainHeadings != null && !unresolvedMainHeadings.isEmpty()) {
-            for (UnresolvedHeadings unres : unresolvedMainHeadings) {
-                document = insertUnresolvedMainHeadings(document, unres);
-            }
-        }
-
+        document = insertHeadings(document, levelListMain);
         return document;
+    }
+
+    public List<HeadingWithText> combineMainHeadings(List<HeadingWithText> l, List<HeadingWithText> r) {
+        List<HeadingWithText> result = new ArrayList<>();
+        List<HeadingWithText> resolved = new ArrayList<>();
+        List<XWPFParagraph> PL = new ArrayList<>();
+        List<XWPFParagraph> PR = new ArrayList<>();
+
+        for (HeadingWithText left : l) {
+            PL.add(left.getHeading());
+        }
+        for (HeadingWithText right : r) {
+            PR.add(right.getHeading());
+        }
+
+        for (HeadingWithText hwtL : l) {
+            if (hwtL.getHeading().getStyle().equals("Heading1")) {
+                boolean isMatched = false;
+                List<XWPFParagraph> text = new ArrayList<>();
+                List<XWPFTable> tables = new ArrayList<>();
+                List<HeadingWithText> content = new ArrayList<>();
+                if (hwtL.getText() != null && !hwtL.getText().isEmpty()) {
+                    text.addAll(hwtL.getText());
+                }
+                if (hwtL.getTables() != null && !hwtL.getTables().isEmpty()) {
+                    tables.addAll(hwtL.getTables());
+                }
+                for (HeadingWithText hwtR : r) {
+                    if (hwtR.getHeading().getStyle().equals("Heading1")) {
+                        HeadingsMatcher matcher = new HeadingsMatcher();
+                        if (matcher.headingsMatch(PL, PR, hwtL.getHeading(), hwtR.getHeading()) >= 100
+                                && !resolved.contains(hwtR)) {
+                            if (hwtR.getText() != null && !hwtR.getText().isEmpty()) {
+                                text.addAll(hwtR.getText());
+                            }
+                            if (hwtR.getTables() != null && !hwtR.getTables().isEmpty()) {
+                                tables.addAll(hwtR.getTables());
+                            }
+                            resolved.add(hwtR);
+                            isMatched = true;
+                            content = combineSubHeadings(TempParamsGetter.getHeadingContent(l,
+                                    hwtL.getHeading()).getSubHList(), TempParamsGetter.getHeadingContent(r,
+                                    hwtR.getHeading()).getSubHList(), 1);
+                            break;
+                        }
+                    }
+                }
+                HeadingWithText hwt = new HeadingWithText(hwtL.getHeading(), text, tables);
+                result.add(hwt);
+                if (content != null && !content.isEmpty()) {
+                    result.addAll(content);
+                }
+                if (!isMatched) {
+                    List<HeadingWithText> c = TempParamsGetter.getHeadingContent(l, hwtL.getHeading()).getSubHList();
+                    if (c != null && !c.isEmpty()) {
+                        result.addAll(c);
+                    }
+                }
+            }
+        }
+
+        for (HeadingWithText hwt : r) {
+            if (hwt.getHeading().getStyle().equals("Heading1")) {
+                if (!resolved.contains(hwt)) {
+                    List<HeadingWithText> list = new ArrayList<>();
+                    list.add(hwt);
+                    list.addAll(TempParamsGetter.getHeadingContent(r, hwt.getHeading()).getSubHList());
+                    result.addAll(list);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public List<HeadingWithText> combineSubHeadings(List<HeadingWithText> l, List<HeadingWithText> r,
+                                                    int level) {
+        if (level == 6 || l == null || l.isEmpty()) {
+            return null;
+        }
+        List<HeadingWithText> result = new ArrayList<>();
+        List<HeadingWithText> resolved = new ArrayList<>();
+        List<XWPFParagraph> PL = new ArrayList<>();
+        List<XWPFParagraph> PR = new ArrayList<>();
+        for (HeadingWithText left : l) {
+            PL.add(left.getHeading());
+        }
+        for (HeadingWithText right : r) {
+            PR.add(right.getHeading());
+        }
+
+        for (HeadingWithText hwtL : l) {
+            if (TempParamsGetter.getHeadingNumLevel(hwtL.getHeading()) == level) {
+                List<XWPFParagraph> text = new ArrayList<>();
+                List<XWPFTable> tables = new ArrayList<>();
+                List<HeadingWithText> content = new ArrayList<>();
+                if (hwtL.getText() != null && !hwtL.getText().isEmpty()) {
+                    text.addAll(hwtL.getText());
+                }
+                if (hwtL.getTables() != null && !hwtL.getTables().isEmpty()) {
+                    tables.addAll(hwtL.getTables());
+                }
+                for (HeadingWithText hwtR : r) {
+                    if (TempParamsGetter.getHeadingNumLevel(hwtR.getHeading()) == level) {
+                        HeadingsMatcher matcher = new HeadingsMatcher();
+                        if (matcher.headingsNameMatch(hwtL.getHeading(), hwtR.getHeading()) == 100
+                                && !resolved.contains(hwtR)) {
+                            if (hwtR.getText() != null && !hwtR.getText().isEmpty()) {
+                                text.addAll(hwtR.getText());
+                            }
+                            if (hwtR.getTables() != null && !hwtR.getTables().isEmpty()) {
+                                tables.addAll(hwtR.getTables());
+                            }
+                            resolved.add(hwtR);
+                            if (level != 5) {
+                                content = combineSubHeadings(TempParamsGetter.getHeadingContent(l,
+                                        hwtL.getHeading()).getSubHList(), TempParamsGetter.getHeadingContent(r,
+                                        hwtR.getHeading()).getSubHList(), level + 1);
+                            }
+                            break;
+                        }
+                    }
+                }
+                HeadingWithText hwt = new HeadingWithText(hwtL.getHeading(), text, tables);
+                result.add(hwt);
+                if (content != null && !content.isEmpty()) {
+                    result.addAll(content);
+                }
+            }
+        }
+
+        for (HeadingWithText hwt : r) {
+            if (TempParamsGetter.getHeadingNumLevel(hwt.getHeading()) == level) {
+                if (!resolved.contains(hwt)) {
+                    List<HeadingWithText> list = new ArrayList<>();
+                    list.add(hwt);
+                    List<HeadingWithText> content = TempParamsGetter.getHeadingContent(r, hwt.getHeading()).getSubHList();
+                    if (content != null && !content.isEmpty()) {
+                        list.addAll(content);
+                    }
+                    result.addAll(list);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public XWPFDocument insertHeadings(XWPFDocument document, List<HeadingWithText> list) {
+        for (HeadingWithText hwt : list) {
+            insertHeading(document, hwt);
+        }
+        return document;
+    }
+
+    private void checkSameHeadingsException(XWPFDocument document) throws CustomException {
+        List<HeadingWithText> headings = TempParamsGetter.getMainHeadingsList(document);
+        List<String> headingsNames = new ArrayList<>();
+        for (HeadingWithText hwt : headings) {
+            headingsNames.add(hwt.getHeading().getText());
+        }
+        for (String name : headingsNames) {
+            if (headingsNames.stream().filter(name::equals).count() > 1) {
+                throw Exceptions.TwoSameHeadersInFile.getException();
+            }
+        }
     }
 
     public XWPFDocument combineMainHeadings(XWPFDocument docS, XWPFDocument docTBA, HeadingWithText l,
                                             HeadingWithText r) {
         XWPFDocument document = docS;
         document = insertTextAfterHeading(document, l, r.getText(), r.getTables());
-        document = combineMainHeadingsContent(docS, docTBA, l.getHeading(), r.getHeading());
+        document = combineHeadingsContent(docS, docTBA, l.getHeading(), r.getHeading());
         return document;
     }
 
@@ -113,7 +283,7 @@ public class DocCombiner {
         return document;
     }
 
-    public XWPFDocument combineMainHeadingsContent(XWPFDocument docS, XWPFDocument docTBA,
+    public XWPFDocument combineHeadingsContent(XWPFDocument docS, XWPFDocument docTBA,
                                                    XWPFParagraph l, XWPFParagraph r) {
         XWPFDocument document = docS;
         HeadingContent hcL = TempParamsGetter.getHeadingContent(docS, l);
@@ -164,6 +334,7 @@ public class DocCombiner {
         XWPFParagraph paragraph = document.createParagraph();
         XWPFRun run = paragraph.createRun();
         paragraph.setStyle(hwt.getHeading().getStyle());
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
         run.setText(hwt.getHeading().getText());
         for (XWPFParagraph p : hwt.getText()) {
             paragraph = document.createParagraph();
@@ -178,6 +349,7 @@ public class DocCombiner {
         for (XWPFTable t : hwt.getTables()) {
             XmlCursor cursor = paragraph.getCTP().newCursor();
             document = insertTable(document, t, cursor);
+            document.createParagraph();
         }
         return document;
     }
@@ -205,9 +377,10 @@ public class DocCombiner {
     }
 
     public XWPFDocument insertTable(XWPFDocument document, XWPFTable t, XmlCursor cursor) {
-        cursor.toEndToken();
+        /*cursor.toEndToken();
         while(cursor.toNextToken() != XmlCursor.TokenType.START);
-        XWPFTable newTable = document.insertNewTbl(cursor);
+        XWPFTable newTable = document.insertNewTbl(cursor);*/
+        XWPFTable newTable = document.createTable();
         int num_rows = t.getNumberOfRows();
         int num_coloms = t.getRow(0).getTableCells().size();
 

@@ -1,5 +1,6 @@
 package com.example.templater.documentService.docCombine;
 
+import com.example.templater.documentService.tempParamsGetter.HeadingWithText;
 import com.example.templater.documentService.tempParamsGetter.TempParamsGetter;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 

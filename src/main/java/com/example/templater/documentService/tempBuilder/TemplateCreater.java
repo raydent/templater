@@ -4,6 +4,7 @@ import org.apache.poi.wp.usermodel.HeaderFooterType;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
+import org.thymeleaf.model.IDocType;
 
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import java.io.*;
@@ -354,12 +355,10 @@ public class TemplateCreater {
 
         //установка полей на странице
         CTSectPr ctSectPr = null;
-        if (tempParams.isNumeration()) {
-            CTDocument1 ctDocument = document.getDocument();
-            CTBody ctBody = ctDocument.getBody();
-            ctSectPr = ctBody.getSectPr();
-        }
-        else {
+        CTDocument1 ctDocument = document.getDocument();
+        CTBody ctBody = ctDocument.getBody();
+        ctSectPr = ctBody.getSectPr();
+        if (ctSectPr == null) {
             ctSectPr = document.getDocument().getBody().addNewSectPr();
         }
         setFields(ctSectPr, fields);
@@ -501,37 +500,8 @@ public class TemplateCreater {
         }
 
         if (tempParams.isHeader()) {
-            XWPFHeader header = document.createHeader(HeaderFooterType.DEFAULT);
-            XWPFParagraph paragraph = header.getParagraphArray(0);
-            if (paragraph == null) {
-                paragraph = header.createParagraph();
-            }
-            paragraph.setStyle("Header");
             ParagraphParams params = paragraphParamsList.get(paragraphParamsList.size() - 3);
-            XWPFRun run = paragraph.createRun();
-            run.setText("Header text");
-            if (params != null) {
-                paragraph.setAlignment(params.getAlignment());
-                if (params.isBold()) {
-                    run.setBold(true);
-                }
-                if (params.isItalic()) {
-                    run .setItalic(true);
-                }
-                if (params.isUnderline()) {
-                    run.setUnderline(UnderlinePatterns.SINGLE);
-                }
-            }
-        }
-
-        if (tempParams.isNumeration()) {
-            XWPFFooter footer = document.createFooter(HeaderFooterType.FIRST);
-            XWPFParagraph paragraph = footer.getParagraphArray(0);
-            if (paragraph == null) {
-                paragraph = footer.createParagraph();
-            }
-            paragraph.setAlignment(ParagraphAlignment.RIGHT);
-            paragraph.getCTP().addNewFldSimple().setInstr("PAGE \\* ARABIC MERGEFORMAT");
+            document = createHeader(document, params);
         }
 
         if (tempParams.isTitle_page()) {
@@ -540,51 +510,11 @@ public class TemplateCreater {
         document = createDefaultMainPage(document, tempParams, paragraphParamsList, tempParams.getField(), tableParams);
 
         if (tempParams.isNumeration()) {
-            CTDocument1 ctDocument = document.getDocument();
-            CTBody ctBody = ctDocument.getBody();
-            CTSectPr ctSectPrLastSect = ctBody.getSectPr();
-            CTHdrFtrRef ctHdrFtrRef = ctSectPrLastSect.getFooterReferenceArray(0);
-            ctHdrFtrRef.setType(STHdrFtr.DEFAULT);
-            CTHdrFtrRef[] ctHdrFtrRefs = new CTHdrFtrRef[]{ctHdrFtrRef};
-            ctSectPrLastSect.setFooterReferenceArray(ctHdrFtrRefs);
-
-            ctSectPrLastSect.unsetTitlePg();
+            document = createNumeration(document);
         }
-
         if (tempParams.isFooter()) {
-            XWPFFooter footer = document.getFooterArray(0);
-            if (footer == null) {
-                footer = document.createFooter(HeaderFooterType.DEFAULT);
-            }
-            XWPFParagraph paragraph = footer.createParagraph();
             ParagraphParams params = paragraphParamsList.get(paragraphParamsList.size() - 2);
-            paragraph.setStyle("Footer");
-            XWPFRun run = paragraph.createRun();
-            run.setText("© 2020 Netcracker Technology Corp.\tCONFIDENTIAL AND PROPRIETARY\n");
-            XWPFParagraph paragraph1 = footer.createParagraph();
-            paragraph1.setStyle("Footer");
-            XWPFRun run1 = paragraph1.createRun();
-            run1.setText("Disclose and distribute solely to those individuals with a need to know.");
-            if (params != null) {
-                paragraph.setAlignment(params.getAlignment());
-                paragraph1.setAlignment(params.getAlignment());
-                if (params.isBold()) {
-                    run.setBold(true);
-                    run1.setBold(true);
-                }
-                if (params.isItalic()) {
-                    run.setItalic(true);
-                    run1.setItalic(true);
-                }
-                if (params.isUnderline()) {
-                    run.setUnderline(UnderlinePatterns.SINGLE);
-                    run1.setUnderline(UnderlinePatterns.SINGLE);
-                }
-            }
-            else {
-                paragraph.setAlignment(ParagraphAlignment.CENTER);
-                paragraph1.setAlignment(ParagraphAlignment.CENTER);
-            }
+            document = createFooter(document, params);
         }
 
         try {
@@ -595,6 +525,87 @@ public class TemplateCreater {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public XWPFDocument createHeader(XWPFDocument document, ParagraphParams params) {
+        XWPFHeader header = document.createHeader(HeaderFooterType.DEFAULT);
+        XWPFParagraph paragraph = header.getParagraphArray(0);
+        if (paragraph == null) {
+            paragraph = header.createParagraph();
+        }
+        paragraph.setStyle("Header");
+        XWPFRun run = paragraph.createRun();
+        run.setText("Header text");
+        if (params != null) {
+            paragraph.setAlignment(params.getAlignment());
+            if (params.isBold()) {
+                run.setBold(true);
+            }
+            if (params.isItalic()) {
+                run .setItalic(true);
+            }
+            if (params.isUnderline()) {
+                run.setUnderline(UnderlinePatterns.SINGLE);
+            }
+        }
+        return document;
+    }
+
+    public XWPFDocument createNumeration(XWPFDocument document) {
+        XWPFFooter footer = document.createFooter(HeaderFooterType.FIRST);
+        XWPFParagraph paragraph = footer.getParagraphArray(0);
+        if (paragraph == null) {
+            paragraph = footer.createParagraph();
+        }
+        paragraph.setAlignment(ParagraphAlignment.RIGHT);
+        paragraph.getCTP().addNewFldSimple().setInstr("PAGE \\* ARABIC MERGEFORMAT");
+
+        CTDocument1 ctDocument = document.getDocument();
+        CTBody ctBody = ctDocument.getBody();
+        CTSectPr ctSectPrLastSect = ctBody.getSectPr();
+        CTHdrFtrRef ctHdrFtrRef = ctSectPrLastSect.getFooterReferenceArray(0);
+        ctHdrFtrRef.setType(STHdrFtr.DEFAULT);
+        CTHdrFtrRef[] ctHdrFtrRefs = new CTHdrFtrRef[]{ctHdrFtrRef};
+        ctSectPrLastSect.setFooterReferenceArray(ctHdrFtrRefs);
+
+        ctSectPrLastSect.unsetTitlePg();
+        return document;
+    }
+
+    public XWPFDocument createFooter(XWPFDocument document, ParagraphParams params) {
+        XWPFFooter footer = document.getFooterArray(0);
+        if (footer == null) {
+            footer = document.createFooter(HeaderFooterType.DEFAULT);
+        }
+        XWPFParagraph paragraph = footer.createParagraph();
+        paragraph.setStyle("Footer");
+        XWPFRun run = paragraph.createRun();
+        run.setText("© 2020 Netcracker Technology Corp.\tCONFIDENTIAL AND PROPRIETARY\n");
+        XWPFParagraph paragraph1 = footer.createParagraph();
+        paragraph1.setStyle("Footer");
+        XWPFRun run1 = paragraph1.createRun();
+        run1.setText("Disclose and distribute solely to those individuals with a need to know.");
+        if (params != null) {
+            paragraph.setAlignment(params.getAlignment());
+            paragraph1.setAlignment(params.getAlignment());
+            if (params.isBold()) {
+                run.setBold(true);
+                run1.setBold(true);
+            }
+            if (params.isItalic()) {
+                run.setItalic(true);
+                run1.setItalic(true);
+            }
+            if (params.isUnderline()) {
+                run.setUnderline(UnderlinePatterns.SINGLE);
+                run1.setUnderline(UnderlinePatterns.SINGLE);
+            }
+        }
+        else {
+            paragraph.setAlignment(ParagraphAlignment.CENTER);
+            paragraph1.setAlignment(ParagraphAlignment.CENTER);
+        }
+        return document;
     }
 
     //public void createCustomTemplate(TempParams tempParams, List<ParagraphParams> paragraphParamsList) {
