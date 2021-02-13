@@ -5,8 +5,7 @@ import com.example.templater.model.Temp_Full;
 import com.example.templater.model.User;
 import com.example.templater.service.IUserService;
 import com.example.templater.service.TemplateService;
-import com.example.templater.tempBuilder.*;
-import com.sun.xml.bind.v2.runtime.output.SAXOutput;
+import com.example.templater.documentService.tempBuilder.*;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +115,7 @@ public class MainController {
         ParagraphParams fourthParagraph = new ParagraphParams(temp, 4);
         ParagraphParams fifthParagraph = new ParagraphParams(temp, 5);
         ParagraphParams textField = new ParagraphParams(Fonts.Arial, 14, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
+                ParagraphAlignment.LEFT, "none", "000000");
         List<ParagraphParams> paragraphParamsList = Arrays.asList(firstParagraph, secondParagraph,
                 thirdParagraph, fourthParagraph, fifthParagraph, null, null, textField);
 

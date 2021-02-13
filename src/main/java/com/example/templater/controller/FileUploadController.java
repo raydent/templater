@@ -16,5 +16,10 @@ public class FileUploadController {
     @PostMapping
     public void upload(@RequestParam("file") MultipartFile file) {
         System.out.println("uploaded file " + file.getOriginalFilename());
+        /*try {
+            AllTempParams all = TempParamsGetter.getTempParams(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
     }
 }
