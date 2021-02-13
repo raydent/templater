@@ -33,6 +33,9 @@ public class HeadingsMatcher {
     }
 
     public int headingsNameMatch(XWPFParagraph source, XWPFParagraph candidate) {
+        if (source == null || candidate == null) {
+            return 0;
+        }
         String strS = source.getText();
         String strC = candidate.getText();
         if (strS.equals(strC)) {

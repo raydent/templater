@@ -115,7 +115,7 @@ public class MainController {
         ParagraphParams fourthParagraph = new ParagraphParams(temp, 4);
         ParagraphParams fifthParagraph = new ParagraphParams(temp, 5);
         ParagraphParams textField = new ParagraphParams(Fonts.Arial, 14, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
+                ParagraphAlignment.LEFT, "none", "000000");
         List<ParagraphParams> paragraphParamsList = Arrays.asList(firstParagraph, secondParagraph,
                 thirdParagraph, fourthParagraph, fifthParagraph, null, null, textField);
 

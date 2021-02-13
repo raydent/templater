@@ -154,40 +154,39 @@ public class TitleParams {
 
     public static TitleParams getDefaultTemp1TitleParams() {
         ParagraphParams paramsFirstLine = new ParagraphParams(Fonts.Calibri, 12, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.steel_blue), Colors.getColorCode(Colors.steel_blue));
+                ParagraphAlignment.LEFT, "none", "4682B4");
         ParagraphParams paramsSecondLine = new ParagraphParams(Fonts.Calibri, 44, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.steel_blue), Colors.getColorCode(Colors.steel_blue));
+                ParagraphAlignment.LEFT, "none", "4682B4");
         ParagraphParams paramsThirdLine = new ParagraphParams(Fonts.Calibri, 12, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.steel_blue), Colors.getColorCode(Colors.steel_blue));
+                ParagraphAlignment.LEFT, "none", "4682B4");
         ParagraphParams paramsNameField = new ParagraphParams(Fonts.Calibri, 14, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.steel_blue), Colors.getColorCode(Colors.steel_blue));
+                ParagraphAlignment.LEFT, "none", "4682B4");
         ParagraphParams paramsDateField = new ParagraphParams(Fonts.Calibri, 14, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.steel_blue), Colors.getColorCode(Colors.steel_blue));
+                ParagraphAlignment.LEFT, "none", "4682B4");
         return new TitleParams(2, paramsFirstLine, paramsSecondLine, paramsThirdLine, null, paramsNameField, paramsDateField);
     }
 
     public static TitleParams getDefaultTemp2TitleParams() {
         ParagraphParams paramsFirstLine = new ParagraphParams(Fonts.Calibria, 36, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.steel_blue), Colors.getColorCode(Colors.steel_blue));
+                ParagraphAlignment.LEFT, "none", "4682B4");
         ParagraphParams paramsSecondLine = new ParagraphParams(Fonts.Calibria, 14, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.aqua_dark), Colors.getColorCode(Colors.aqua_dark));
+                ParagraphAlignment.LEFT, "none", "4682B4");
         ParagraphParams paramsThirdLine = new ParagraphParams(Fonts.Calibria, 12, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.aqua), Colors.getColorCode(Colors.aqua));
+                ParagraphAlignment.LEFT, "none", "4682B4");
         ParagraphParams dateColomn = new ParagraphParams(Fonts.Calibria, 12, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.white), Colors.getColorCode(Colors.white));
+                ParagraphAlignment.LEFT, "none", "FFFFFF");
         return new TitleParams(1, paramsFirstLine, paramsSecondLine, paramsThirdLine, dateColomn, null, null);
     }
     public static TitleParams getDefaultTemp3TitleParams() {
         ParagraphParams paramsFirstLine = new ParagraphParams(Fonts.Arial, 36, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.steel_blue), Colors.getColorCode(Colors.steel_blue));
+                ParagraphAlignment.LEFT, "none", "4682B4");
         ParagraphParams paramsSecondLine = new ParagraphParams(Fonts.Arial, 14, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.aqua_dark), Colors.getColorCode(Colors.aqua_dark));
+                ParagraphAlignment.LEFT, "none", "4682B4");
         ParagraphParams paramsThirdLine = new ParagraphParams(Fonts.Arial, 12, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.aqua), Colors.getColorCode(Colors.aqua));
+                ParagraphAlignment.LEFT, "none", "4682B4");
 
         ParagraphParams dateColomn = new ParagraphParams(Fonts.Arial, 12, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.white), Colors.getColorCode(Colors.white));
+                ParagraphAlignment.LEFT, "none", "FFFFFF");
         return new TitleParams(1, paramsFirstLine, paramsSecondLine, paramsThirdLine, dateColomn, null, null);
     }
-
 }

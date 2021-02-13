@@ -11,13 +11,13 @@ public class TableParams {
     private int rows = 2;
     private int coloms = 2;
     private List<BigInteger> width = Arrays.asList(BigInteger.valueOf(5000), BigInteger.valueOf(5000));
-    private String headingCellTextColor = Colors.getColorCode(Colors.black);
+    private String headingCellTextColor;
     private Fonts headingTextFont = Fonts.Calibri;
     private boolean headingTextBold = false;
     private boolean headingTextItalic = false;
     private Integer headingTextFontSize = 11;
-    private String headingCellColor = Colors.getColorCode(Colors.gray);
-    private String borderColor = Colors.getColorCode(Colors.gray);
+    private String headingCellColor;
+    private String borderColor;
     private String CommonCellColor;
 
     public TableParams() {}
@@ -159,17 +159,17 @@ public class TableParams {
 
     public static TableParams getDefaultTemplate1TableParams() {
         return new TableParams(2, 2, Arrays.asList(BigInteger.valueOf(5000), BigInteger.valueOf(5000)),
-                Colors.getColorCode(Colors.black), Fonts.Calibri, true, false, 11,
-                Colors.getColorCode(Colors.gray), Colors.getColorCode(Colors.blue), Colors.getColorCode(Colors.gray));
+                "000000", Fonts.Calibri, true, false, 11,
+                "808080", "000000", "FFFFFF");
     }
     public static TableParams getDefaultTemplate2TableParams() {
         return new TableParams(2, 2, Arrays.asList(BigInteger.valueOf(1500), BigInteger.valueOf(7000)),
-                Colors.getColorCode(Colors.black), Fonts.Calibri, true, false, 11,
-                Colors.getColorCode(Colors.gray), Colors.getColorCode(Colors.blue), Colors.getColorCode(Colors.gray));
+                "000000", Fonts.Calibri, true, false, 11,
+                "808080", "000000", "FFFFFF");
     }
     public static TableParams getDefaultTemplate3TableParams() {
         return new TableParams(3, 3, Arrays.asList(BigInteger.valueOf(3500), BigInteger.valueOf(3500), BigInteger.valueOf(3500)),
-                Colors.getColorCode(Colors.black), Fonts.Calibri, true, false, 11,
-                Colors.getColorCode(Colors.gray), Colors.getColorCode(Colors.blue), Colors.getColorCode(Colors.gray));
+                "000000", Fonts.Calibri, true, false, 11,
+                "808080", "000000", "FFFFFF");
     }
 }

@@ -1,6 +1,8 @@
 package com.example.templater;
 
 import com.example.templater.documentService.docCombine.DocCombiner;
+import com.example.templater.documentService.docCombine.MainHeadingInfo;
+import com.example.templater.documentService.docCombine.MatchedHeadingInfo;
 import com.example.templater.documentService.tempBuilder.*;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.xmlbeans.XmlException;
@@ -9,11 +11,12 @@ import org.apache.xmlbeans.XmlException;
 import javax.print.Doc;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainTestTempCreation {
     public static void main(String... s) {
-/*
+        /*
         TemplateCreater templateCreater = new TemplateCreater();
         TempParams tempParams = TempParams.getDefaultTemp2Params();
         TitleParams titleParams = TitleParams.getDefaultTemp2TitleParams();
@@ -26,7 +29,7 @@ public class MainTestTempCreation {
         } catch (IOException | XmlException e) {
             e.printStackTrace();
         }
-*/
+       */
        /*File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Template.docx");
             try {
                 FileInputStream is = new FileInputStream(file);
@@ -52,30 +55,38 @@ public class MainTestTempCreation {
                 e.printStackTrace();
         }
 */
+
         File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Template1.docx");
         File file1 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Template2.docx");
         File file2 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Template3.docx");
-        FileInputStream is = null;
         try {
-            is = new FileInputStream(file);
-            XWPFDocument document1 = new XWPFDocument(is);
-            is = new FileInputStream(file1);
-            XWPFDocument document2 = new XWPFDocument(is);
-            is = new FileInputStream(file2);
-            XWPFDocument document3 = new XWPFDocument(is);
-            List<XWPFDocument> listDoc = new ArrayList<>();
-            listDoc.add(document1);
-            listDoc.add(document2);
-            //listDoc.add(document3);
             DocCombiner dc = new DocCombiner();
-            XWPFDocument result = dc.combineDocs(listDoc);
+            XWPFDocument result = dc.combineDocs(Arrays.asList(file, file1), null);
             FileOutputStream fos = new FileOutputStream("Combined.docx");
             result.write(fos);
-            is.close();
             fos.close();
+            List<MainHeadingInfo> mainHeadingsInfo = dc.getMainHeadingsInfo();
+            for (MainHeadingInfo info : mainHeadingsInfo) {
+                System.out.println("Name: " + info.getHeadingName() + ", Final Name: " + info.getFinalName() + ", File name:"
+                        + info.getFileName() + ", Is matched: " + info.isMatched());
+                if (info.getMatched() != null) {
+                    System.out.println("Matched: ");
+                    for (MatchedHeadingInfo m : info.getMatched()) {
+                        System.out.print(m.getHeadingName() + ", " + m.getFileName() + "\n");
+                    }
+                    System.out.println("Subheadings: ");
+                }
+                for (String str : info.getSubheadingsNames()) {
+                    System.out.print(str + ", ");
+                }
+                System.out.println("\n");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     }
+
 }

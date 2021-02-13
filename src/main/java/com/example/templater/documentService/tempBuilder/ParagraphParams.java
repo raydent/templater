@@ -14,8 +14,8 @@ public class ParagraphParams {
     private boolean italic = false;
     private boolean underline = false;
     private ParagraphAlignment alignment = ParagraphAlignment.LEFT;
-    private String textHighlightColor;
-    private String textColor = Colors.getColorCode(Colors.black);
+    private String textHighlightColor; // название цвета ("none" если нет)
+    private String textColor; // код цвета
 
     public ParagraphParams() {}
 
@@ -177,17 +177,17 @@ public class ParagraphParams {
 
     public static List<ParagraphParams> getDefaultTemp1ParParams() {
         ParagraphParams heading1 = new ParagraphParams(Fonts.Calibri, 20, true, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
+                ParagraphAlignment.LEFT, "none", "000000");
         ParagraphParams heading2 = new ParagraphParams(Fonts.Calibri, 14, true, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
+                ParagraphAlignment.LEFT, "none", "000000");
         ParagraphParams heading3 = new ParagraphParams(Fonts.Calibri, 11, true, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
+                ParagraphAlignment.LEFT, "none", "000000");
         ParagraphParams heading4 = new ParagraphParams(Fonts.Calibri, 11, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
+                ParagraphAlignment.LEFT, "none", "000000");
         ParagraphParams heading5 = new ParagraphParams(Fonts.Calibri, 11, false, true, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
+                ParagraphAlignment.LEFT, "none", "000000");
         ParagraphParams textField = new ParagraphParams(Fonts.Calibri, 11, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
+                ParagraphAlignment.LEFT, "none", "000000");
         List<ParagraphParams> list = new ArrayList<ParagraphParams>();
         list.add(heading1);
         list.add(heading2);
@@ -202,19 +202,19 @@ public class ParagraphParams {
 
     public static List<ParagraphParams> getDefaultTemp2ParParams() {
         ParagraphParams heading1 = new ParagraphParams(Fonts.Calibria, 14, true, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.blue), Colors.getColorCode(Colors.blue));
+                ParagraphAlignment.LEFT, "none", "4682B4");
         ParagraphParams heading2 = new ParagraphParams(Fonts.Calibria, 12, true, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.blue), Colors.getColorCode(Colors.blue));
+                ParagraphAlignment.LEFT, "none", "4682B4");
         ParagraphParams heading3 = new ParagraphParams(Fonts.Calibria, 11, true, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.steel_blue), Colors.getColorCode(Colors.steel_blue));
+                ParagraphAlignment.LEFT, "none", "4682B4");
         ParagraphParams heading4 = new ParagraphParams(Fonts.Calibria, 11, true, true, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.steel_blue), Colors.getColorCode(Colors.steel_blue));
+                ParagraphAlignment.LEFT, "none", "4682B4");
         ParagraphParams heading5 = new ParagraphParams(Fonts.Calibria, 11, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.blue), Colors.getColorCode(Colors.blue));
+                ParagraphAlignment.LEFT, "none", "4682B4");
         ParagraphParams footer = new ParagraphParams(Fonts.Calibria, 11, false, false, false,
-                ParagraphAlignment.CENTER, Colors.getColorCode(Colors.gray), Colors.getColorCode(Colors.gray));
+                ParagraphAlignment.CENTER, "none", "4682B4");
         ParagraphParams textField = new ParagraphParams(Fonts.Calibria, 11, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
+                ParagraphAlignment.LEFT, "none", "4682B4");
         List<ParagraphParams> list = new ArrayList<ParagraphParams>();
         list.add(heading1);
         list.add(heading2);
@@ -229,17 +229,17 @@ public class ParagraphParams {
 
     public static List<ParagraphParams> getDefaultTemp3ParParams() {
         ParagraphParams heading1 = new ParagraphParams(Fonts.Arial, 18, true, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
+                ParagraphAlignment.LEFT, "none", "000000");
         ParagraphParams heading2 = new ParagraphParams(Fonts.Arial, 16, true, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
+                ParagraphAlignment.LEFT, "none", "000000");
         ParagraphParams heading3 = new ParagraphParams(Fonts.Arial, 14, true, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
+                ParagraphAlignment.LEFT, "none", "000000");
         ParagraphParams heading4 = new ParagraphParams(Fonts.Arial, 14, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
+                ParagraphAlignment.LEFT, "none", "000000");
         ParagraphParams heading5 = new ParagraphParams(Fonts.Arial, 14, false, true, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
+                ParagraphAlignment.LEFT, "none", "000000");
         ParagraphParams textField = new ParagraphParams(Fonts.Arial, 14, false, false, false,
-                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
+                ParagraphAlignment.LEFT, "none", "000000");
         List<ParagraphParams> list = new ArrayList<ParagraphParams>();
         list.add(heading1);
         list.add(heading2);

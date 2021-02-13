@@ -1,11 +1,8 @@
 package com.example.templater.documentService.tempParamsGetter;
 
-import com.example.templater.documentService.docCombine.HeadingsMatcher;
 import com.example.templater.documentService.tempBuilder.*;
-import org.apache.poi.ooxml.POIXMLRelation;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
-import org.springframework.security.core.parameters.P;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,8 +52,13 @@ public class TempParamsGetter {
             if (ctrPr.getU() != null && ctrPr.getU().getVal() != null) {
                 params.setUnderline(ctrPr.getU().getVal().equals(STUnderline.SINGLE));
             }
-            //params.setTextHighlightColor();
-            //params.setAlignment();
+            if (ctpPr != null && ctrPr.getHighlight() != null) {
+                params.setTextHighlightColor(Colors.getColorName(ctrPr.getHighlight().getVal()));
+            }
+            else {
+                params.setTextHighlightColor("none");
+            }
+            params.setAlignment(ParagraphAlignment.LEFT);
             paramsList.add(params);
         }
 
@@ -140,7 +142,7 @@ public class TempParamsGetter {
                 dateC.setFont(Fonts.getFontEnum(run.getFontFamily()));
                 dateC.setFontSize(run.getFontSize());
                 dateC.setTextColor(run.getColor());
-                //dateC.setTextHighlightColor(run.getTextHightlightColor());
+                dateC.setTextHighlightColor(Colors.getColorName(run.getTextHightlightColor().toString()));
                 dateC.setBold(run.isBold());
                 dateC.setUnderline(run.getUnderline().equals(UnderlinePatterns.SINGLE));
                 dateC.setItalic(run.isItalic());
@@ -169,7 +171,7 @@ public class TempParamsGetter {
                     params.setFont(Fonts.getFontEnum(run.getFontFamily()));
                     params.setFontSize(run.getFontSize());
                     params.setTextColor(run.getColor());
-                    //params.setTextHighlightColor(run.getTextHightlightColor());
+                    params.setTextHighlightColor(Colors.getColorName(run.getTextHightlightColor().toString()));
                     params.setBold(run.isBold());
                     params.setItalic(run.isItalic());
                     params.setUnderline(run.getUnderline().equals(UnderlinePatterns.SINGLE));
@@ -195,7 +197,8 @@ public class TempParamsGetter {
                 paramsN.setFontSize(runN.getFontSize());
                 paramsD.setTextColor(runD.getColor());
                 paramsN.setTextColor(runN.getColor());
-                //params.setTextHighlightColor(run.getTextHightlightColor());
+                paramsD.setTextHighlightColor(Colors.getColorName(runD.getTextHightlightColor().toString()));
+                paramsN.setTextHighlightColor(Colors.getColorName(runN.getTextHightlightColor().toString()));
                 paramsD.setBold(runD.isBold());
                 paramsN.setBold(runN.isBold());
                 paramsD.setItalic(runD.isItalic());
@@ -266,6 +269,9 @@ public class TempParamsGetter {
     public static List<HeadingWithText> getHeadingsList(XWPFDocument document) {
         List<HeadingWithText> headingList = new ArrayList<>();
         List<XWPFParagraph> pList = document.getParagraphs();
+        if (pList == null || pList.isEmpty()) {
+            return null;
+        }
         List<Integer> indexes = new ArrayList<>();
         for (int i = 0; i < pList.size(); ++i) {
             String style = pList.get(i).getStyle();
@@ -327,9 +333,26 @@ public class TempParamsGetter {
     public static List<HeadingWithText> getMainHeadingsList(XWPFDocument document) {
         List<HeadingWithText> result = new ArrayList<>();
         List<HeadingWithText> hList = getHeadingsList(document);
+        if (hList == null) {
+            return null;
+        }
         for (HeadingWithText hwt : hList) {
             if (hwt.getHeading().getStyle() != null && hwt.getHeading().getStyle().equals("Heading1")) {
                 result.add(hwt);
+            }
+        }
+        return result;
+    }
+
+    public static List<String> getMainHeadingsNamesList(XWPFDocument document) {
+        List<String> result = new ArrayList<>();
+        List<XWPFParagraph> hList = document.getParagraphs();
+        if (hList == null) {
+            return null;
+        }
+        for (XWPFParagraph p : hList) {
+            if (p.getStyle() != null &&p .getStyle().equals("Heading1")) {
+                result.add(p.getText());
             }
         }
         return result;
@@ -410,6 +433,9 @@ public class TempParamsGetter {
     }
     public static HeadingContent getHeadingContent(XWPFDocument document, XWPFParagraph heading) {
         List<HeadingWithText> hList = TempParamsGetter.getHeadingsList(document);
+        if (hList == null || hList.isEmpty()) {
+            return null;
+        }
         return getHeadingContent(hList, heading);
     }
 

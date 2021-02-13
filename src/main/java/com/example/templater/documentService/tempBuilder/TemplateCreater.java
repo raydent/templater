@@ -34,6 +34,9 @@ public class TemplateCreater {
             XWPFRun run = p.createRun();
             run.setText("Date");
             run.setColor(titleParams.getDateColomn().getTextColor());
+            if (!titleParams.getDateColomn().getTextHighlightColor().equals("none")) {
+                run.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getDateColomn().getTextHighlightColor())));
+            }
             run.setFontFamily(Fonts.getFontString(titleParams.getDateColomn().getFont()));
             run.setFontSize(titleParams.getDateColomn().getFontSize());
             if (titleParams.getDateColomn().isBold()) {
@@ -97,37 +100,36 @@ public class TemplateCreater {
         if (titleParams.getThirdLine().isUnderline()) {
             run3.setUnderline(UnderlinePatterns.SINGLE);
         }
-
+        run.setFontFamily(Fonts.getFontString(titleParams.getFirstLine().getFont()));
+        run.setFontSize(titleParams.getFirstLine().getFontSize());
+        run.setColor(titleParams.getFirstLine().getTextColor());
+        if (!titleParams.getFirstLine().getTextHighlightColor().equals("none")) {
+            run.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getFirstLine().getTextHighlightColor())));
+        }
+        run2.setFontFamily(Fonts.getFontString(titleParams.getSecondLine().getFont()));
+        run2.setFontSize(titleParams.getSecondLine().getFontSize());
+        run2.setColor(titleParams.getSecondLine().getTextColor());
+        if (!titleParams.getSecondLine().getTextHighlightColor().equals("none")) {
+            run2.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getSecondLine().getTextHighlightColor())));
+        }
+        run3.setFontFamily(Fonts.getFontString(titleParams.getThirdLine().getFont()));
+        run3.setFontSize(titleParams.getThirdLine().getFontSize());
+        run3.setColor(titleParams.getThirdLine().getTextColor());
+        if (!titleParams.getThirdLine().getTextHighlightColor().equals("none")) {
+            run2.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getThirdLine().getTextHighlightColor())));
+        }
         switch (titleParams.getType()) {
             case 1: {
                 run.setText("Organisation");
-                run.setFontFamily(Fonts.getFontString(titleParams.getFirstLine().getFont()));
-                run.setFontSize(titleParams.getFirstLine().getFontSize());
-                run.setColor(titleParams.getFirstLine().getTextColor());
                 run2.setText("Document's name");
-                run2.setFontFamily(Fonts.getFontString(titleParams.getSecondLine().getFont()));
-                run2.setFontSize(titleParams.getSecondLine().getFontSize());
-                run2.setColor(titleParams.getSecondLine().getTextColor());
                 run3.setText("Description");
-                run3.setFontFamily(Fonts.getFontString(titleParams.getThirdLine().getFont()));
-                run3.setFontSize(titleParams.getThirdLine().getFontSize());
-                run3.setColor(titleParams.getThirdLine().getTextColor());
                 break;
             }
             case 2:
             case 3: {
                 run.setText("Document's name");
-                run.setFontFamily(Fonts.getFontString(titleParams.getFirstLine().getFont()));
-                run.setFontSize(titleParams.getFirstLine().getFontSize());
-                run.setColor(titleParams.getFirstLine().getTextColor());
                 run2.setText("DESCRIPTION");
-                run2.setFontFamily(Fonts.getFontString(titleParams.getSecondLine().getFont()));
-                run2.setFontSize(titleParams.getSecondLine().getFontSize());
-                run2.setColor(titleParams.getSecondLine().getTextColor());
                 run3.setText("NAME");
-                run3.setFontFamily(Fonts.getFontString(titleParams.getThirdLine().getFont()));
-                run3.setFontSize(titleParams.getThirdLine().getFontSize());
-                run3.setColor(titleParams.getThirdLine().getTextColor());
                 break;
             }
         }
@@ -146,6 +148,9 @@ public class TemplateCreater {
             run.setFontFamily(Fonts.getFontString(titleParams.getNameField().getFont()));
             run.setFontSize(titleParams.getNameField().getFontSize());
             run.setColor(titleParams.getNameField().getTextColor());
+            if (!titleParams.getNameField().getTextHighlightColor().equals("none")) {
+                run.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getNameField().getTextHighlightColor())));
+            }
             if (titleParams.getNameField().isBold()) {
                 run.setBold(true);
             }
@@ -163,6 +168,10 @@ public class TemplateCreater {
             run.setFontFamily(Fonts.getFontString(titleParams.getDateField().getFont()));
             run.setFontSize(titleParams.getDateField().getFontSize());
             run.setColor(titleParams.getDateField().getTextColor());
+            if (!titleParams.getDateField().getTextHighlightColor().equals("none")) {
+                run.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getDateField().getTextHighlightColor())));
+            }
+
             if (titleParams.getDateField().isBold()) {
                 run.setBold(true);
             }
@@ -197,6 +206,9 @@ public class TemplateCreater {
         XWPFRun run = paragraph.createRun();
         run.setText("Text");
         run.setColor(paragraphParams.getTextColor());
+        if (!paragraphParams.getTextHighlightColor().equals("none")) {
+            run.setTextHighlightColor(paragraphParams.getTextHighlightColor());
+        }
         run.setFontFamily(Fonts.getFontString(paragraphParams.getFont()));
         run.setFontSize(paragraphParams.getFontSize());
 
@@ -465,11 +477,10 @@ public class TemplateCreater {
             STHexColor col = STHexColor.Factory.newInstance();
             col.setStringValue(paragraphParamsList.get(i).getTextColor());
             color.setVal(col);
-            //color.setVal(hexToBytes(paragraphParamsList.get(i).getTextColor()));
             rpr.setColor(color);
-            //CTHighlight highlight = CTHighlight.Factory.newInstance();
-            //highlight.setVal(STHighlightColor.BLUE);
-            //rpr.setHighlight(highlight);
+            CTHighlight ctHighlight = CTHighlight.Factory.newInstance();
+            ctHighlight.setVal(Colors.getColorEnum(paragraphParamsList.get(i).getTextHighlightColor()));
+            rpr.setHighlight(ctHighlight);
 
             //font
             CTFonts fonts = CTFonts.Factory.newInstance();
