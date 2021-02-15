@@ -1,4 +1,4 @@
-package com.example.templater.tempBuilder;
+package com.example.templater.documentService.tempBuilder;
 
 
 import java.util.Arrays;

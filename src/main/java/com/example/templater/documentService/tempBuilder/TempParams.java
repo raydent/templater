@@ -1,4 +1,4 @@
-package com.example.templater.tempBuilder;
+package com.example.templater.documentService.tempBuilder;
 
 
 import com.example.templater.model.Temp_Full;
@@ -89,5 +89,17 @@ public class TempParams {
     }
     public static TempParams getDefaultTemp3Params() {
         return new TempParams(true, true, false, false, 1.15, Fields.average);
+    }
+
+    @Override
+    public String toString() {
+        return "TempParams{" +
+                "title_page=" + title_page +
+                ", numeration=" + numeration +
+                ", footer=" + footer +
+                ", header=" + header +
+                ", interval_between_lines=" + interval_between_lines +
+                ", field=" + field +
+                '}';
     }
 }
