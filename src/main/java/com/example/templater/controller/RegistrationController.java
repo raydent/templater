@@ -30,10 +30,10 @@ public class RegistrationController {
         return "registration";
     }
 
-    @RequestMapping(value = "/angular/registration", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/registration_angular", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
     User angularRegistration(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        String header = httpServletRequest.getHeader("authorization");
+        String header = httpServletRequest.getHeader("registration");
         String usernameAndPass = new String(Base64.getDecoder().decode(header.substring(header.indexOf(' ') + 1)));
         String username = usernameAndPass.substring(0, usernameAndPass.indexOf(':'));
         String passwordConfirmationPassword = usernameAndPass.substring(usernameAndPass.indexOf(':') + 1);
@@ -44,12 +44,10 @@ public class RegistrationController {
         user.setPassword(password);
         user.setUsername(username);
         user.setConfirmationPassword(confirmationPassword);
-        System.out.println(username + " " + password + " " + confirmationPassword);
-
-        if (password == confirmationPassword && userService.saveUser(user)) {
+        if (password.equals(confirmationPassword) && userService.saveUser(user)) {
             return user;
         }
-
+        System.out.println("Error");
         return null;
     }
 

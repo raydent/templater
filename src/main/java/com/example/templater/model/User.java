@@ -34,6 +34,10 @@ public class User implements UserDetails {
     @JoinColumn(name = "departments_id")
     private Department department;
 
+    public void setTemp_FullList(List<Temp_Full> temp_FullList) {
+        this.temp_FullList = temp_FullList;
+    }
+
     public Department getDepartment() {
         return department;
     }

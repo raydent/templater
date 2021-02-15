@@ -11,15 +11,26 @@
         </div>
 
         <form th:userDto="${usernameForm}" th:action="@{/managing}" th:method="post">
-            <input type="text" id="login" class="fadeIn second" name="username" placeholder="Username" required autofocus
+            <input type="text" id="adding user" class="fadeIn second" name="username" placeholder="Username" required autofocus
                    th:field="*{usernameForm.username}">
             <!--span class="validation_message" th:if="${name != null}">
                              [[${name}]]
                     </span-->
-            <input id="button-sub" type="submit" class="fadeIn fourth" value="Submit">
+            <input id="button-sub-1" type="submit" class="fadeIn fourth" value="Add to department">
+        </form>
+
+        <form th:userDto="${usernameForm}" th:action="@{/delete_from_department}" th:method="post">
+            <input type="text" id="deleting user" class="fadeIn second" name="username" placeholder="Username" required autofocus
+                   th:field="*{usernameForm.username}">
+            <!--span class="validation_message" th:if="${name != null}">
+                             [[${name}]]
+                    </span-->
+            <input id="button-sub-2" type="submit" class="fadeIn fourth" value="Delete from department">
         </form>
     </div>
 </div>
+
+
 
 </body>
 </html>
