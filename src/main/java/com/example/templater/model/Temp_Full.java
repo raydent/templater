@@ -1052,4 +1052,6 @@ public class Temp_Full {
     public void setTable_italic(String table_italic) {
         this.table_italic = table_italic;
     }
+
+
 }

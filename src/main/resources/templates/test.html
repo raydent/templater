@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hello</title>
+    <title>test page</title>
 </head>
 <body>
 <form th:userDo="${userForm}" th:action="@{/registration}" method="post">
@@ -10,7 +10,7 @@
     <input type="text" id="test" class="fadeIn second" name="test" placeholder="test" required autofocus
            th:field="*{userForm.field}" th:value="*{userForm.field}">
     <input type="text" id="test1" class="fadeIn second" name="test1" placeholder="test1" required autofocus
-           th:field="*{userForm.field}" th:value="*{userForm.field}"a>
+           th:field="*{userForm.field}" th:value="*{userForm.field}">
 
 </form>
 </body>
