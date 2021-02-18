@@ -1,0 +1,29 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+</head>
+<body>
+
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <div class="fadeIn first">
+            <h1 id="lable">Registration</h1>
+        </div>
+
+        <form th:userDo="${departmentForm}" th:action="@{/department}" method="post">
+            --
+            <input type="text" id="login" class="fadeIn second" name="login" placeholder="Department name" required autofocus
+                   th:field="*{departmentForm.departmentName}">
+            <p />
+            <input type="text" id="inputPassword" class="fadeIn third" placeholder="Manager id" required
+                   th:field="*{departmentForm.managerId}">
+            <p />
+            <input id="button-sub" type="submit" class="fadeIn eighth" value="Create department">
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>
