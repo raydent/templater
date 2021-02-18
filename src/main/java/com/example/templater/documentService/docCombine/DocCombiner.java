@@ -1,6 +1,5 @@
 package com.example.templater.documentService.docCombine;
 
-import com.example.templater.documentService.tempBuilder.TempParams;
 import com.example.templater.documentService.tempBuilder.TemplateCreater;
 import com.example.templater.documentService.tempParamsGetter.AllTempParams;
 import com.example.templater.documentService.tempParamsGetter.HeadingWithText;
@@ -14,7 +13,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +38,8 @@ public class DocCombiner {
         this.removedMainHeadings = removedMainHeadings;
     }
 
-    public XWPFDocument combineDocs(List<File> documents, List<HeadingsCorrection> correctionList) throws CustomException, IOException, XmlException {
+    public XWPFDocument combineDocs(List<File> documents, List<HeadingsCorrection> correctionList,
+                                    boolean removeSamePar) throws CustomException, IOException, XmlException {
         if (documents == null || documents.isEmpty()) {
             return null;
         }
@@ -140,7 +139,12 @@ public class DocCombiner {
                 mainHeadingsInfo.add(info);
             }
 
-            levelListMain = combineMainHeadings(levelListMain, levelListToMerge, documents.get(i).getName(), correctionList);
+            levelListMain = combineMainHeadings(levelListMain, levelListToMerge, documents.get(i).getName(),
+                    correctionList, removeSamePar);
+           /* for (HeadingWithText h : levelListMain) {
+                System.out.println(h.getHeading().getText());
+            }
+            System.out.println();*/
         }
         document = insertHeadings(document, levelListMain);
 
@@ -182,7 +186,7 @@ public class DocCombiner {
     }
 
     public List<HeadingWithText> combineMainHeadings(List<HeadingWithText> l, List<HeadingWithText> r, String fileName,
-                                                     List<HeadingsCorrection> correctionList) {
+                                                     List<HeadingsCorrection> correctionList, boolean removeSamePar) {
         List<HeadingWithText> result = new ArrayList<>();
         List<HeadingWithText> resolved = new ArrayList<>();
         List<XWPFParagraph> PL = new ArrayList<>();
@@ -197,11 +201,10 @@ public class DocCombiner {
 
         for (HeadingWithText hwtL : l) {
             if (hwtL.getHeading().getStyle().equals("Heading1")) {
-                List<String> headinhsToMerge = new ArrayList<>();
+                List<String> headingsToMerge = new ArrayList<>();
                 if (correctionList != null) {
                     // доделать коррекцию
                 }
-                boolean isMatched = false;
                 List<XWPFParagraph> text = new ArrayList<>();
                 List<XWPFTable> tables = new ArrayList<>();
                 List<HeadingWithText> content = new ArrayList<>();
@@ -211,22 +214,46 @@ public class DocCombiner {
                 if (hwtL.getTables() != null && !hwtL.getTables().isEmpty()) {
                     tables.addAll(hwtL.getTables());
                 }
+                List<HeadingWithText> con = TempParamsGetter.getHeadingContent(l, hwtL.getHeading()).getSubHList();
+                if (con != null && !con.isEmpty()) {
+                    content.addAll(con);
+                }
                 for (HeadingWithText hwtR : r) {
                     if (hwtR.getHeading().getStyle().equals("Heading1")) {
-                        HeadingsMatcher matcher = new HeadingsMatcher();
+                        Matcher matcher = new Matcher();
                         if (matcher.headingsMatch(PL, PR, hwtL.getHeading(), hwtR.getHeading()) >= 100
                                 && !resolved.contains(hwtR)) {
                             if (hwtR.getText() != null && !hwtR.getText().isEmpty()) {
-                                text.addAll(hwtR.getText());
+                                // проверка на наличие одинаковых абзацев
+                                if (removeSamePar && !text.isEmpty()) {
+                                    List<XWPFParagraph> pToAdd = new ArrayList<>();
+                                    List<XWPFParagraph> matched = new ArrayList<>();
+                                    for (XWPFParagraph pL : text) {
+                                        for (XWPFParagraph pR : hwtR.getText()) {
+                                            int score = matcher.paragraphsMatch(pL.getText(), pR.getText());
+                                            if (score < 80 && !pToAdd.contains(pR) && !matched.contains(pR)) {
+                                                pToAdd.add(pR);
+                                            }
+                                            if (score >= 80) {
+                                                if (text.get(text.indexOf(pL)).getText().length() < pR.getText().length()) {
+                                                    text.set(text.indexOf(pL), pR);
+                                                }
+                                                matched.add(pR);
+                                            }
+                                        }
+                                    }
+                                    text.addAll(pToAdd);
+                                }
+                                else {
+                                    text.addAll(hwtR.getText());
+                                }
                             }
                             if (hwtR.getTables() != null && !hwtR.getTables().isEmpty()) {
                                 tables.addAll(hwtR.getTables());
                             }
                             resolved.add(hwtR);
-                            isMatched = true;
-                            content = combineSubHeadings(TempParamsGetter.getHeadingContent(l,
-                                    hwtL.getHeading()).getSubHList(), TempParamsGetter.getHeadingContent(r,
-                                    hwtR.getHeading()).getSubHList(), 1);
+                            content = combineSubHeadings(con, TempParamsGetter.getHeadingContent(r,
+                                    hwtR.getHeading()).getSubHList(), removeSamePar, 1);
                             // дополнение инофрмации о хедере из source
                             MatchedHeadingInfo matchedInfo = new MatchedHeadingInfo();
                             matchedInfo.setFileName(fileName);
@@ -253,12 +280,6 @@ public class DocCombiner {
                     result.add(hwt);
                     if (content != null && !content.isEmpty()) {
                         result.addAll(content);
-                    }
-                    if (!isMatched) {
-                        List<HeadingWithText> c = TempParamsGetter.getHeadingContent(l, hwtL.getHeading()).getSubHList();
-                        if (c != null && !c.isEmpty()) {
-                            result.addAll(c);
-                        }
                     }
                 }
             }
@@ -289,9 +310,9 @@ public class DocCombiner {
         return result;
     }
 
-    public List<HeadingWithText> combineSubHeadings(List<HeadingWithText> l, List<HeadingWithText> r,
+    public List<HeadingWithText> combineSubHeadings(List<HeadingWithText> l, List<HeadingWithText> r, boolean removeSamePar,
                                                     int level) {
-        if (level == 6 || ((l == null || l.isEmpty()) && (r == null || r.isEmpty()))) {
+        if (level == 5 || ((l == null || l.isEmpty()) && (r == null || r.isEmpty()))) {
             return null;
         }
         else if ((l == null || l.isEmpty()) && (r != null && !r.isEmpty())) {
@@ -324,22 +345,49 @@ public class DocCombiner {
                 if (hwtL.getTables() != null && !hwtL.getTables().isEmpty()) {
                     tables.addAll(hwtL.getTables());
                 }
+                List<HeadingWithText> con = TempParamsGetter.getHeadingContent(l, hwtL.getHeading()).getSubHList();
+                if (con != null && !con.isEmpty()) {
+                    content.addAll(con);
+                }
                 for (HeadingWithText hwtR : r) {
                     if (TempParamsGetter.getHeadingNumLevel(hwtR.getHeading()) == level) {
-                        HeadingsMatcher matcher = new HeadingsMatcher();
+                        Matcher matcher = new Matcher();
                         if (matcher.headingsNameMatch(hwtL.getHeading(), hwtR.getHeading()) == 100
                                 && !resolved.contains(hwtR)) {
                             if (hwtR.getText() != null && !hwtR.getText().isEmpty()) {
-                                text.addAll(hwtR.getText());
+                                // проверка на наличие одинаковых абзацев
+                                if (removeSamePar && !text.isEmpty()) {
+                                    List<XWPFParagraph> pToAdd = new ArrayList<>();
+                                    List<XWPFParagraph> matched = new ArrayList<>();
+                                    for (XWPFParagraph pL : text) {
+                                        for (XWPFParagraph pR : hwtR.getText()) {
+                                            int score = matcher.paragraphsMatch(pL.getText(), pR.getText());
+                                            if (score >= 80) {
+                                                if (text.get(text.indexOf(pL)).getText().length() < pR.getText().length()) {
+                                                    text.set(text.indexOf(pL), pR);
+                                                }
+                                                matched.add(pR);
+                                            }
+                                        }
+                                    }
+                                    for (XWPFParagraph pR : hwtR.getText()) {
+                                        if (!matched.contains(pR)) {
+                                            pToAdd.add(pR);
+                                        }
+                                    }
+                                    text.addAll(pToAdd);
+                                }
+                                else {
+                                    text.addAll(hwtR.getText());
+                                }
                             }
                             if (hwtR.getTables() != null && !hwtR.getTables().isEmpty()) {
                                 tables.addAll(hwtR.getTables());
                             }
                             resolved.add(hwtR);
-                            if (level != 5) {
-                                content = combineSubHeadings(TempParamsGetter.getHeadingContent(l,
-                                        hwtL.getHeading()).getSubHList(), TempParamsGetter.getHeadingContent(r,
-                                        hwtR.getHeading()).getSubHList(), level + 1);
+                            if (level != 4) {
+                                content = combineSubHeadings(con, TempParamsGetter.getHeadingContent(r,
+                                        hwtR.getHeading()).getSubHList(), removeSamePar, level + 1);
                             }
                             break;
                         }
@@ -416,9 +464,11 @@ public class DocCombiner {
                 run.setColor(p.getRuns().get(0).getColor());
             }
         }
-        for (XWPFTable t : hwt.getTables()) {
-            document = insertTable(document, t);
-            document.createParagraph();
+        if (hwt.getTables() != null && !hwt.getTables().isEmpty()) {
+            for (XWPFTable t : hwt.getTables()) {
+                document = insertTable(document, t);
+                document.createParagraph();
+            }
         }
         return document;
     }
@@ -532,5 +582,4 @@ public class DocCombiner {
         }
         return document;
     }
-
 }

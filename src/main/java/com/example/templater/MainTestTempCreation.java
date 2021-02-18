@@ -3,14 +3,11 @@ package com.example.templater;
 import com.example.templater.documentService.docCombine.DocCombiner;
 import com.example.templater.documentService.docCombine.MainHeadingInfo;
 import com.example.templater.documentService.docCombine.MatchedHeadingInfo;
-import com.example.templater.documentService.tempBuilder.*;
+import com.example.templater.documentService.docCombine.Matcher;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.xmlbeans.XmlException;
 
-
-import javax.print.Doc;
-import java.io.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,12 +53,12 @@ public class MainTestTempCreation {
         }
 */
 
-        File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Template1.docx");
-        File file1 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Template2.docx");
-        File file2 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Template3.docx");
+        File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test1.docx");
+        File file1 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test2.docx");
+        File file2 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test3.docx");
         try {
             DocCombiner dc = new DocCombiner();
-            XWPFDocument result = dc.combineDocs(Arrays.asList(file, file1), null);
+            XWPFDocument result = dc.combineDocs(Arrays.asList(file, file1, file2), null, true);
             FileOutputStream fos = new FileOutputStream("Combined.docx");
             result.write(fos);
             fos.close();
@@ -85,8 +82,6 @@ public class MainTestTempCreation {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
 }
