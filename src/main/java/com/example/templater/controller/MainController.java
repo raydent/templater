@@ -36,7 +36,7 @@ public class MainController {
     private IUserService userService;
     //@Autowired
     private AuthenticationManager authenticationManager;
-
+    private List<MultipartFile> uploadedFiles = new ArrayList<>();
 //test
     @GetMapping("/login")
     public String getLogin(Model model, @AuthenticationPrincipal User authenticatedUser, @RequestParam(required = false) String error) {
@@ -50,27 +50,6 @@ public class MainController {
         model.addAttribute("userForm", new User());
         return "login";
     }
-
-    /*@PostMapping("/login")
-    public String setLogin(HttpServletRequest request, HttpServletResponse response, @ModelAttribute("userForm") User user,
-                           BindingResult result) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UsernamePasswordAuthenticationToken authReq
-                = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), user.getAuthorities());
-        Authentication auth = authenticationManager.authenticate(authReq);
-        SecurityContext sc = SecurityContextHolder.getContext();
-        sc.setAuthentication(auth);
-        return "redirect:/user";
-    }*/
-
-
-//    @RequestMapping(value = "/angular/login", method = RequestMethod.GET, produces = "application/json")
-//    public @ResponseBody
-//    User angularLogin(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-//        String credentials = httpServletRequest.getHeader("authorization");
-//        return checkUserByCredentials(credentials);
-//    }
-
 
     //@RequestMapping(value = "/upload_angular", method = RequestMethod.POST, produces = "application/json")
 //    @PostMapping("/upload_angular")
@@ -88,12 +67,16 @@ public class MainController {
 //        }
 //    }
     @PostMapping("/upload_angular")
-    public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> handleFileUpload(@RequestPart("file") MultipartFile file) {
         String message;
+        System.out.println(file.getOriginalFilename());
+
+        uploadedFiles.add(file);
+        System.out.println(uploadedFiles.size());
         try {
             try {
                 Path path = Paths.get("C:\\files\\");
-                Files.copy(file.getInputStream(), path.resolve("file_name.docx"));
+                //Files.copy(file.getInputStream(), path.resolve("file_name.docx"));
             } catch (Exception e) {
                 throw new RuntimeException("FAIL!");
             }
@@ -168,28 +151,18 @@ public class MainController {
 
     @RequestMapping(value = "/get_department_users_angular", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
-    List<User> getDepartmentUsersAngular(HttpServletRequest httpServletRequest, Authentication authentication){
+    List<String> getDepartmentUsersAngular(HttpServletRequest httpServletRequest, Authentication authentication){
         User user = userService.getUserByName(authentication.getName());
+        List<String> usernames = new ArrayList<>();
         if (user.getDepartment() != null){
             List<User> users = user.getDepartment().getUsers();
             for (User u : users){
-                u.setDepartment(null);
-                u.setTemp_FullList(null);
+               usernames.add(u.getUsername());
             }
-            return users;
+            return usernames;
         }
         return null;
     }
-//    @RequestMapping(value = "/upload_angular", method = RequestMethod.GET, produces = "application/json")
-//    public @ResponseBody
-//    String saveTemplateAngular(HttpServletRequest httpServletRequest){
-//        httpServletRequest.
-//        Enumeration<String> e = httpServletRequest.getHeaderNames();
-//        while (e.hasMoreElements())
-//            System.out.println("Value is: " + e.nextElement());
-//
-//        return "{\"username\" : \"angular\"}";
-//    }
 
     @RequestMapping(value = "/download_angular", method = RequestMethod.POST, produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     public @ResponseBody
