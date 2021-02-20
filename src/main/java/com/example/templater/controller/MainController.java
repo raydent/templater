@@ -1,9 +1,11 @@
 package com.example.templater.controller;
 
+import com.example.templater.documentService.tempBuilder.*;
 import com.example.templater.model.*;
 import com.example.templater.service.IUserService;
 //import com.example.templater.tempBuilder.*;
 import org.apache.commons.compress.utils.IOUtils;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -38,18 +40,18 @@ public class MainController {
     private AuthenticationManager authenticationManager;
     private List<MultipartFile> uploadedFiles = new ArrayList<>();
 //test
-    @GetMapping("/login")
-    public String getLogin(Model model, @AuthenticationPrincipal User authenticatedUser, @RequestParam(required = false) String error) {
-        System.out.println(model.toString());
-        if (error != null){
-            model.addAttribute("loginError", "Login or password is incorrect");
-        }
-        if (Objects.nonNull(authenticatedUser)) {
-            return "redirect:/user";
-        }
-        model.addAttribute("userForm", new User());
-        return "login";
+@GetMapping("/login")
+public String getLogin(Model model, @AuthenticationPrincipal User authenticatedUser, @RequestParam(required = false) String error) {
+    System.out.println(model.toString());
+    if (error != null){
+        model.addAttribute("loginError", "Login or password is incorrect");
     }
+    if (Objects.nonNull(authenticatedUser)) {
+        return "redirect:/user";
+    }
+    model.addAttribute("userForm", new User());
+    return "login";
+}
 
     //@RequestMapping(value = "/upload_angular", method = RequestMethod.POST, produces = "application/json")
 //    @PostMapping("/upload_angular")
@@ -93,8 +95,15 @@ public class MainController {
 
     @RequestMapping(value = "/save_angular", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
-    String saveTemplateAngular(@RequestBody String json, HttpServletRequest httpServletRequest){
-        System.out.println("Json" + json);
+    String saveTemplateAngular(@RequestBody Temp_Full temp_full, Authentication authentication, HttpServletRequest httpServletRequest){
+        //System.out.println("Json" + json);
+        //System.out.println(json.getTable_font());
+        //System.out.println(json.getH1_underline());
+        User user = userService.getUserByName(authentication.getName());
+        System.out.println(temp_full.toString());
+        temp_full.fillAllDBParams(user);
+        user.addTemp_Full(temp_full);
+        userService.saveUserUnsafe(user);
         return "{\"username\" : \"angular\"}";
     }
 
@@ -134,10 +143,12 @@ public class MainController {
 
     @RequestMapping(value = "/get_templates_angular", method = RequestMethod.POST)
     public @ResponseBody
-    List<Temp_Full> getTemplatesAngular(@RequestBody String json, HttpServletRequest httpServletRequest, Authentication authentication){
+    List<String> getTemplatesAngular(@RequestBody String json, HttpServletRequest httpServletRequest, Authentication authentication){
         List<Temp_Full> templates = userService.getUserByName(authentication.getName()).getTemp_FullList();
+        List<String> template_ids = new ArrayList<>();
         for (Temp_Full temp_full : templates){
             temp_full.setUser(null);
+            template_ids.add(String.valueOf(temp_full.getId()));
             for (Header header : temp_full.getHeaders()){
                 header.setTemp_full(null);
             }
@@ -146,7 +157,7 @@ public class MainController {
             }
             temp_full.getTable().setTemp_full(null);
         }
-        return templates;
+        return template_ids;
     }
 
     @RequestMapping(value = "/get_department_users_angular", method = RequestMethod.POST, produces = "application/json")
@@ -157,20 +168,58 @@ public class MainController {
         if (user.getDepartment() != null){
             List<User> users = user.getDepartment().getUsers();
             for (User u : users){
-               usernames.add(u.getUsername());
+                usernames.add(u.getUsername());
             }
             return usernames;
         }
         return null;
     }
 
+    @RequestMapping(value = "/get_department_angular", method = RequestMethod.POST, produces = "application/json")
+    public @ResponseBody
+    String getDepartmentAngular(HttpServletRequest httpServletRequest, Authentication authentication){
+        User user = userService.getUserByName(authentication.getName());
+        return "{\"Department name\" : \"" + user.getDepartment().getDepartmentName() + "\"}";
+    }
+
     @RequestMapping(value = "/download_angular", method = RequestMethod.POST, produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     public @ResponseBody
-    byte[] downloadFile() throws IOException {
-        File file = new File("C:\\files\\" + "1" + ".docx");
-        FileInputStream fis = new FileInputStream(file);
-        System.out.println("File return");
-        return IOUtils.toByteArray(fis);
+    byte[] downloadFile(@RequestBody Temp_Full temp_full, Authentication authentication) throws IOException {
+
+        temp_full.replaceCheckboxNulls();
+        //temp_full.setTitle_type("1"); // надо фиксить, проблемы фронта
+        //temp_full.setFields("average");
+        System.out.println(temp_full);
+        ParagraphParams firstParagraph = new ParagraphParams(temp_full, 1);
+        ParagraphParams secondParagraph = new ParagraphParams(temp_full, 2);
+        ParagraphParams thirdParagraph = new ParagraphParams(temp_full, 3);
+        ParagraphParams fourthParagraph = new ParagraphParams(temp_full, 4);
+        ParagraphParams fifthParagraph = new ParagraphParams(temp_full, 5);
+        ParagraphParams textField = new ParagraphParams(Fonts.Arial, 14, false, false, false,
+                ParagraphAlignment.LEFT, Colors.getColorCode("black"), Colors.getColorCode("black"));
+        List<ParagraphParams> paragraphParamsList = Arrays.asList(firstParagraph, secondParagraph,
+                thirdParagraph, fourthParagraph, fifthParagraph, null, null, textField);
+        TitleParams titleParams = new TitleParams(temp_full);
+
+        TempParams tempParams = new TempParams(temp_full);
+
+        TableParams tableParams = new TableParams(temp_full);
+
+
+        TemplateCreater templateCreater = new TemplateCreater();
+        File file;
+        FileInputStream fis;
+        byte[] bytes = null;
+        try {
+            templateCreater.createTemplate(tempParams, titleParams, paragraphParamsList, tableParams);
+            file = new File("Template.docx");
+            fis = new FileInputStream(file);
+            bytes = IOUtils.toByteArray(fis);
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bytes;
     }
 
     @GetMapping("/department") //admin's functional to create department
@@ -222,7 +271,8 @@ public class MainController {
         JSONObject jsonObject = new JSONObject(json);
         User user = userService.getUserByName(jsonObject.get("username").toString());
         Department department = user.getDepartment();
-        if ((manager.getDepartment().getManagerId().equals(manager.getId())) && (department == null || !department.getManagerId().equals(user.getId()))){
+        if ((manager.getDepartment().getManagerId().equals(manager.getId()))
+                && (department == null || !department.getManagerId().equals(user.getId()))){
             user.setDepartment(manager.getDepartment());
             userService.saveUserUnsafe(user);
             return "{\"success\" : \"OK\"}";
@@ -377,8 +427,10 @@ public class MainController {
 //        ParagraphParams thirdParagraph = new ParagraphParams(temp, 3);
 //        ParagraphParams fourthParagraph = new ParagraphParams(temp, 4);
 //        ParagraphParams fifthParagraph = new ParagraphParams(temp, 5);
+////        ParagraphParams textField = new ParagraphParams(Fonts.Arial, 14, false, false, false,
+////                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
 //        ParagraphParams textField = new ParagraphParams(Fonts.Arial, 14, false, false, false,
-//                ParagraphAlignment.LEFT, Colors.getColorCode(Colors.black), Colors.getColorCode(Colors.black));
+//                ParagraphAlignment.LEFT, Colors.getColorCode("black"), Colors.getColorCode("black"));
 //        List<ParagraphParams> paragraphParamsList = Arrays.asList(firstParagraph, secondParagraph,
 //                thirdParagraph, fourthParagraph, fifthParagraph, null, null, textField);
 //
