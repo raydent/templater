@@ -41,7 +41,12 @@ public class TempParamsGetter {
             CTPPr ctpPr = ctStyle.getPPr();
             ParagraphParams params = new ParagraphParams();
             params.setFont(Fonts.getFontEnum(ctrPr.getRFonts().getAscii()));
-            params.setFontSize(ctrPr.getSz().getVal().intValue() / 2);
+            if (ctrPr.getSz() != null) {
+                params.setFontSize(ctrPr.getSz().getVal().intValue() / 2);
+            }
+            else {
+                params.setFontSize(11);
+            }
             params.setTextColor(ctrPr.getColor().xgetVal().getStringValue());
             if (ctrPr.getB() != null && ctrPr.getB().getVal() != null) {
                 params.setBold(ctrPr.getB().getVal().equals(STOnOff.ON));
@@ -96,7 +101,13 @@ public class TempParamsGetter {
 
         for (XWPFStyle style : styleList) {
             if (style != null) {
-                tempParams.setInterval_between_lines(style.getCTStyle().getPPr().getSpacing().getLine().doubleValue() / 240);
+                BigInteger spacing = style.getCTStyle().getPPr().getSpacing().getLine();
+                if (spacing != null) {
+                    tempParams.setInterval_between_lines(spacing.doubleValue() / 240);
+                }
+                else {
+                    tempParams.setInterval_between_lines(1);
+                }
             }
         }
         CTSectPr sectPr = document.getDocument().getBody().getSectPr();
