@@ -221,7 +221,7 @@ public class DocCombiner {
                 for (HeadingWithText hwtR : r) {
                     if (hwtR.getHeading().getStyle().equals("Heading1")) {
                         Matcher matcher = new Matcher();
-                        if (matcher.headingsMatch(PL, PR, hwtL.getHeading(), hwtR.getHeading()) >= 100
+                        if (matcher.headingsMatch(PL, PR, hwtL, hwtR) >= 100
                                 && !resolved.contains(hwtR)) {
                             if (hwtR.getText() != null && !hwtR.getText().isEmpty()) {
                                 // проверка на наличие одинаковых абзацев

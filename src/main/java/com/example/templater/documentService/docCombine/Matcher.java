@@ -1,7 +1,9 @@
 package com.example.templater.documentService.docCombine;
 
+import com.example.templater.documentService.tempParamsGetter.HeadingWithText;
 import com.example.templater.documentService.tempParamsGetter.TempParamsGetter;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,11 +12,15 @@ import java.util.regex.Pattern;
 
 public class Matcher {
     public int headingsMatch(List<XWPFParagraph> hListS, List<XWPFParagraph> hListC,
-                             XWPFParagraph source, XWPFParagraph candidate) {
+                             HeadingWithText sourceHWT, HeadingWithText candidateHWT) {
         int score = 0;
+        XWPFParagraph source = sourceHWT.getHeading();
+        XWPFParagraph candidate = candidateHWT.getHeading();
+        // сравнивание названий
         score += headingsNameMatch(source, candidate);
         List<XWPFParagraph> subheadingsS = TempParamsGetter.getSubHeadings(hListS, source);
         List<XWPFParagraph> subheadingsC = TempParamsGetter.getSubHeadings(hListC, candidate);
+        // проверка наличия одинаковых сабхедингов
         int number_matched_subheadings = 0;
         for (XWPFParagraph s : subheadingsS) {
             for (XWPFParagraph c : subheadingsC) {
@@ -28,6 +34,40 @@ public class Matcher {
             int sizeS = subheadingsS.size();
             int sizeC = subheadingsC.size();
             score += (number_matched_subheadings * 40) / Integer.max(sizeS, sizeC);
+        }
+
+        // проверка на наличие схожих таблиц
+        int table_score = 0;
+        List<XWPFTable> tablesS = sourceHWT.getTables();
+        List<XWPFTable> tablesC = candidateHWT.getTables();
+        List<XWPFTable> resolved = new ArrayList<>();
+        if (tablesS != null && !tablesS.isEmpty() && tablesC != null && !tablesC.isEmpty()) {
+            for (XWPFTable tableS : tablesS) {
+                for (XWPFTable tableC : tablesC) {
+                    if (!resolved.contains(tableC)) {
+                        int cell_number = Integer.min(tableS.getRow(0).getTableCells().size(),
+                                tableC.getRow(0).getTableCells().size());
+                        int matched_coloms = 0;
+                        for (int i = 0; i < cell_number; ++i) {
+                            int headings_match = 0;
+                            XWPFParagraph hS = tableS.getRow(0).getCell(i).getParagraphArray(0);
+                            XWPFParagraph hC = tableC.getRow(0).getCell(i).getParagraphArray(0);
+                            headings_match = headingsNameMatch(hS, hC);
+                            if (headings_match >= 100) {
+                                ++matched_coloms;
+                            }
+                        }
+                        int scoreT = (matched_coloms * 100) / cell_number;
+                        table_score += scoreT;
+                        if (scoreT >= 80) {
+                            resolved.add(tableC);
+                            break;
+                        }
+                    }
+                }
+            }
+            int part_of_matched_tables = (table_score * 100) / Integer.min(tablesS.size(), tablesC.size());
+            score += (part_of_matched_tables * 20) / 100;
         }
         return score;
     }
@@ -67,7 +107,7 @@ public class Matcher {
                             break;
                         }
                     }
-                    if (isMatched && ((i * 100) / c.length() > 80)) {
+                    if (isMatched && ((i * 100) / c.length() > 70)) {
                         ++number_matched_words;
                         break;
                     }
