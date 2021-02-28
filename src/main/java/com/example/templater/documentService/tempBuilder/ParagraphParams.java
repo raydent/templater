@@ -27,7 +27,7 @@ public class ParagraphParams {
         this.italic = italic;
         this.underline = underline;
         this.alignment = alignment;
-        this.textHighlightColor = textHighlightColor;
+        this.textHighlightColor = Colors.getColorName(textHighlightColor);
         this.textColor = textColor;
     }
 
@@ -39,7 +39,7 @@ public class ParagraphParams {
         this.italic = italic.equals("1");
         this.underline = underline.equals("1");
         this.alignment = ParagraphAlignment.valueOf(alignment);
-        this.textHighlightColor = textHighlightColor;
+        this.textHighlightColor = Colors.getColorName(textHighlightColor);//"black";//textHighlightColor;
         this.textColor = textColor;
     }
 
@@ -52,7 +52,7 @@ public class ParagraphParams {
                 this.italic = temp.getH1_italic().equals("1");
                 this.underline = temp.getH1_underline().equals("1");
                 this.alignment = ParagraphAlignment.valueOf(temp.getH1_alignment());
-                this.textHighlightColor = temp.getH1_text_highlight_color().substring(1);
+                this.textHighlightColor = Colors.getColorName(temp.getH1_text_highlight_color().substring(1));
                 this.textColor = temp.getH1_text_color().substring(1);
                 break;
             case(2):
@@ -62,7 +62,7 @@ public class ParagraphParams {
                 this.italic = temp.getH2_italic().equals("1");
                 this.underline = temp.getH2_underline().equals("1");
                 this.alignment = ParagraphAlignment.valueOf(temp.getH2_alignment());
-                this.textHighlightColor = temp.getH2_text_highlight_color().substring(1);
+                this.textHighlightColor = Colors.getColorName(temp.getH2_text_highlight_color().substring(1));
                 this.textColor = temp.getH2_text_color().substring(1);
                 break;
             case(3):
@@ -72,7 +72,7 @@ public class ParagraphParams {
                 this.italic = temp.getH3_italic().equals("1");
                 this.underline = temp.getH3_underline().equals("1");
                 this.alignment = ParagraphAlignment.valueOf(temp.getH3_alignment());
-                this.textHighlightColor = temp.getH3_text_highlight_color().substring(1);
+                this.textHighlightColor = Colors.getColorName(temp.getH3_text_highlight_color().substring(1));
                 this.textColor = temp.getH3_text_color().substring(1);
                 break;
             case(4):
@@ -82,7 +82,7 @@ public class ParagraphParams {
                 this.italic = temp.getH4_italic().equals("1");
                 this.underline = temp.getH4_underline().equals("1");
                 this.alignment = ParagraphAlignment.valueOf(temp.getH4_alignment());
-                this.textHighlightColor = temp.getH4_text_highlight_color().substring(1);
+                this.textHighlightColor = Colors.getColorName(temp.getH4_text_highlight_color().substring(1));
                 this.textColor = temp.getH4_text_color().substring(1);
                 break;
             default:
@@ -92,7 +92,7 @@ public class ParagraphParams {
                 this.italic = temp.getH5_italic().equals("1");
                 this.underline = temp.getH5_underline().equals("1");
                 this.alignment = ParagraphAlignment.valueOf(temp.getH5_alignment());
-                this.textHighlightColor = temp.getH5_text_highlight_color().substring(1);
+                this.textHighlightColor = Colors.getColorName(temp.getH5_text_highlight_color().substring(1));
                 this.textColor = temp.getH5_text_color().substring(1);
         }
     }

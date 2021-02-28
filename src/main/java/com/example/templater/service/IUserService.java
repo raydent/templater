@@ -13,4 +13,5 @@ public interface IUserService extends UserDetailsService {
     void saveUserUnsafe(User user);
     void deleteUserById(Integer id);
     List<Temp_Full> getTemplatesListByName(String name);
+    
 }
