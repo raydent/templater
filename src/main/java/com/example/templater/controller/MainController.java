@@ -1,12 +1,17 @@
 package com.example.templater.controller;
 
+import com.example.templater.documentService.docCombine.DocCombiner;
+import com.example.templater.documentService.docCombine.MainHeadingInfo;
+import com.example.templater.documentService.docCombine.MatchedHeadingInfo;
 import com.example.templater.documentService.tempBuilder.*;
 import com.example.templater.model.*;
 import com.example.templater.service.IUserService;
 //import com.example.templater.tempBuilder.*;
 import com.example.templater.service.TemplateService;
 import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,13 +30,12 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
@@ -41,7 +45,7 @@ public class MainController {
     private TemplateService templateService;
     //@Autowired
     private AuthenticationManager authenticationManager;
-    private List<MultipartFile> uploadedFiles = new ArrayList<>();
+    private Map<String, List<File>> uploadedFiles = new HashMap<>();
 //test
     @GetMapping("/login")
     public String getLogin(Model model, @AuthenticationPrincipal User authenticatedUser, @RequestParam(required = false) String error) {
@@ -70,29 +74,61 @@ public class MainController {
     }
 
     @PostMapping("/upload_angular")
-    public ResponseEntity<String> handleFileUpload(@RequestPart("file") MultipartFile file) {
+    public ResponseEntity<String> handleFileUpload(@RequestPart("file") MultipartFile multipartFile, Authentication authentication) {
         String message;
-        System.out.println(file.getOriginalFilename());
-
-        uploadedFiles.add(file);
-        System.out.println(uploadedFiles.size());
+        File file = new File("temp" + multipartFile.getOriginalFilename());
         try {
-            try {
-                Path path = Paths.get("C:\\files\\");
-                //Files.copy(file.getInputStream(), path.resolve("file_name.docx"));
-            } catch (Exception e) {
-                throw new RuntimeException("FAIL!");
-            }
-            //files.add(file.getOriginalFilename());
-
-            message = "Successfully uploaded!";
-            return ResponseEntity.status(HttpStatus.OK).body(message);
-        } catch (Exception e) {
-            message = "Failed to upload!";
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
+            file.createNewFile();
+            InputStream initialStream = multipartFile.getInputStream();
+            byte[] buffer = new byte[initialStream.available()];
+            initialStream.read(buffer);
+            OutputStream outStream = new FileOutputStream(file);
+            outStream.write(buffer);
+            outStream.close();
+            initialStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            //return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Failed to upload");
         }
+        synchronized(uploadedFiles) {
+            if (uploadedFiles.get(authentication.getName()) == null){
+                List<File> userFiles = new ArrayList<>();
+                userFiles.add(file);
+                uploadedFiles.put(authentication.getName(), userFiles);
+            }
+            else {
+                uploadedFiles.get(authentication.getName()).add(file);//[userService.getUserByName(authentication.getName())].add(file);
+            }
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("Successfully uploaded");
     }
 
+    @RequestMapping(value = "/merge_angular", method = RequestMethod.POST, produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+    public synchronized @ResponseBody
+    byte[] mergeTemplatesAndDownloadFile(@RequestBody Temp_Full temp_full, Authentication authentication) throws IOException {
+        //FileInputStream fis = ne;
+        byte[] bytes = null;
+        synchronized(uploadedFiles) {
+            try {
+                DocCombiner dc = new DocCombiner();
+                XWPFDocument result = dc.combineDocs(uploadedFiles.get(authentication.getName()),
+                        null, true);
+                FileOutputStream fos = new FileOutputStream("Combined.docx");
+                //System.out.println(fos.toString());
+//                System.out.println(result == null);
+//                System.out.println(fos == null);
+                result.write(fos);
+                fos.close();
+                FileInputStream fis = new FileInputStream("Combined.docx");
+                bytes = IOUtils.toByteArray(fis);
+                fis.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            uploadedFiles.get(authentication.getName()).clear();
+        }
+        return bytes;
+    }
 
     @RequestMapping(value = "/save_angular", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
@@ -120,14 +156,6 @@ public class MainController {
         if (temp_full == null){
             return null;
         }
-//            temp_full.setUser(null);
-//            for (Header header : temp_full.getHeaders()){
-//                header.setTemp_full(null);
-//            }
-//            for (TitleHeader titleHeader : temp_full.getTitle_headers()){
-//                titleHeader.setTemp_full(null);
-//            }
-//            temp_full.getTable().setTemp_full(null);
         temp_full.cutRecursiveReferences();
         return temp_full;
     }
