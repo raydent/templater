@@ -62,7 +62,7 @@ public class MainTestTempCreation {
             FileOutputStream fos = new FileOutputStream("Combined.docx");
             result.write(fos);
             fos.close();
-            List<MainHeadingInfo> mainHeadingsInfo = dc.getMainHeadingsInfo();
+            /*List<MainHeadingInfo> mainHeadingsInfo = dc.getMainHeadingsInfo();
             for (MainHeadingInfo info : mainHeadingsInfo) {
                 System.out.println("Name: " + info.getHeadingName() + ", Final Name: " + info.getFinalName() + ", File name:"
                         + info.getFileName() + ", Is matched: " + info.isMatched());
@@ -78,7 +78,7 @@ public class MainTestTempCreation {
                 }
                 System.out.println("\n");
             }
-
+*/
         } catch (Exception e) {
             e.printStackTrace();
         }

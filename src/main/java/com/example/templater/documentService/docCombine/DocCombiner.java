@@ -230,18 +230,21 @@ public class DocCombiner {
                                     List<XWPFParagraph> matched = new ArrayList<>();
                                     for (XWPFParagraph pL : text) {
                                         for (XWPFParagraph pR : hwtR.getText()) {
-                                            int score = matcher.paragraphsMatch(pL.getText(), pR.getText());
-                                            if (score < 80 && !pToAdd.contains(pR) && !matched.contains(pR)) {
-                                                pToAdd.add(pR);
-                                            }
-                                            if (score >= 80) {
+                                            if (matcher.paragraphsMatch(pL.getText(), pR.getText())) {
                                                 if (text.get(text.indexOf(pL)).getText().length() < pR.getText().length()) {
                                                     text.set(text.indexOf(pL), pR);
                                                 }
                                                 matched.add(pR);
+                                                break;
                                             }
                                         }
                                     }
+                                    for (XWPFParagraph pR : hwtR.getText()) {
+                                        if (!matched.contains(pR)) {
+                                            pToAdd.add(pR);
+                                        }
+                                    }
+
                                     text.addAll(pToAdd);
                                 }
                                 else {
@@ -361,12 +364,12 @@ public class DocCombiner {
                                     List<XWPFParagraph> matched = new ArrayList<>();
                                     for (XWPFParagraph pL : text) {
                                         for (XWPFParagraph pR : hwtR.getText()) {
-                                            int score = matcher.paragraphsMatch(pL.getText(), pR.getText());
-                                            if (score >= 80) {
+                                            if (matcher.paragraphsMatch(pL.getText(), pR.getText())) {
                                                 if (text.get(text.indexOf(pL)).getText().length() < pR.getText().length()) {
                                                     text.set(text.indexOf(pL), pR);
                                                 }
                                                 matched.add(pR);
+                                                break;
                                             }
                                         }
                                     }
@@ -375,6 +378,7 @@ public class DocCombiner {
                                             pToAdd.add(pR);
                                         }
                                     }
+
                                     text.addAll(pToAdd);
                                 }
                                 else {
