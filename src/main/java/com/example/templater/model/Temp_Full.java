@@ -15,6 +15,7 @@ public class Temp_Full {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
     //private int user_id;
+    private String name;
     private String title_type;
     private String title_name;
     private String title_organization;
@@ -220,6 +221,18 @@ public class Temp_Full {
     @Transient
     private String table_italic;
 
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public User getUser() {
+        return user;
+    }
 
     public void setUser(User user) {
         this.user = user;
@@ -1053,5 +1066,14 @@ public class Temp_Full {
         this.table_italic = table_italic;
     }
 
-
+    public void cutRecursiveReferences(){
+        setUser(null);
+        for (Header header : getHeaders()){
+            header.setTemp_full(null);
+        }
+        for (TitleHeader titleHeader : getTitle_headers()){
+            titleHeader.setTemp_full(null);
+        }
+        getTable().setTemp_full(null);
+    }
 }
