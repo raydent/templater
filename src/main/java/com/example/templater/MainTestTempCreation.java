@@ -1,13 +1,11 @@
 package com.example.templater;
 
-import com.example.templater.documentService.docCombine.DocCombiner;
-import com.example.templater.documentService.docCombine.MainHeadingInfo;
-import com.example.templater.documentService.docCombine.MatchedHeadingInfo;
-import com.example.templater.documentService.docCombine.Matcher;
+import com.example.templater.documentService.docCombine.*;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,12 +51,44 @@ public class MainTestTempCreation {
         }
 */
 
-        File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test1.docx");
-        File file1 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test2.docx");
-        File file2 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test3.docx");
+        File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\1.docx");
+        File file1 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\2.docx");
+        File file2 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\3.docx");
+        File file3 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\4.docx");
+        //File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test1.docx");
+        //File file1 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test2.docx");
+        //File file2 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test3.docx");
         try {
+            /*List<HeadingsCorrection>  correctionList = new ArrayList<>();
+            HeadingsCorrection c = new HeadingsCorrection();
+            c.setFinalName("Corrected");
+            MatchedHeadingInfo h1 = new MatchedHeadingInfo();
+            h1.setFileName("Test1.docx");
+            h1.setHeadingName("Etymology");
+            MatchedHeadingInfo h2 = new MatchedHeadingInfo();
+            h2.setFileName("Test2.docx");
+            h2.setHeadingName("History");
+            List<MatchedHeadingInfo> headings = Arrays.asList(h1, h2);
+            c.setHeadings(headings);
+            correctionList.add(c);
+
+            HeadingsCorrection c1 = new HeadingsCorrection();
+            c1.setFinalName("Corrected1");
+            MatchedHeadingInfo h11 = new MatchedHeadingInfo();
+            h11.setFileName("Test2.docx");
+            h11.setHeadingName("Geography");
+            MatchedHeadingInfo h22 = new MatchedHeadingInfo();
+            h22.setFileName("Test3.docx");
+            h22.setHeadingName("Economy");
+            List<MatchedHeadingInfo> headings1 = Arrays.asList(h11, h22);
+            c1.setHeadings(headings1);
+            correctionList.add(c1);
+*/
             DocCombiner dc = new DocCombiner();
+            long start = System.currentTimeMillis();
             XWPFDocument result = dc.combineDocs(Arrays.asList(file, file1, file2), null, true);
+            long end = System.currentTimeMillis();
+            System.out.println("Total time (ms): " + (end - start));
             FileOutputStream fos = new FileOutputStream("Combined.docx");
             result.write(fos);
             fos.close();
