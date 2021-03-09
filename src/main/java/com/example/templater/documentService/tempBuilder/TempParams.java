@@ -3,7 +3,6 @@ package com.example.templater.documentService.tempBuilder;
 
 import com.example.templater.model.Temp_Full;
 
-//заглушка
 public class TempParams {
     private boolean title_page = true;
     private boolean numeration = true;

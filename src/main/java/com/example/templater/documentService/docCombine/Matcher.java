@@ -11,6 +11,25 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class Matcher {
+    private List<String> not_matchedL = new ArrayList<>();
+    private List<String> not_matchedR = new ArrayList<>();
+
+    public List<String> getNot_matchedL() {
+        return not_matchedL;
+    }
+
+    public void setNot_matchedL(List<String> not_matchedL) {
+        this.not_matchedL = not_matchedL;
+    }
+
+    public List<String> getNot_matchedR() {
+        return not_matchedR;
+    }
+
+    public void setNot_matchedR(List<String> not_matchedR) {
+        this.not_matchedR = not_matchedR;
+    }
+
     public int headingsMatch(List<XWPFParagraph> hListS, List<XWPFParagraph> hListC,
                              HeadingWithText sourceHWT, HeadingWithText candidateHWT) {
         int score = 0;
@@ -86,31 +105,16 @@ public class Matcher {
         if (SWords == null || CWords == null) {
             return 0;
         }
+        List<String> matched = new ArrayList<>();
         int number_matched_words = 0;
         for (String s : SWords) {
             s = s.toLowerCase();
             for (String c : CWords) {
                 c = c.toLowerCase();
-                if (s.length() < c.length()) {
-                    continue;
-                }
-                else if (s.equals(c)) {
+                if (!matched.contains(c) && isWordsMatch(s, c)) {
                     ++number_matched_words;
+                    matched.add(c);
                     break;
-                }
-                else {
-                    boolean isMatched = true;
-                    int i;
-                    for (i = 0; i < s.length(); ++i) {
-                        if (s.charAt(i) != c.charAt(i)) {
-                            isMatched = false;
-                            break;
-                        }
-                    }
-                    if (isMatched && ((i * 100) / c.length() > 70)) {
-                        ++number_matched_words;
-                        break;
-                    }
                 }
             }
         }
@@ -118,8 +122,23 @@ public class Matcher {
             return 0;
         }
         else {
-            return (number_matched_words * 100) / SWords.size();
+            return (number_matched_words * 100) / Integer.max(SWords.size(), CWords.size());
         }
+    }
+
+    public boolean isWordsMatch(String wordL, String wordR) {
+        boolean isMatched = false;
+        int last_matched_pos = Integer.min(wordL.length(), wordR.length());
+        for (int i = 0; i < Integer.min(wordL.length(), wordR.length()); ++i) {
+            if (wordL.charAt(i) != wordR.charAt(i)) {
+                last_matched_pos = i;
+                break;
+            }
+        }
+        if ((last_matched_pos * 100) / Integer.max(wordL.length(), wordR.length()) >= 70) {
+            isMatched = true;
+        }
+        return isMatched;
     }
 
     public List<String> getWords(String src) {
@@ -163,16 +182,22 @@ public class Matcher {
 
     // возвращает процент совпадения предложений
     // сравнивает наличие идентичных слов
-    public int sentencesMatch(String l, String r) {
+    public int sentencesMatch(String l, String r, boolean isSimplify) {
         List<String> wordsL = getWords(l);
         List<String> wordsR = getWords(r);
         List<String> matched_words = new ArrayList<>();
         int number_matched = 0;
-        for (String wordL : wordsL) {
-            for (String wordR : wordsR) {
-                if (wordL.equals(wordR)) {
+        int maxL = wordsL.size();
+        int maxR = wordsR.size();
+        if (isSimplify) {
+            maxL = Integer.min(maxL, 5);
+            maxR = Integer.min(maxR, 5);
+        }
+        for (int i = 0; i < maxL; ++i) {
+            for (int j = 0; j < maxR; ++j) {
+                if (wordsL.get(i).equals(wordsR.get(j))) {
                     ++number_matched;
-                    matched_words.add(wordR);
+                    matched_words.add(wordsR.get(j));
                     break;
                 }
             }
@@ -183,34 +208,68 @@ public class Matcher {
         return  (number_matched * 100) / (Integer.max(wordsL.size(), wordsR.size()));
     }
 
+    public int paragraphsMatchPlanA(List<String> l, List<String> r) {
+        not_matchedL.clear();
+        not_matchedR.clear();
+        boolean isMatched = false;
+        int start_pos = 0;
+        if (sentencesMatch(l.get(0), r.get(0), false) <= 30) {
+            for (int i = 0; i < r.size(); ++i) {
+                if (sentencesMatch(l.get(0), r.get(i), false) >= 80) {
+                    start_pos = i;
+                    break;
+                }
+            }
+        }
+        int score = 0;
+        for (int i = 0; i < Integer.min(l.size(), r.size()); ++i) {
+            int s = sentencesMatch(l.get(i), r.get(i + start_pos), false);
+            if (s < 80) {
+                not_matchedL.add(l.get(i));
+                not_matchedR.add(r.get(i + start_pos));
+            }
+            score += sentencesMatch(l.get(i), r.get(i + start_pos), false);
+        }
+        return score / Integer.max(l.size(), r.size());
+    }
+
+    public boolean paragraphsMatchPlanB(int number_of_sent) {
+        List<String> matched = new ArrayList<>();
+        for (String l : not_matchedL) {
+            for (String r : not_matchedR) {
+                if (!matched.contains(r)) {
+                    if (sentencesMatch(l, r, true) >= 80) {
+                        matched.add(r);
+                        break;
+                    }
+                }
+            }
+            if (not_matchedR.size() == matched.size()) {
+                break;
+            }
+        }
+        int percentage = 100 - (matched.size() * 100) / number_of_sent;
+        return percentage < 80;
+    }
 
     // 1) ищет первое предложение первого абзаца во втором
     // 2) ищет первое предложение второго абзаца в первом
     // 3) проверяет совпадение предложений начиная с общего первого совпадения из 1) и 2)
-    public int paragraphsMatch(String l, String r) {
+    public boolean paragraphsMatch(String l, String r) {
         List<String> sentencesL = getSentences(l);
         List<String> sentencesR = getSentences(r);
         if (sentencesL.isEmpty() || sentencesR.isEmpty()) {
-            return 0;
+            return false;
         }
-        int start_posR = 0;
-        int start_posL = 0;
-        for (int i = 0; i < Integer.min(sentencesL.size(), sentencesR.size()); ++i) {
-            if (sentencesMatch(sentencesL.get(0), sentencesR.get(i)) >= 80) {
-                start_posR = i;
-                break;
-            }
+        int score = paragraphsMatchPlanA(sentencesL, sentencesR);
+        if (score >= 90) {
+            return true;
         }
-        for (int i = 0; i < Integer.min(sentencesL.size(), sentencesR.size()); ++i) {
-            if (sentencesMatch(sentencesR.get(0), sentencesL.get(i)) >= 80) {
-                start_posL = i;
-                break;
-            }
+        else if (score >= 20 && score < 80) {
+            return false;
         }
-        int score = 0;
-        for (int i = 0; i < Integer.min(sentencesL.size(), sentencesR.size()); ++i) {
-                score += sentencesMatch(sentencesL.get(i + start_posL), sentencesR.get(i + start_posR));
-            }
-        return score / Integer.max(sentencesL.size(), sentencesR.size());
+        else {
+            return paragraphsMatchPlanB(sentencesR.size());
+        }
     }
 }
