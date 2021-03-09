@@ -3,14 +3,14 @@ package com.example.templater.documentService.docCombine;
 import java.util.List;
 
 public class HeadingsCorrection {
-    List<String> headings;
+    List<MatchedHeadingInfo> headings;
     String finalName;
 
-    public List<String> getHeadings() {
+    public List<MatchedHeadingInfo> getHeadings() {
         return headings;
     }
 
-    public void setHeadings(List<String> headings) {
+    public void setHeadings(List<MatchedHeadingInfo> headings) {
         this.headings = headings;
     }
 

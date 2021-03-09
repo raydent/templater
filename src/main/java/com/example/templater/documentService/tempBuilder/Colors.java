@@ -2,7 +2,6 @@ package com.example.templater.documentService.tempBuilder;
 
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
 
-//заглушка
 public enum Colors {
     ;
     public static STHighlightColor.Enum getColorEnum(String color) {
@@ -30,53 +29,53 @@ public enum Colors {
     }
 
     public static String getColorName(String color) {
-        if (color.equals(STHighlightColor.NONE)) {
+        if (color.equals("none")) {
             return STHighlightColor.NONE.toString();
-        } else if (color.equals(STHighlightColor.BLACK)) {
+        } else if (color.equals("black")) {
             return STHighlightColor.BLACK.toString();
         }
-        else if (color.equals(STHighlightColor.BLUE)) {
+        else if (color.equals("blue")) {
             return STHighlightColor.BLUE.toString();
         }
-        else if (color.equals(STHighlightColor.CYAN)) {
+        else if (color.equals("cyan")) {
             return STHighlightColor.CYAN.toString();
         }
-        else if (color.equals(STHighlightColor.DARK_BLUE)) {
+        else if (color.equals("dark_blue")) {
             return STHighlightColor.DARK_BLUE.toString();
-        }else if (color.equals(STHighlightColor.DARK_CYAN)) {
+        }else if (color.equals("dark_cyan")) {
             return STHighlightColor.DARK_CYAN.toString();
         }
-        else if (color.equals(STHighlightColor.DARK_GRAY)) {
+        else if (color.equals("dark_gray")) {
             return STHighlightColor.DARK_GRAY.toString();
         }
-        else if (color.equals(STHighlightColor.DARK_MAGENTA)) {
+        else if (color.equals("dark_magenta")) {
             return STHighlightColor.DARK_MAGENTA.toString();
         }
-        else if (color.equals(STHighlightColor.DARK_RED)) {
+        else if (color.equals("dare_red")) {
             return STHighlightColor.DARK_RED.toString();
         }
-        else if (color.equals(STHighlightColor.DARK_YELLOW)) {
+        else if (color.equals("dark_yellow")) {
             return STHighlightColor.DARK_YELLOW.toString();
         }
-        else if (color.equals(STHighlightColor.DARK_GREEN)) {
+        else if (color.equals("dark_green")) {
             return STHighlightColor.DARK_GREEN.toString();
         }
-        else if (color.equals(STHighlightColor.GREEN)) {
+        else if (color.equals("green")) {
             return STHighlightColor.GREEN.toString();
         }
-        else if (color.equals(STHighlightColor.LIGHT_GRAY)) {
+        else if (color.equals("light_gray")) {
             return STHighlightColor.LIGHT_GRAY.toString();
         }
-        else if (color.equals(STHighlightColor.MAGENTA)) {
+        else if (color.equals("magenta")) {
             return STHighlightColor.MAGENTA.toString();
         }
-        else if (color.equals(STHighlightColor.RED)) {
+        else if (color.equals("red")) {
             return STHighlightColor.RED.toString();
         }
-        else if (color.equals(STHighlightColor.YELLOW)) {
+        else if (color.equals("yellow")) {
             return STHighlightColor.YELLOW.toString();
         }
-        else if (color.equals(STHighlightColor.WHITE)) {
+        else if (color.equals("white")) {
             return STHighlightColor.WHITE.toString();
         }
         else {
