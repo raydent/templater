@@ -1,7 +1,12 @@
 package com.example.templater.documentService.tempBuilder;
 
+import com.example.templater.documentService.docCombine.DocCombiner;
+import com.example.templater.documentService.tempParamsGetter.AllTempParams;
+import com.example.templater.documentService.tempParamsGetter.HeadingWithText;
+import com.example.templater.documentService.tempParamsGetter.TempParamsGetter;
 import org.apache.poi.wp.usermodel.HeaderFooterType;
 import org.apache.poi.xwpf.usermodel.*;
+import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import org.thymeleaf.model.IDocType;
@@ -10,183 +15,23 @@ import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import java.io.*;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 public class TemplateCreater {
     public XWPFDocument createTitlePage(XWPFDocument document, TitleParams titleParams, Fields fields) {
         //создание поля Date в правом верхнем углу
         if (titleParams.getType() == 1) {
-            XWPFTable table = document.createTable();
-            table.setTableAlignment(TableRowAlign.RIGHT);
-            table.removeBorders();
-            CTTblWidth width = table.getCTTbl().addNewTblPr().addNewTblW();
-            width.setType(STTblWidth.DXA);
-            width.setW(BigInteger.valueOf(1600));
-            XWPFTableRow tableRow = table.getRow(0);
-            XWPFTableCell cell = tableRow.getCell(0);
-            cell.setColor("4682B4");
-            XWPFParagraph p = cell.getParagraphs().get(0);
-            p.setSpacingBefore(600);
-            p.setAlignment(ParagraphAlignment.RIGHT);
-            p.setIndentationLeft(200);
-            p.setIndentationRight(70);
-            p.setStyle("NoSpacing");
-            XWPFRun run = p.createRun();
-            run.setText("Date");
-            run.setColor(titleParams.getDateColomn().getTextColor());
-            if (!titleParams.getDateColomn().getTextHighlightColor().equals("none")) {
-                run.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getDateColomn().getTextHighlightColor())));
-            }
-            run.setFontFamily(Fonts.getFontString(titleParams.getDateColomn().getFont()));
-            run.setFontSize(titleParams.getDateColomn().getFontSize());
-            if (titleParams.getDateColomn().isBold()) {
-                run.setBold(true);
-            }
-            if (titleParams.getDateColomn().isItalic()) {
-                run.setItalic(true);
-            }
-            if (titleParams.getDateColomn().isUnderline()) {
-                run.setUnderline(UnderlinePatterns.SINGLE);
-            }
+            document = createDateColomn(document, titleParams);
         }
-
-        XWPFTable table = document.createTable();
-        table.getCTTbl().getTblPr().addNewTblpPr().setVertAnchor(STVAnchor.TEXT);
-        table.getCTTbl().getTblPr().getTblpPr().setTblpY(BigInteger.valueOf(2500));
-        CTJc jc = table.getCTTbl().getTblPr().addNewJc();
-        jc.setVal(STJc.LEFT);
-        table.setTableAlignment(TableRowAlign.LEFT);
-        table.removeBorders();
-        if (titleParams.getType() == 1) {
-            table.setLeftBorder(XWPFTable.XWPFBorderType.SINGLE, 1, 10, "4682B4");
-        }
-        XWPFTableRow tableRowOne = table.getRow(0);
-        XWPFTableRow tableRowTwo = table.createRow();
-        XWPFTableRow tableRowThree = table.createRow();
-        if (titleParams.getType() != 1) {
-            XWPFParagraph p1 = tableRowOne.getCell(0).getParagraphs().get(0);
-            p1.setSpacingAfter(800);
-        }
-        tableRowOne.getCell(0).getParagraphs().get(0).setStyle("NoSpacing");
-        tableRowTwo.getCell(0).getParagraphs().get(0).setStyle("NoSpacing");
-        tableRowThree.getCell(0).getParagraphs().get(0).setStyle("NoSpacing");
-        XWPFRun run = tableRowOne.getCell(0).getParagraphs().get(0).createRun();
-        XWPFRun run2 = tableRowTwo.getCell(0).getParagraphs().get(0).createRun();
-        XWPFRun run3 = tableRowThree.getCell(0).getParagraphs().get(0).createRun();
-        if (titleParams.getFirstLine().isBold()) {
-            run.setBold(true);
-        }
-        if (titleParams.getFirstLine().isItalic()) {
-            run.setItalic(true);
-        }
-        if (titleParams.getFirstLine().isUnderline()) {
-            run.setUnderline(UnderlinePatterns.SINGLE);
-        }
-        if (titleParams.getSecondLine().isBold()) {
-            run2.setBold(true);
-        }
-        if (titleParams.getSecondLine().isItalic()) {
-            run2.setItalic(true);
-        }
-        if (titleParams.getSecondLine().isUnderline()) {
-            run2.setUnderline(UnderlinePatterns.SINGLE);
-        }
-        if (titleParams.getThirdLine().isBold()) {
-            run3.setBold(true);
-        }
-        if (titleParams.getThirdLine().isItalic()) {
-            run3.setItalic(true);
-        }
-        if (titleParams.getThirdLine().isUnderline()) {
-            run3.setUnderline(UnderlinePatterns.SINGLE);
-        }
-        run.setFontFamily(Fonts.getFontString(titleParams.getFirstLine().getFont()));
-        run.setFontSize(titleParams.getFirstLine().getFontSize());
-        run.setColor(titleParams.getFirstLine().getTextColor());
-        if (!titleParams.getFirstLine().getTextHighlightColor().equals("none")) {
-            run.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getFirstLine().getTextHighlightColor())));
-        }
-        run2.setFontFamily(Fonts.getFontString(titleParams.getSecondLine().getFont()));
-        run2.setFontSize(titleParams.getSecondLine().getFontSize());
-        run2.setColor(titleParams.getSecondLine().getTextColor());
-        if (!titleParams.getSecondLine().getTextHighlightColor().equals("none")) {
-            run2.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getSecondLine().getTextHighlightColor())));
-        }
-        run3.setFontFamily(Fonts.getFontString(titleParams.getThirdLine().getFont()));
-        run3.setFontSize(titleParams.getThirdLine().getFontSize());
-        run3.setColor(titleParams.getThirdLine().getTextColor());
-        if (!titleParams.getThirdLine().getTextHighlightColor().equals("none")) {
-            run2.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getThirdLine().getTextHighlightColor())));
-        }
-        switch (titleParams.getType()) {
-            case 1: {
-                run.setText("Organisation");
-                run2.setText("Document's name");
-                run3.setText("Description");
-                break;
-            }
-            case 2:
-            case 3: {
-                run.setText("Document's name");
-                run2.setText("DESCRIPTION");
-                run3.setText("NAME");
-                break;
-            }
-        }
-
+        document = createTitleCredits(document, titleParams);
         //создание полей Name и Date снизу титульника
         if (titleParams.getType() != 1) {
-            XWPFTable table1 = document.createTable();
-            table1.getCTTbl().getTblPr().addNewTblpPr().setVertAnchor(STVAnchor.TEXT);
-            table1.getCTTbl().getTblPr().getTblpPr().setTblpY(BigInteger.valueOf(10500));
-            table1.setTableAlignment(TableRowAlign.LEFT);
-            table1.removeBorders();
-            XWPFTableRow table1RowOne = table1.getRow(0);
-            table1RowOne.getCell(0).getParagraphs().get(0).setStyle("NoSpacing");
-            run = table1RowOne.getCell(0).getParagraphs().get(0).createRun();
-            run.setText("Name");
-            run.setFontFamily(Fonts.getFontString(titleParams.getNameField().getFont()));
-            run.setFontSize(titleParams.getNameField().getFontSize());
-            run.setColor(titleParams.getNameField().getTextColor());
-            if (!titleParams.getNameField().getTextHighlightColor().equals("none")) {
-                run.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getNameField().getTextHighlightColor())));
-            }
-            if (titleParams.getNameField().isBold()) {
-                run.setBold(true);
-            }
-            if (titleParams.getNameField().isItalic()) {
-                run.setItalic(true);
-            }
-            if (titleParams.getNameField().isUnderline()) {
-                run.setUnderline(UnderlinePatterns.SINGLE);
-            }
-
-            XWPFTableRow table1RowTwo = table1.createRow();
-            table1RowTwo.getCell(0).getParagraphs().get(0).setStyle("NoSpacing");
-            run = table1RowTwo.getCell(0).getParagraphs().get(0).createRun();
-            run.setText("Date");
-            run.setFontFamily(Fonts.getFontString(titleParams.getDateField().getFont()));
-            run.setFontSize(titleParams.getDateField().getFontSize());
-            run.setColor(titleParams.getDateField().getTextColor());
-            if (!titleParams.getDateField().getTextHighlightColor().equals("none")) {
-                run.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getDateField().getTextHighlightColor())));
-            }
-
-            if (titleParams.getDateField().isBold()) {
-                run.setBold(true);
-            }
-            if (titleParams.getDateField().isItalic()) {
-                run.setItalic(true);
-            }
-            if (titleParams.getDateField().isUnderline()) {
-                run.setUnderline(UnderlinePatterns.SINGLE);
-            }
+            document = createNameAndDateFields(document, titleParams);
         }
-
         //установка полей на странице
         XWPFParagraph paragraph = document.createParagraph();
         CTSectPr ctSectPr = paragraph.getCTP().addNewPPr().addNewSectPr();
-
         setFields(ctSectPr, fields);
 
         return document;
@@ -428,6 +273,14 @@ public class TemplateCreater {
         spacing.setLine(BigInteger.valueOf((long) (number * 240)));
     }
 
+    public void createTemplate(AllTempParams allTempParams) throws IOException, XmlException {
+        TempParams tempParams = allTempParams.getTempParams();
+        TitleParams titleParams = allTempParams.getTitleParams();
+        List<ParagraphParams> paragraphParamsList = allTempParams.getParamsList();
+        TableParams tableParams = allTempParams.getTableParams();
+        createTemplate(tempParams, titleParams, paragraphParamsList, tableParams);
+    }
+
     public void createTemplate(TempParams tempParams, TitleParams titleParams, List<ParagraphParams> paragraphParamsList, TableParams tableParams) throws IOException, XmlException {
         FileInputStream fis = new FileInputStream(new File("Empty.docx"));
         XWPFDocument temp = new XWPFDocument(fis);
@@ -617,6 +470,241 @@ public class TemplateCreater {
             paragraph1.setAlignment(ParagraphAlignment.CENTER);
         }
         return document;
+    }
+
+    public XWPFDocument createDateColomn(XWPFDocument document, TitleParams titleParams) {
+        XWPFTable table1 = document.createTable();
+        table1.setTableAlignment(TableRowAlign.RIGHT);
+        table1.removeBorders();
+        CTTblWidth width = table1.getCTTbl().addNewTblPr().addNewTblW();
+        width.setType(STTblWidth.DXA);
+        width.setW(BigInteger.valueOf(1600));
+        XWPFTableRow tableRow = table1.getRow(0);
+        XWPFTableCell cell = tableRow.getCell(0);
+        cell.setColor("4682B4");
+        XWPFParagraph p = cell.getParagraphs().get(0);
+        p.setSpacingBefore(600);
+        p.setAlignment(ParagraphAlignment.RIGHT);
+        p.setIndentationLeft(200);
+        p.setIndentationRight(70);
+        p.setStyle("NoSpacing");
+        XWPFRun run = p.createRun();
+        run.setText("Date");
+        run.setColor(titleParams.getDateColomn().getTextColor());
+        if (!titleParams.getDateColomn().getTextHighlightColor().equals("none")) {
+            run.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getDateColomn().getTextHighlightColor())));
+        }
+        run.setFontFamily(Fonts.getFontString(titleParams.getDateColomn().getFont()));
+        run.setFontSize(titleParams.getDateColomn().getFontSize());
+        if (titleParams.getDateColomn().isBold()) {
+            run.setBold(true);
+        }
+        if (titleParams.getDateColomn().isItalic()) {
+            run.setItalic(true);
+        }
+        if (titleParams.getDateColomn().isUnderline()) {
+            run.setUnderline(UnderlinePatterns.SINGLE);
+        }
+        return document;
+    }
+
+    public XWPFDocument createTitleCredits(XWPFDocument document, TitleParams titleParams) {
+        XWPFTable table = document.createTable();
+        table.getCTTbl().getTblPr().addNewTblpPr().setVertAnchor(STVAnchor.TEXT);
+        table.getCTTbl().getTblPr().getTblpPr().setTblpY(BigInteger.valueOf(2500));
+        CTJc jc = table.getCTTbl().getTblPr().addNewJc();
+        jc.setVal(STJc.LEFT);
+        table.setTableAlignment(TableRowAlign.LEFT);
+        table.removeBorders();
+        if (titleParams.getType() == 1) {
+            table.setLeftBorder(XWPFTable.XWPFBorderType.SINGLE, 1, 10, "4682B4");
+        }
+        XWPFTableRow tableRowOne = table.getRow(0);
+        XWPFTableRow tableRowTwo = table.createRow();
+        XWPFTableRow tableRowThree = table.createRow();
+        if (titleParams.getType() != 1) {
+            XWPFParagraph p1 = tableRowOne.getCell(0).getParagraphs().get(0);
+            p1.setSpacingAfter(800);
+        }
+        tableRowOne.getCell(0).getParagraphs().get(0).setStyle("NoSpacing");
+        tableRowTwo.getCell(0).getParagraphs().get(0).setStyle("NoSpacing");
+        tableRowThree.getCell(0).getParagraphs().get(0).setStyle("NoSpacing");
+        XWPFRun run = tableRowOne.getCell(0).getParagraphs().get(0).createRun();
+        XWPFRun run2 = tableRowTwo.getCell(0).getParagraphs().get(0).createRun();
+        XWPFRun run3 = tableRowThree.getCell(0).getParagraphs().get(0).createRun();
+        if (titleParams.getFirstLine().isBold()) {
+            run.setBold(true);
+        }
+        if (titleParams.getFirstLine().isItalic()) {
+            run.setItalic(true);
+        }
+        if (titleParams.getFirstLine().isUnderline()) {
+            run.setUnderline(UnderlinePatterns.SINGLE);
+        }
+        if (titleParams.getSecondLine().isBold()) {
+            run2.setBold(true);
+        }
+        if (titleParams.getSecondLine().isItalic()) {
+            run2.setItalic(true);
+        }
+        if (titleParams.getSecondLine().isUnderline()) {
+            run2.setUnderline(UnderlinePatterns.SINGLE);
+        }
+        if (titleParams.getThirdLine().isBold()) {
+            run3.setBold(true);
+        }
+        if (titleParams.getThirdLine().isItalic()) {
+            run3.setItalic(true);
+        }
+        if (titleParams.getThirdLine().isUnderline()) {
+            run3.setUnderline(UnderlinePatterns.SINGLE);
+        }
+        run.setFontFamily(Fonts.getFontString(titleParams.getFirstLine().getFont()));
+        run.setFontSize(titleParams.getFirstLine().getFontSize());
+        run.setColor(titleParams.getFirstLine().getTextColor());
+        if (!titleParams.getFirstLine().getTextHighlightColor().equals("none")) {
+            run.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getFirstLine().getTextHighlightColor())));
+        }
+        run2.setFontFamily(Fonts.getFontString(titleParams.getSecondLine().getFont()));
+        run2.setFontSize(titleParams.getSecondLine().getFontSize());
+        run2.setColor(titleParams.getSecondLine().getTextColor());
+        if (!titleParams.getSecondLine().getTextHighlightColor().equals("none")) {
+            run2.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getSecondLine().getTextHighlightColor())));
+        }
+        run3.setFontFamily(Fonts.getFontString(titleParams.getThirdLine().getFont()));
+        run3.setFontSize(titleParams.getThirdLine().getFontSize());
+        run3.setColor(titleParams.getThirdLine().getTextColor());
+        if (!titleParams.getThirdLine().getTextHighlightColor().equals("none")) {
+            run2.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getThirdLine().getTextHighlightColor())));
+        }
+        switch (titleParams.getType()) {
+            case 1: {
+                run.setText("Organisation");
+                run2.setText("Document's name");
+                run3.setText("Description");
+                break;
+            }
+            case 2:
+            case 3: {
+                run.setText("Document's name");
+                run2.setText("DESCRIPTION");
+                run3.setText("NAME");
+                break;
+            }
+        }
+        return document;
+    }
+
+    public XWPFDocument createNameAndDateFields(XWPFDocument document, TitleParams titleParams) {
+        XWPFTable table1 = document.createTable();
+        table1.getCTTbl().getTblPr().addNewTblpPr().setVertAnchor(STVAnchor.TEXT);
+        table1.getCTTbl().getTblPr().getTblpPr().setTblpY(BigInteger.valueOf(10500));
+        table1.setTableAlignment(TableRowAlign.LEFT);
+        table1.removeBorders();
+        XWPFTableRow table1RowOne = table1.getRow(0);
+        table1RowOne.getCell(0).getParagraphs().get(0).setStyle("NoSpacing");
+        XWPFRun run;
+        run = table1RowOne.getCell(0).getParagraphs().get(0).createRun();
+        run.setText("Name");
+        run.setFontFamily(Fonts.getFontString(titleParams.getNameField().getFont()));
+        run.setFontSize(titleParams.getNameField().getFontSize());
+        run.setColor(titleParams.getNameField().getTextColor());
+        if (!titleParams.getNameField().getTextHighlightColor().equals("none")) {
+            run.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getNameField().getTextHighlightColor())));
+        }
+        if (titleParams.getNameField().isBold()) {
+            run.setBold(true);
+        }
+        if (titleParams.getNameField().isItalic()) {
+            run.setItalic(true);
+        }
+        if (titleParams.getNameField().isUnderline()) {
+            run.setUnderline(UnderlinePatterns.SINGLE);
+        }
+
+        XWPFTableRow table1RowTwo = table1.createRow();
+        table1RowTwo.getCell(0).getParagraphs().get(0).setStyle("NoSpacing");
+        run = table1RowTwo.getCell(0).getParagraphs().get(0).createRun();
+        run.setText("Date");
+        run.setFontFamily(Fonts.getFontString(titleParams.getDateField().getFont()));
+        run.setFontSize(titleParams.getDateField().getFontSize());
+        run.setColor(titleParams.getDateField().getTextColor());
+        if (!titleParams.getDateField().getTextHighlightColor().equals("none")) {
+            run.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getDateField().getTextHighlightColor())));
+        }
+
+        if (titleParams.getDateField().isBold()) {
+            run.setBold(true);
+        }
+        if (titleParams.getDateField().isItalic()) {
+            run.setItalic(true);
+        }
+        if (titleParams.getDateField().isUnderline()) {
+            run.setUnderline(UnderlinePatterns.SINGLE);
+        }
+        return document;
+    }
+
+    public XWPFDocument insertTitlePage(XWPFDocument document, TitleParams titleParams, Fields fields) throws IOException, XmlException {
+        if (TempParamsGetter.isTitlePage(document)) {
+            List<XWPFTable> tables = document.getTables();
+            int pos = document.getPosOfTable(tables.get(0));
+
+            if (titleParams.getType() == 1) {
+                document = createDateColomn(document, titleParams);
+                XWPFTable tableDC = document.getTables().get(document.getTables().size() - 1);
+                document.setTable(pos, tableDC);
+                document.removeBodyElement(document.getPosOfTable(tableDC));
+            }
+            document = createTitleCredits(document, titleParams);
+            XWPFTable tableCr = document.getTables().get(document.getTables().size() - 1);
+            int posCr = 0;
+            if (titleParams.getType() == 1) {
+                posCr = 1;
+            }
+            document.setTable(posCr, tableCr);
+            document.removeBodyElement(document.getPosOfTable(tableCr));
+            if (titleParams.getType() != 1) {
+                document = createNameAndDateFields(document, titleParams);
+                XWPFTable tableDN = document.getTables().get(document.getTables().size() - 1);
+                document.setTable(pos + 1, tableDN);
+                document.removeBodyElement(document.getPosOfTable(tableDN));
+            }
+            return document;
+        }
+        else {
+            XWPFDocument result = new XWPFDocument();
+            XWPFStyles styles = result.createStyles();
+            styles.setStyles(document.getStyle());
+            styles = result.getStyles();
+            XWPFStyle style1 = styles.getStyle("Heading1");
+            CTStyle ctStyle1 = style1.getCTStyle();
+            CTPPr ppr = ctStyle1.getPPr();
+            CTOnOff ctOnOffPB = CTOnOff.Factory.newInstance();
+            ctOnOffPB.setVal(STOnOff.ON);
+            ppr.setPageBreakBefore(ctOnOffPB);
+            CTPBdr ctpBdr = CTPBdr.Factory.newInstance();
+            CTBorder ctBorder = CTBorder.Factory.newInstance();
+            ctBorder.setVal(STBorder.APPLES);
+            ctpBdr.setBottom(ctBorder);
+            ppr.setPBdr(ctpBdr);
+
+            result = createTitlePage(result, titleParams, fields);
+            List<HeadingWithText> mainHeadings = TempParamsGetter.getMainHeadingsList(document);
+            DocCombiner combiner = new DocCombiner();
+            if (mainHeadings != null) {
+                for (HeadingWithText hwt : mainHeadings) {
+                    result = combiner.insertHeading(result, hwt);
+                    List<HeadingWithText> content = TempParamsGetter.getHeadingContent(document, hwt.getHeading()).getSubHList();
+                    if (content != null) {
+                        for (HeadingWithText hwtC : content) {
+                            result = combiner.insertHeading(result, hwtC);
+                        }
+                    }
+                }
+            }
+            return result;
+        }
     }
 
     //public void createCustomTemplate(TempParams tempParams, List<ParagraphParams> paragraphParamsList) {
