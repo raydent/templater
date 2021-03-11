@@ -45,7 +45,6 @@ public class MainController {
     private TemplateService templateService;
     //@Autowired
     private AuthenticationManager authenticationManager;
-    private Map<String, List<File>> uploadedFiles = new HashMap<>();
 //test
     @GetMapping("/login")
     public String getLogin(Model model, @AuthenticationPrincipal User authenticatedUser, @RequestParam(required = false) String error) {
@@ -74,58 +73,38 @@ public class MainController {
     }
 
     @PostMapping("/upload_angular")
-    public ResponseEntity<String> handleFileUpload(@RequestPart("file") MultipartFile multipartFile, Authentication authentication) {
+    public @ResponseBody byte[] handleFileUpload(@RequestPart("files") MultipartFile[] multipartFiles, Authentication authentication) {
         String message;
-        File file = new File("temp" + multipartFile.getOriginalFilename());
-        try {
-            file.createNewFile();
-            InputStream initialStream = multipartFile.getInputStream();
-            byte[] buffer = new byte[initialStream.available()];
-            initialStream.read(buffer);
-            OutputStream outStream = new FileOutputStream(file);
-            outStream.write(buffer);
-            outStream.close();
-            initialStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            //return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Failed to upload");
-        }
-        synchronized(uploadedFiles) {
-            if (uploadedFiles.get(authentication.getName()) == null){
-                List<File> userFiles = new ArrayList<>();
-                userFiles.add(file);
-                uploadedFiles.put(authentication.getName(), userFiles);
-            }
-            else {
-                uploadedFiles.get(authentication.getName()).add(file);//[userService.getUserByName(authentication.getName())].add(file);
-            }
-        }
-        return ResponseEntity.status(HttpStatus.OK).body("Successfully uploaded");
-    }
-
-    @RequestMapping(value = "/merge_angular", method = RequestMethod.POST, produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
-    public synchronized @ResponseBody
-    byte[] mergeTemplatesAndDownloadFile(@RequestBody Temp_Full temp_full, Authentication authentication) throws IOException {
-        //FileInputStream fis = ne;
+        List<File> files = new ArrayList<>();
         byte[] bytes = null;
-        synchronized(uploadedFiles) {
+        for (int i = 0; i < multipartFiles.length; i++) {
+            File file = new File("temp" + multipartFiles[i].getOriginalFilename());
             try {
-                DocCombiner dc = new DocCombiner();
-                XWPFDocument result = dc.combineDocs(uploadedFiles.get(authentication.getName()),
-                        null, true);
-                FileOutputStream fos = new FileOutputStream("Combined.docx");
-                //System.out.println(fos.toString());
-//                System.out.println(result == null);
-//                System.out.println(fos == null);
-                result.write(fos);
-                fos.close();
-                FileInputStream fis = new FileInputStream("Combined.docx");
-                bytes = IOUtils.toByteArray(fis);
-                fis.close();
-            } catch (Exception e) {
+                file.createNewFile();
+                InputStream initialStream = multipartFiles[i].getInputStream();
+                byte[] buffer = new byte[initialStream.available()];
+                initialStream.read(buffer);
+                OutputStream outStream = new FileOutputStream(file);
+                outStream.write(buffer);
+                outStream.close();
+                initialStream.close();
+                files.add(file);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-            uploadedFiles.get(authentication.getName()).clear();
+        }
+        try {
+            DocCombiner dc = new DocCombiner();
+            XWPFDocument result = dc.combineDocs(files,
+                    null, true);
+            FileOutputStream fos = new FileOutputStream("Combined.docx");
+            result.write(fos);
+            fos.close();
+            FileInputStream fis = new FileInputStream("Combined.docx");
+            bytes = IOUtils.toByteArray(fis);
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return bytes;
     }
