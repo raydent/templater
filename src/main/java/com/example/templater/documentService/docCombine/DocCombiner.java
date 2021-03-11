@@ -1,21 +1,21 @@
 package com.example.templater.documentService.docCombine;
 
-import com.example.templater.documentService.tempBuilder.TemplateCreater;
+import com.example.templater.documentService.tempBuilder.*;
 import com.example.templater.documentService.tempParamsGetter.AllTempParams;
 import com.example.templater.documentService.tempParamsGetter.HeadingWithText;
 import com.example.templater.documentService.tempParamsGetter.TempParamsGetter;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlException;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import org.springframework.security.core.parameters.P;
 
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -637,6 +637,119 @@ public class DocCombiner {
                 }
             }
         }
+        return document;
+    }
+
+    public XWPFDocument applyTemplateToDoc(XWPFDocument document, AllTempParams allTempParams) throws IOException, XmlException {
+        TempParams tempParams = allTempParams.getTempParams();
+        TitleParams titleParams = allTempParams.getTitleParams();
+        List<ParagraphParams> paragraphParamsList = allTempParams.getParamsList();
+        TableParams tableParams = allTempParams.getTableParams();
+
+        // хединги
+        XWPFStyles styles = document.getStyles();
+        XWPFStyle heading1 = styles.getStyle("Heading1");
+        XWPFStyle heading2 = styles.getStyle("Heading2");
+        XWPFStyle heading3 = styles.getStyle("Heading3");
+        XWPFStyle heading4 = styles.getStyle("Heading4");
+        XWPFStyle heading5 = styles.getStyle("Heading5");
+
+        CTStyle ctStyle1 = heading1.getCTStyle();
+        CTPPr ppr = ctStyle1.getPPr();
+        CTOnOff ctOnOffPB = CTOnOff.Factory.newInstance();
+        ctOnOffPB.setVal(STOnOff.ON);
+        ppr.setPageBreakBefore(ctOnOffPB);
+        CTPBdr ctpBdr = CTPBdr.Factory.newInstance();
+        CTBorder ctBorder = CTBorder.Factory.newInstance();
+        ctBorder.setVal(STBorder.APPLES);
+        ctpBdr.setBottom(ctBorder);
+        ppr.setPBdr(ctpBdr);
+
+        List<XWPFStyle> styleList = Arrays.asList(heading1, heading2, heading3, heading4, heading5);
+        for (int i = 0; i < styleList.size(); ++i) {
+            if (styleList.get(i) == null) {
+                continue;
+            }
+            CTStyle ctStyle = styleList.get(i).getCTStyle();
+            CTRPr ctrPr = ctStyle.getRPr();
+            CTPPr ctpPr = ctStyle.getPPr();
+            if (ctrPr == null) {
+                ctStyle.addNewRPr();
+            }
+            if (ctpPr == null) {
+                ctStyle.addNewPPr();
+            }
+            ParagraphParams params = paragraphParamsList.get(i);
+            // межстрочный интервал
+            CTSpacing spacing = CTSpacing.Factory.newInstance();
+            spacing.setAfter(BigInteger.valueOf(0));
+            spacing.setBefore(BigInteger.valueOf(0));
+            spacing.setLineRule(STLineSpacingRule.AUTO);
+            spacing.setLine(BigInteger.valueOf((long) tempParams.getInterval_between_lines() * 240));
+            ctStyle.getPPr().setSpacing(spacing);
+            // цвет
+            CTColor color = CTColor.Factory.newInstance();
+            STHexColor col = STHexColor.Factory.newInstance();
+            col.setStringValue(params.getTextColor());
+            color.setVal(col);
+            ctrPr.setColor(color);
+            CTHighlight ctHighlight = CTHighlight.Factory.newInstance();
+            ctHighlight.setVal(Colors.getColorEnum(params.getTextHighlightColor()));
+            ctrPr.setHighlight(ctHighlight);
+            // шрифт
+            CTFonts fonts = CTFonts.Factory.newInstance();
+            fonts.setAscii(Fonts.getFontString(params.getFont()));
+            ctrPr.setRFonts(fonts);
+            CTHpsMeasure size = CTHpsMeasure.Factory.newInstance();
+            size.setVal(new BigInteger(String.valueOf(params.getFontSize() * 2)));
+            ctrPr.setSz(size);
+            CTOnOff ctOnOffBold = CTOnOff.Factory.newInstance();
+            ctOnOffBold.setVal(STOnOff.OFF);
+            CTOnOff ctOnOffItalic = CTOnOff.Factory.newInstance();
+            ctOnOffItalic.setVal(STOnOff.OFF);
+            CTUnderline ctUnderline = CTUnderline.Factory.newInstance();
+            ctUnderline.setVal(STUnderline.NONE);
+            if (params.isBold()) {
+                ctOnOffBold.setVal(STOnOff.ON);
+            }
+            if (params.isItalic()) {
+                ctOnOffItalic.setVal(STOnOff.ON);
+            }
+            if (params.isUnderline()) {
+                ctUnderline.setVal(STUnderline.SINGLE);
+            }
+            ctrPr.setB(ctOnOffBold);
+            ctrPr.setI(ctOnOffItalic);
+            ctrPr.setU(ctUnderline);
+            ctStyle.setRPr(ctrPr);
+        }
+
+        //разметка документа
+        TemplateCreater creater = new TemplateCreater();
+        if (tempParams.isHeader()) {
+            ParagraphParams params = paragraphParamsList.get(paragraphParamsList.size() - 3);
+            document = creater.createHeader(document, params);
+        }
+        if (tempParams.isTitle_page()) {
+            document = creater.insertTitlePage(document, titleParams, tempParams.getField());
+        }
+        if (tempParams.isNumeration()) {
+            document = creater.createNumeration(document);
+        }
+        if (tempParams.isFooter()) {
+            ParagraphParams params = paragraphParamsList.get(paragraphParamsList.size() - 2);
+            document = creater.createFooter(document, params);
+        }
+        //поля
+        CTSectPr ctSectPr = null;
+        CTDocument1 ctDocument = document.getDocument();
+        CTBody ctBody = ctDocument.getBody();
+        ctSectPr = ctBody.getSectPr();
+        if (ctSectPr == null) {
+            ctSectPr = document.getDocument().getBody().addNewSectPr();
+        }
+        creater.setFields(ctSectPr, tempParams.getField());
+
         return document;
     }
 }

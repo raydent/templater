@@ -68,14 +68,7 @@ public class TempParamsGetter {
         }
 
         //getting template params
-        tempParams.setTitle_page(false);
-        List<XWPFTable> tList = document.getTables();
-        if (!tList.isEmpty()) {
-            String style = tList.get(0).getRow(0).getCell(0).getParagraphs().get(0).getStyle();
-            if (style != null && style.equals("NoSpacing")) {
-                tempParams.setTitle_page(true);
-            }
-        }
+        tempParams.setTitle_page(isTitlePage(document));
 
         tempParams.setHeader(!document.getHeaderList().isEmpty());
         List<XWPFFooter> fList = document.getFooterList();
@@ -138,6 +131,7 @@ public class TempParamsGetter {
         }
 
         //getting title params
+        List<XWPFTable> tList = document.getTables();
         if (!tempParams.isTitle_page()) {
             titleParams = null;
         }
@@ -275,6 +269,18 @@ public class TempParamsGetter {
         FileInputStream is = new FileInputStream(file);
         XWPFDocument document = new XWPFDocument(is);
         return getTempParams(document);
+    }
+
+    public static boolean isTitlePage(XWPFDocument document) {
+        boolean isTitlePage = false;
+        List<XWPFTable> tList = document.getTables();
+        if (!tList.isEmpty()) {
+            String style = tList.get(0).getRow(0).getCell(0).getParagraphs().get(0).getStyle();
+            if (style != null && style.equals("NoSpacing")) {
+                isTitlePage = true;
+            }
+        }
+        return isTitlePage;
     }
 
     public static List<HeadingWithText> getHeadingsList(XWPFDocument document) {

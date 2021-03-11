@@ -13,7 +13,7 @@ public class AllTempParams {
     List<ParagraphParams> paramsList;
     TableParams tableParams;
 
-    AllTempParams() {}
+    public AllTempParams() {}
 
     public AllTempParams(TempParams tempParams, TitleParams titleParams, List<ParagraphParams> paramsList, TableParams tableParams) {
         this.tempParams = tempParams;
