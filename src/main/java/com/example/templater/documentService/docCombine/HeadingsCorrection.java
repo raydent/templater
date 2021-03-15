@@ -6,6 +6,13 @@ public class HeadingsCorrection {
     List<MatchedHeadingInfo> headings;
     String finalName;
 
+    public HeadingsCorrection() {}
+
+    public HeadingsCorrection(List<MatchedHeadingInfo> headings, String finalName) {
+        this.headings = headings;
+        this.finalName = finalName;
+    }
+
     public List<MatchedHeadingInfo> getHeadings() {
         return headings;
     }

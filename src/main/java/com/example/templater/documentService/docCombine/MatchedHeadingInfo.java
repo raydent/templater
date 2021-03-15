@@ -4,6 +4,12 @@ public class MatchedHeadingInfo {
     String headingName;
     String fileName;
 
+    public MatchedHeadingInfo() {}
+    public MatchedHeadingInfo(String headingName, String fileName) {
+        this.headingName = headingName;
+        this.fileName = fileName;
+    }
+
     public String getHeadingName() {
         return headingName;
     }
