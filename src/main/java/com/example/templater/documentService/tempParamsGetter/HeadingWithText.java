@@ -1,5 +1,6 @@
 package com.example.templater.documentService.tempParamsGetter;
 
+import com.example.templater.documentService.docCombine.MatchedHeadingInfo;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 
@@ -9,8 +10,15 @@ public class HeadingWithText {
     XWPFParagraph heading;
     List<XWPFParagraph> text;
     List<XWPFTable> tables;
+    boolean toCorrect = false;
+    List<MatchedHeadingInfo> correctionList;
+    String finalName;
 
-    HeadingWithText() {}
+    HeadingWithText() {
+        toCorrect = false;
+        correctionList = null;
+        finalName = null;
+    }
 
     public HeadingWithText(XWPFParagraph heading, List<XWPFParagraph> text, List<XWPFTable> tables) {
         this.heading = heading;
@@ -18,9 +26,28 @@ public class HeadingWithText {
         this.tables = tables;
     }
 
-    public HeadingWithText(XWPFParagraph heading, List<XWPFParagraph> text) {
-        this.heading = heading;
-        this.text = text;
+    public String getFinalName() {
+        return finalName;
+    }
+
+    public void setFinalName(String finalName) {
+        this.finalName = finalName;
+    }
+
+    public boolean isToCorrect() {
+        return toCorrect;
+    }
+
+    public void setToCorrect(boolean toCorrect) {
+        this.toCorrect = toCorrect;
+    }
+
+    public List<MatchedHeadingInfo> getCorrectionList() {
+        return correctionList;
+    }
+
+    public void setCorrectionList(List<MatchedHeadingInfo> correctionList) {
+        this.correctionList = correctionList;
     }
 
     public XWPFParagraph getHeading() {

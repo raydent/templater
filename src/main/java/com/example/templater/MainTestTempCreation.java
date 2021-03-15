@@ -16,7 +16,7 @@ import java.util.List;
 
 public class MainTestTempCreation {
     public static void main(String... s) {
-
+        /*
         TemplateCreater templateCreater = new TemplateCreater();
         TempParams tempParams = TempParams.getDefaultTemp1Params();
         TitleParams titleParams = TitleParams.getDefaultTemp1TitleParams();
@@ -39,13 +39,13 @@ public class MainTestTempCreation {
             result.write(fos);
             fos.close();
             fis.close();
-            /*TemplateCreater creater = new TemplateCreater();
-            creater.createTemplate(allParams);*/
+            TemplateCreater creater = new TemplateCreater();
+            creater.createTemplate(allParams);
         } catch (IOException | XmlException e) {
             e.printStackTrace();
         }
 
-       /*File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Template.docx");
+       File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Template.docx");
             try {
                 FileInputStream is = new FileInputStream(file);
                 XWPFDocument document = new XWPFDocument(is);
@@ -70,16 +70,16 @@ public class MainTestTempCreation {
                 e.printStackTrace();
         }
 
-
+        */
         //File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\1.docx");
         //File file1 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\2.docx");
         //File file2 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\3.docx");
         //File file3 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\4.docx");
-        //File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test1.docx");
-        //File file1 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test2.docx");
-        //File file2 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test3.docx");
+        File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test1.docx");
+        File file1 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test2.docx");
+        File file2 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test3.docx");
         try {
-            /*List<HeadingsCorrection>  correctionList = new ArrayList<>();
+            List<HeadingsCorrection>  correctionList = new ArrayList<>();
             HeadingsCorrection c = new HeadingsCorrection();
             c.setFinalName("Corrected");
             MatchedHeadingInfo h1 = new MatchedHeadingInfo();
@@ -103,10 +103,10 @@ public class MainTestTempCreation {
             List<MatchedHeadingInfo> headings1 = Arrays.asList(h11, h22);
             c1.setHeadings(headings1);
             correctionList.add(c1);
-*/
-           /* DocCombiner dc = new DocCombiner();
+
+            DocCombiner dc = new DocCombiner();
             long start = System.currentTimeMillis();
-            XWPFDocument result = dc.combineDocs(Arrays.asList(file, file1, file2, file3), null, true);
+            XWPFDocument result = dc.combineDocs(Arrays.asList(file, file1, file2), correctionList, true);
             long end = System.currentTimeMillis();
             System.out.println("Total time (ms): " + (end - start));
             FileOutputStream fos = new FileOutputStream("Combined.docx");
@@ -121,8 +121,8 @@ public class MainTestTempCreation {
                     for (MatchedHeadingInfo m : info.getMatched()) {
                         System.out.print(m.getHeadingName() + ", " + m.getFileName() + "\n");
                     }
-                    System.out.println("Subheadings: ");
                 }
+                System.out.println("Subheadings: ");
                 for (String str : info.getSubheadingsNames()) {
                     System.out.print(str + ", ");
                 }
@@ -132,6 +132,6 @@ public class MainTestTempCreation {
         } catch (Exception e) {
             e.printStackTrace();
         }
-            */
+
     }
 }

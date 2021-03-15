@@ -5,7 +5,7 @@ import java.util.List;
 public class MainHeadingInfo {
     String headingName;
     String finalName;
-    boolean isMatched;
+    boolean isMatched = false;
     List<MatchedHeadingInfo> matched;
     String fileName;
     List<String> subheadingsNames;

@@ -6,6 +6,7 @@ import com.example.templater.documentService.tempParamsGetter.HeadingWithText;
 import com.example.templater.documentService.tempParamsGetter.TempParamsGetter;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlException;
+import org.jboss.jandex.Main;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import org.springframework.security.core.parameters.P;
 
@@ -117,6 +118,25 @@ public class DocCombiner {
             mainHeadingsInfo.add(info);
         }
 
+        //пометка хедингов требующих коррекции
+        if (correctionList != null) {
+            for (HeadingWithText hwt : levelListMain) {
+                if (hwt.getHeading().getStyle().equals("Heading1")) {
+                    for (HeadingsCorrection correction : correctionList) {
+                        for (MatchedHeadingInfo info : correction.getHeadings()) {
+                            if (info.getHeadingName().equals(hwt.getHeading().getText())
+                                    && info.getFileName().equals(documents.get(0).getName())) {
+                                hwt.setToCorrect(true);
+                                hwt.setCorrectionList(correction.getHeadings());
+                                hwt.setFinalName(correction.getFinalName());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         long startMerge = System.currentTimeMillis();
 
         // мердж с осталными файлами
@@ -152,6 +172,25 @@ public class DocCombiner {
                 mainHeadingsInfo.add(info);
             }
 
+            //пометка хедингов требующих коррекции
+            if (correctionList != null) {
+                for (HeadingWithText hwt : levelListToMerge) {
+                    if (hwt.getHeading().getStyle().equals("Heading1")) {
+                        for (HeadingsCorrection correction : correctionList) {
+                            for (MatchedHeadingInfo info : correction.getHeadings()) {
+                                if (info.getHeadingName().equals(hwt.getHeading().getText())
+                                        && info.getFileName().equals(documents.get(i).getName())) {
+                                    hwt.setToCorrect(true);
+                                    hwt.setCorrectionList(correction.getHeadings());
+                                    hwt.setFinalName(correction.getFinalName());
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             long startMergeFile = System.currentTimeMillis();
 
             levelListMain = combineMainHeadings(levelListMain, levelListToMerge, documents.get(i).getName(),
@@ -161,44 +200,48 @@ public class DocCombiner {
             System.out.println("Time (ms) to merge file " + documents.get(i).getName() + ": " + (endMergeFile - startMergeFile));
 
         }
+
+        // замена имен у хедингов требующих коррекции
+        if (correctionList != null) {
+            for (HeadingWithText hwt : levelListMain) {
+                if (hwt.getHeading().getStyle().equals("Heading1")) {
+                    if (hwt.isToCorrect()) {
+                        XWPFParagraph p = hwt.getHeading();
+                        p.getRuns().get(0).setText(hwt.getFinalName(), 0);
+                        hwt.setHeading(p);
+                    }
+                }
+            }
+        }
+
         document = insertHeadings(document, levelListMain);
 
         long endMerge = System.currentTimeMillis();
         System.out.println("Time (ms) to merge: " + (endMerge - startMerge));
 
         // заполнение mainHeadingsInfo
-        List<String> headings = TempParamsGetter.getMainHeadingsNamesList(document);
-        if (headings != null && !headings.isEmpty()) {
-            for (String str : headings) {
-                List<MatchedHeadingInfo> matchedHeadings = new ArrayList<>();
-                for (MainHeadingInfo info : mainHeadingsInfo) {
-                    if (info.getHeadingName().equals(str) && info.getFileName().equals(documents.get(0).getName())) {
-                        MatchedHeadingInfo info1 = new MatchedHeadingInfo();
-                        info1.setHeadingName(info.getHeadingName());
-                        info1.setFileName(info.getFileName());
-                        matchedHeadings.add(info1);
-                        if (info.getMatched() != null && !info.getMatched().isEmpty()) {
-                            matchedHeadings.addAll(info.getMatched());
-                        }
-                        break;
-                    }
-                }
-                for (int i = 1; i < matchedHeadings.size(); ++i) {
-                    for (MainHeadingInfo info : mainHeadingsInfo) {
-                        if (info.getHeadingName().equals(matchedHeadings.get(i).getHeadingName())
-                                && info.getFileName().equals(matchedHeadings.get(i).getFileName())) {
-                            List<MatchedHeadingInfo> tba = new ArrayList<>(matchedHeadings);
-                            tba.remove(matchedHeadings.get(i));
-                            info.setFinalName(matchedHeadings.get(0).getHeadingName());
-                            info.setMatched(tba);
-                            if (!tba.isEmpty()) {
-                                info.setMatched(true);
-                            }
+        for (MainHeadingInfo info : mainHeadingsInfo) {
+            if (info.isMatched()) {
+                for (MatchedHeadingInfo matchedInfo : info.getMatched()) {
+                    for (MainHeadingInfo info1 : mainHeadingsInfo) {
+                        if (matchedInfo.getHeadingName().equals(info1.getHeadingName())
+                                && matchedInfo.getFileName().equals(info1.getFileName()) && !info1.isMatched) {
+                            info1.setMatched(true);
+                            info1.setFinalName(info.getFinalName());
+                            List<MatchedHeadingInfo> tba = new ArrayList<>(info.getMatched());
+                            MatchedHeadingInfo info2 = new MatchedHeadingInfo();
+                            info2.setHeadingName(info.getHeadingName());
+                            info2.setFileName(info.getFileName());
+                            tba.add(info2);
+                            tba.removeIf(i->(i.getHeadingName().equals(matchedInfo.getHeadingName()))
+                                    && i.getFileName().equals(matchedInfo.getFileName()));
+                            info1.setMatched(tba);
                         }
                     }
                 }
             }
         }
+
         return document;
     }
 
@@ -218,30 +261,6 @@ public class DocCombiner {
 
         for (HeadingWithText hwtL : l) {
             if (hwtL.getHeading().getStyle().equals("Heading1")) {
-                // проверка на коррекцию
-                boolean toCorrect = false;
-                String oldName = hwtL.getHeading().getText();
-                HeadingsCorrection correction = new HeadingsCorrection();
-                if (correctionList != null && !correctionList.isEmpty()) {
-                    for (HeadingsCorrection c : correctionList) {
-                        for (MatchedHeadingInfo matchedInfo : c.getHeadings()) {
-                            for (MainHeadingInfo mainInfo : mainHeadingsInfo) {
-                                if (fileName.equals(matchedInfo.getFileName())
-                                        && (mainInfo.getHeadingName().equals(matchedInfo.getHeadingName())
-                                        || mainInfo.getHeadingName().equals(c.getFinalName()))) {
-                                    toCorrect = true;
-                                    correction = c;
-                                    if (!oldName.equals(c.getFinalName())) {
-                                        hwtL.getHeading().getRuns().get(0).setText(c.getFinalName(), 0);
-                                    }
-                                    foundCorrected.add(matchedInfo);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                }
                 List<XWPFParagraph> text = new ArrayList<>();
                 List<XWPFTable> tables = new ArrayList<>();
                 List<HeadingWithText> content = new ArrayList<>();
@@ -258,19 +277,16 @@ public class DocCombiner {
                 for (HeadingWithText hwtR : r) {
                     if (hwtR.getHeading().getStyle().equals("Heading1")) {
                         Matcher matcher = new Matcher();
-                        boolean isMatched;
-                        if (toCorrect) {
-                            String headingName = hwtR.getHeading().getText();
-                            boolean isFound = false;
-                            for (MatchedHeadingInfo info : correction.getHeadings()) {
-                                if (info.getHeadingName().equals(headingName)) {
-                                    isFound = true;
-                                    break;
+                        boolean isMatched = false;
+                        if (hwtR.isToCorrect() && hwtL.isToCorrect()) {
+                            for (MatchedHeadingInfo info : hwtL.getCorrectionList()) {
+                                if (info.getHeadingName().equals(hwtR.getHeading().getText())
+                                        && info.getFileName().equals(fileName)) {
+                                    isMatched = true;
                                 }
                             }
-                            isMatched = isFound;
                         }
-                        else {
+                        else if (!hwtR.isToCorrect() && !hwtL.isToCorrect()) {
                             isMatched = matcher.headingsMatch(PL, PR, hwtL, hwtR) >= 100 && !resolved.contains(hwtR);
                         }
                         if (isMatched) {
@@ -313,7 +329,7 @@ public class DocCombiner {
                             matchedInfo.setFileName(fileName);
                             matchedInfo.setHeadingName(hwtR.getHeading().getText());
                             for (MainHeadingInfo info : mainHeadingsInfo) {
-                                if (info.getHeadingName().equals(oldName)) {
+                                if (info.getHeadingName().equals(hwtL.getHeading().getText())) {
                                     List<MatchedHeadingInfo> infos = info.getMatched();
                                     if (infos == null) {
                                         infos = new ArrayList<>();
@@ -321,18 +337,25 @@ public class DocCombiner {
                                     infos.add(matchedInfo);
                                     info.setMatched(infos);
                                     info.setMatched(true);
-                                    info.setFinalName(hwtL.getHeading().getText());
+                                    if (hwtL.isToCorrect()) {
+                                        info.setFinalName(hwtL.getFinalName());
+                                    }
+                                    else {
+                                        info.setFinalName(hwtL.getHeading().getText());
+                                    }
                                     break;
                                 }
                             }
-                            //
                             break;
                         }
                     }
                 }
+                // Объединение двух хедеров
                 if (!text.isEmpty() || !tables.isEmpty() || (content != null && !content.isEmpty())) {
-                    //Если есть коррекция и она полностью завершена заменить имя заголовка
                     HeadingWithText hwt = new HeadingWithText(hwtL.getHeading(), text, tables);
+                    hwt.setToCorrect(hwtL.isToCorrect());
+                    hwt.setCorrectionList(hwtL.getCorrectionList());
+                    hwt.setFinalName(hwtL.getFinalName());
                     result.add(hwt);
                     if (content != null && !content.isEmpty()) {
                         result.addAll(content);
