@@ -79,31 +79,18 @@ public class MainTestTempCreation {
         File file1 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test2.docx");
         File file2 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test3.docx");
         try {
-            List<HeadingsCorrection>  correctionList = new ArrayList<>();
-            HeadingsCorrection c = new HeadingsCorrection();
-            c.setFinalName("Corrected");
-            MatchedHeadingInfo h1 = new MatchedHeadingInfo();
-            h1.setFileName("Test1.docx");
-            h1.setHeadingName("Etymology");
-            MatchedHeadingInfo h2 = new MatchedHeadingInfo();
-            h2.setFileName("Test2.docx");
-            h2.setHeadingName("History");
-            List<MatchedHeadingInfo> headings = Arrays.asList(h1, h2);
-            c.setHeadings(headings);
-            correctionList.add(c);
-
-            HeadingsCorrection c1 = new HeadingsCorrection();
-            c1.setFinalName("Corrected1");
-            MatchedHeadingInfo h11 = new MatchedHeadingInfo();
-            h11.setFileName("Test2.docx");
-            h11.setHeadingName("Geography");
-            MatchedHeadingInfo h22 = new MatchedHeadingInfo();
-            h22.setFileName("Test3.docx");
-            h22.setHeadingName("Economy");
-            List<MatchedHeadingInfo> headings1 = Arrays.asList(h11, h22);
-            c1.setHeadings(headings1);
-            correctionList.add(c1);
-
+            HeadingsCorrection c1 = new HeadingsCorrection(Arrays.asList(
+                    new MatchedHeadingInfo("Etymology", "Test1.docx"),
+                    new MatchedHeadingInfo("Etymology", "Test3.docx")), "Corrected1");
+            HeadingsCorrection c2 = new HeadingsCorrection(Arrays.asList(
+                    new MatchedHeadingInfo("History", "Test1.docx"),
+                    new MatchedHeadingInfo("History", "Test2.docx"),
+                    new MatchedHeadingInfo("History", "Test3.docx")), "Corrected2");
+            HeadingsCorrection c3 = new HeadingsCorrection(Arrays.asList(
+                    new MatchedHeadingInfo("Economy", "Test3.docx")), "Corrected3");
+            HeadingsCorrection c4 = new HeadingsCorrection(Arrays.asList(
+                    new MatchedHeadingInfo("Geography", "Test2.docx")), "Corrected4");
+            List<HeadingsCorrection> correctionList = Arrays.asList(c1, c2, c3, c4);
             DocCombiner dc = new DocCombiner();
             long start = System.currentTimeMillis();
             XWPFDocument result = dc.combineDocs(Arrays.asList(file, file1, file2), correctionList, true);

@@ -24,7 +24,6 @@ public class DocCombiner {
 
     private List<MainHeadingInfo> mainHeadingsInfo;
     private List<String> removedMainHeadings;
-    List<MatchedHeadingInfo> foundCorrected = new ArrayList<>();
 
     public List<MainHeadingInfo> getMainHeadingsInfo() {
         return mainHeadingsInfo;
@@ -214,6 +213,31 @@ public class DocCombiner {
             }
         }
 
+        // расстановка хедингов в нужном порядке
+        if (correctionList != null) {
+            List<HeadingWithText> result = new ArrayList<>();
+            for (HeadingsCorrection headingsCorrection : correctionList) {
+                String headingName = headingsCorrection.getFinalName();
+                int headingPos = 0;
+                int nextHeadingPos = levelListMain.size();
+                for (int i = 0; i < levelListMain.size(); ++i) {
+                    if (levelListMain.get(i).getHeading().getStyle().equals("Heading1")
+                            && levelListMain.get(i).getHeading().getText().equals(headingName)) {
+                        headingPos = i;
+                        break;
+                    }
+                }
+                for (int i = headingPos + 1; i < levelListMain.size(); ++i) {
+                    if (levelListMain.get(i).getHeading().getStyle().equals("Heading1")) {
+                        nextHeadingPos = i;
+                        break;
+                    }
+                }
+                result.addAll(levelListMain.subList(headingPos, nextHeadingPos));
+            }
+            levelListMain = result;
+        }
+
         document = insertHeadings(document, levelListMain);
 
         long endMerge = System.currentTimeMillis();
@@ -239,6 +263,13 @@ public class DocCombiner {
                         }
                     }
                 }
+            }
+        }
+
+        // заполнение finalName у тех у кого null
+        for (MainHeadingInfo info : mainHeadingsInfo) {
+            if (info.getFinalName() == null) {
+                info.setFinalName(info.getHeadingName());
             }
         }
 
