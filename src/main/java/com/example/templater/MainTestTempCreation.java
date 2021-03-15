@@ -1,10 +1,15 @@
 package com.example.templater;
 
 import com.example.templater.documentService.docCombine.*;
+import com.example.templater.documentService.tempBuilder.*;
+import com.example.templater.documentService.tempParamsGetter.AllTempParams;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.xmlbeans.XmlException;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,19 +18,34 @@ public class MainTestTempCreation {
     public static void main(String... s) {
         /*
         TemplateCreater templateCreater = new TemplateCreater();
-        TempParams tempParams = TempParams.getDefaultTemp2Params();
-        TitleParams titleParams = TitleParams.getDefaultTemp2TitleParams();
+        TempParams tempParams = TempParams.getDefaultTemp1Params();
+        TitleParams titleParams = TitleParams.getDefaultTemp1TitleParams();
         // порядок элементов (соблюдать строго): header 1, header 2, header 3, header 4, header 5 (если нет хедера то null),
         // header(верхний колонтитул) (null если нет),footer (null если нет), textField (null, если нет).
-        List<ParagraphParams> paragraphParamsList = ParagraphParams.getDefaultTemp2ParParams();
-        TableParams tableParams = TableParams.getDefaultTemplate2TableParams();
+        List<ParagraphParams> paragraphParamsList = ParagraphParams.getDefaultTemp1ParParams();
+        TableParams tableParams = TableParams.getDefaultTemplate1TableParams();
+        AllTempParams allParams = new AllTempParams();
+        allParams.setTempParams(tempParams);
+        allParams.setTitleParams(titleParams);
+        allParams.setParamsList(paragraphParamsList);
+        allParams.setTableParams(tableParams);
         try {
-            templateCreater.createTemplate(tempParams, titleParams, paragraphParamsList, tableParams);
+            File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test2.docx");
+            FileInputStream fis = new FileInputStream(file);
+            XWPFDocument document = new XWPFDocument(fis);
+            DocCombiner combiner = new DocCombiner();
+            XWPFDocument result = combiner.applyTemplateToDoc(document, allParams);
+            FileOutputStream fos = new FileOutputStream("Applied.docx");
+            result.write(fos);
+            fos.close();
+            fis.close();
+            TemplateCreater creater = new TemplateCreater();
+            creater.createTemplate(allParams);
         } catch (IOException | XmlException e) {
             e.printStackTrace();
         }
-       */
-       /*File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Template.docx");
+
+       File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Template.docx");
             try {
                 FileInputStream is = new FileInputStream(file);
                 XWPFDocument document = new XWPFDocument(is);
@@ -49,17 +69,17 @@ public class MainTestTempCreation {
             catch (IOException e) {
                 e.printStackTrace();
         }
-*/
 
-        File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\1.docx");
-        File file1 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\2.docx");
-        File file2 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\3.docx");
-        File file3 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\4.docx");
-        //File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test1.docx");
-        //File file1 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test2.docx");
-        //File file2 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test3.docx");
+        */
+        //File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\1.docx");
+        //File file1 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\2.docx");
+        //File file2 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\3.docx");
+        //File file3 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\4.docx");
+        File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test1.docx");
+        File file1 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test2.docx");
+        File file2 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test3.docx");
         try {
-            /*List<HeadingsCorrection>  correctionList = new ArrayList<>();
+            List<HeadingsCorrection>  correctionList = new ArrayList<>();
             HeadingsCorrection c = new HeadingsCorrection();
             c.setFinalName("Corrected");
             MatchedHeadingInfo h1 = new MatchedHeadingInfo();
@@ -83,10 +103,10 @@ public class MainTestTempCreation {
             List<MatchedHeadingInfo> headings1 = Arrays.asList(h11, h22);
             c1.setHeadings(headings1);
             correctionList.add(c1);
-*/
+
             DocCombiner dc = new DocCombiner();
             long start = System.currentTimeMillis();
-            XWPFDocument result = dc.combineDocs(Arrays.asList(file, file1, file2), null, true);
+            XWPFDocument result = dc.combineDocs(Arrays.asList(file, file1, file2), correctionList, true);
             long end = System.currentTimeMillis();
             System.out.println("Total time (ms): " + (end - start));
             FileOutputStream fos = new FileOutputStream("Combined.docx");
@@ -101,8 +121,8 @@ public class MainTestTempCreation {
                     for (MatchedHeadingInfo m : info.getMatched()) {
                         System.out.print(m.getHeadingName() + ", " + m.getFileName() + "\n");
                     }
-                    System.out.println("Subheadings: ");
                 }
+                System.out.println("Subheadings: ");
                 for (String str : info.getSubheadingsNames()) {
                     System.out.print(str + ", ");
                 }
@@ -112,6 +132,6 @@ public class MainTestTempCreation {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
 
+    }
 }

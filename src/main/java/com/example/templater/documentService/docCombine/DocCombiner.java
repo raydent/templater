@@ -1,21 +1,22 @@
 package com.example.templater.documentService.docCombine;
 
-import com.example.templater.documentService.tempBuilder.TemplateCreater;
+import com.example.templater.documentService.tempBuilder.*;
 import com.example.templater.documentService.tempParamsGetter.AllTempParams;
 import com.example.templater.documentService.tempParamsGetter.HeadingWithText;
 import com.example.templater.documentService.tempParamsGetter.TempParamsGetter;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlException;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
+import org.jboss.jandex.Main;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import org.springframework.security.core.parameters.P;
 
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -117,6 +118,25 @@ public class DocCombiner {
             mainHeadingsInfo.add(info);
         }
 
+        //пометка хедингов требующих коррекции
+        if (correctionList != null) {
+            for (HeadingWithText hwt : levelListMain) {
+                if (hwt.getHeading().getStyle().equals("Heading1")) {
+                    for (HeadingsCorrection correction : correctionList) {
+                        for (MatchedHeadingInfo info : correction.getHeadings()) {
+                            if (info.getHeadingName().equals(hwt.getHeading().getText())
+                                    && info.getFileName().equals(documents.get(0).getName())) {
+                                hwt.setToCorrect(true);
+                                hwt.setCorrectionList(correction.getHeadings());
+                                hwt.setFinalName(correction.getFinalName());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         long startMerge = System.currentTimeMillis();
 
         // мердж с осталными файлами
@@ -152,6 +172,25 @@ public class DocCombiner {
                 mainHeadingsInfo.add(info);
             }
 
+            //пометка хедингов требующих коррекции
+            if (correctionList != null) {
+                for (HeadingWithText hwt : levelListToMerge) {
+                    if (hwt.getHeading().getStyle().equals("Heading1")) {
+                        for (HeadingsCorrection correction : correctionList) {
+                            for (MatchedHeadingInfo info : correction.getHeadings()) {
+                                if (info.getHeadingName().equals(hwt.getHeading().getText())
+                                        && info.getFileName().equals(documents.get(i).getName())) {
+                                    hwt.setToCorrect(true);
+                                    hwt.setCorrectionList(correction.getHeadings());
+                                    hwt.setFinalName(correction.getFinalName());
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             long startMergeFile = System.currentTimeMillis();
 
             levelListMain = combineMainHeadings(levelListMain, levelListToMerge, documents.get(i).getName(),
@@ -161,44 +200,48 @@ public class DocCombiner {
             System.out.println("Time (ms) to merge file " + documents.get(i).getName() + ": " + (endMergeFile - startMergeFile));
 
         }
+
+        // замена имен у хедингов требующих коррекции
+        if (correctionList != null) {
+            for (HeadingWithText hwt : levelListMain) {
+                if (hwt.getHeading().getStyle().equals("Heading1")) {
+                    if (hwt.isToCorrect()) {
+                        XWPFParagraph p = hwt.getHeading();
+                        p.getRuns().get(0).setText(hwt.getFinalName(), 0);
+                        hwt.setHeading(p);
+                    }
+                }
+            }
+        }
+
         document = insertHeadings(document, levelListMain);
 
         long endMerge = System.currentTimeMillis();
         System.out.println("Time (ms) to merge: " + (endMerge - startMerge));
 
         // заполнение mainHeadingsInfo
-        List<String> headings = TempParamsGetter.getMainHeadingsNamesList(document);
-        if (headings != null && !headings.isEmpty()) {
-            for (String str : headings) {
-                List<MatchedHeadingInfo> matchedHeadings = new ArrayList<>();
-                for (MainHeadingInfo info : mainHeadingsInfo) {
-                    if (info.getHeadingName().equals(str) && info.getFileName().equals(documents.get(0).getName())) {
-                        MatchedHeadingInfo info1 = new MatchedHeadingInfo();
-                        info1.setHeadingName(info.getHeadingName());
-                        info1.setFileName(info.getFileName());
-                        matchedHeadings.add(info1);
-                        if (info.getMatched() != null && !info.getMatched().isEmpty()) {
-                            matchedHeadings.addAll(info.getMatched());
-                        }
-                        break;
-                    }
-                }
-                for (int i = 1; i < matchedHeadings.size(); ++i) {
-                    for (MainHeadingInfo info : mainHeadingsInfo) {
-                        if (info.getHeadingName().equals(matchedHeadings.get(i).getHeadingName())
-                                && info.getFileName().equals(matchedHeadings.get(i).getFileName())) {
-                            List<MatchedHeadingInfo> tba = new ArrayList<>(matchedHeadings);
-                            tba.remove(matchedHeadings.get(i));
-                            info.setFinalName(matchedHeadings.get(0).getHeadingName());
-                            info.setMatched(tba);
-                            if (!tba.isEmpty()) {
-                                info.setIsMatched(true);
-                            }
+        for (MainHeadingInfo info : mainHeadingsInfo) {
+            if (info.getIsMatched()) {
+                for (MatchedHeadingInfo matchedInfo : info.getMatched()) {
+                    for (MainHeadingInfo info1 : mainHeadingsInfo) {
+                        if (matchedInfo.getHeadingName().equals(info1.getHeadingName())
+                                && matchedInfo.getFileName().equals(info1.getFileName()) && !info1.isMatched) {
+                            info1.setIsMatched(true);
+                            info1.setFinalName(info.getFinalName());
+                            List<MatchedHeadingInfo> tba = new ArrayList<>(info.getMatched());
+                            MatchedHeadingInfo info2 = new MatchedHeadingInfo();
+                            info2.setHeadingName(info.getHeadingName());
+                            info2.setFileName(info.getFileName());
+                            tba.add(info2);
+                            tba.removeIf(i->(i.getHeadingName().equals(matchedInfo.getHeadingName()))
+                                    && i.getFileName().equals(matchedInfo.getFileName()));
+                            info1.setMatched(tba);
                         }
                     }
                 }
             }
         }
+
         return document;
     }
 
@@ -218,30 +261,6 @@ public class DocCombiner {
 
         for (HeadingWithText hwtL : l) {
             if (hwtL.getHeading().getStyle().equals("Heading1")) {
-                // проверка на коррекцию
-                boolean toCorrect = false;
-                String oldName = hwtL.getHeading().getText();
-                HeadingsCorrection correction = new HeadingsCorrection();
-                if (correctionList != null && !correctionList.isEmpty()) {
-                    for (HeadingsCorrection c : correctionList) {
-                        for (MatchedHeadingInfo matchedInfo : c.getHeadings()) {
-                            for (MainHeadingInfo mainInfo : mainHeadingsInfo) {
-                                if (fileName.equals(matchedInfo.getFileName())
-                                        && (mainInfo.getHeadingName().equals(matchedInfo.getHeadingName())
-                                        || mainInfo.getHeadingName().equals(c.getFinalName()))) {
-                                    toCorrect = true;
-                                    correction = c;
-                                    if (!oldName.equals(c.getFinalName())) {
-                                        hwtL.getHeading().getRuns().get(0).setText(c.getFinalName(), 0);
-                                    }
-                                    foundCorrected.add(matchedInfo);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                }
                 List<XWPFParagraph> text = new ArrayList<>();
                 List<XWPFTable> tables = new ArrayList<>();
                 List<HeadingWithText> content = new ArrayList<>();
@@ -258,19 +277,16 @@ public class DocCombiner {
                 for (HeadingWithText hwtR : r) {
                     if (hwtR.getHeading().getStyle().equals("Heading1")) {
                         Matcher matcher = new Matcher();
-                        boolean isMatched;
-                        if (toCorrect) {
-                            String headingName = hwtR.getHeading().getText();
-                            boolean isFound = false;
-                            for (MatchedHeadingInfo info : correction.getHeadings()) {
-                                if (info.getHeadingName().equals(headingName)) {
-                                    isFound = true;
-                                    break;
+                        boolean isMatched = false;
+                        if (hwtR.isToCorrect() && hwtL.isToCorrect()) {
+                            for (MatchedHeadingInfo info : hwtL.getCorrectionList()) {
+                                if (info.getHeadingName().equals(hwtR.getHeading().getText())
+                                        && info.getFileName().equals(fileName)) {
+                                    isMatched = true;
                                 }
                             }
-                            isMatched = isFound;
                         }
-                        else {
+                        else if (!hwtR.isToCorrect() && !hwtL.isToCorrect()) {
                             isMatched = matcher.headingsMatch(PL, PR, hwtL, hwtR) >= 100 && !resolved.contains(hwtR);
                         }
                         if (isMatched) {
@@ -313,7 +329,7 @@ public class DocCombiner {
                             matchedInfo.setFileName(fileName);
                             matchedInfo.setHeadingName(hwtR.getHeading().getText());
                             for (MainHeadingInfo info : mainHeadingsInfo) {
-                                if (info.getHeadingName().equals(oldName)) {
+                                if (info.getHeadingName().equals(hwtL.getHeading().getText())) {
                                     List<MatchedHeadingInfo> infos = info.getMatched();
                                     if (infos == null) {
                                         infos = new ArrayList<>();
@@ -321,18 +337,25 @@ public class DocCombiner {
                                     infos.add(matchedInfo);
                                     info.setMatched(infos);
                                     info.setIsMatched(true);
-                                    info.setFinalName(hwtL.getHeading().getText());
+                                    if (hwtL.isToCorrect()) {
+                                        info.setFinalName(hwtL.getFinalName());
+                                    }
+                                    else {
+                                        info.setFinalName(hwtL.getHeading().getText());
+                                    }
                                     break;
                                 }
                             }
-                            //
                             break;
                         }
                     }
                 }
+                // Объединение двух хедеров
                 if (!text.isEmpty() || !tables.isEmpty() || (content != null && !content.isEmpty())) {
-                    //Если есть коррекция и она полностью завершена заменить имя заголовка
                     HeadingWithText hwt = new HeadingWithText(hwtL.getHeading(), text, tables);
+                    hwt.setToCorrect(hwtL.isToCorrect());
+                    hwt.setCorrectionList(hwtL.getCorrectionList());
+                    hwt.setFinalName(hwtL.getFinalName());
                     result.add(hwt);
                     if (content != null && !content.isEmpty()) {
                         result.addAll(content);
@@ -637,6 +660,119 @@ public class DocCombiner {
                 }
             }
         }
+        return document;
+    }
+
+    public XWPFDocument applyTemplateToDoc(XWPFDocument document, AllTempParams allTempParams) throws IOException, XmlException {
+        TempParams tempParams = allTempParams.getTempParams();
+        TitleParams titleParams = allTempParams.getTitleParams();
+        List<ParagraphParams> paragraphParamsList = allTempParams.getParamsList();
+        TableParams tableParams = allTempParams.getTableParams();
+
+        // хединги
+        XWPFStyles styles = document.getStyles();
+        XWPFStyle heading1 = styles.getStyle("Heading1");
+        XWPFStyle heading2 = styles.getStyle("Heading2");
+        XWPFStyle heading3 = styles.getStyle("Heading3");
+        XWPFStyle heading4 = styles.getStyle("Heading4");
+        XWPFStyle heading5 = styles.getStyle("Heading5");
+
+        CTStyle ctStyle1 = heading1.getCTStyle();
+        CTPPr ppr = ctStyle1.getPPr();
+        CTOnOff ctOnOffPB = CTOnOff.Factory.newInstance();
+        ctOnOffPB.setVal(STOnOff.ON);
+        ppr.setPageBreakBefore(ctOnOffPB);
+        CTPBdr ctpBdr = CTPBdr.Factory.newInstance();
+        CTBorder ctBorder = CTBorder.Factory.newInstance();
+        ctBorder.setVal(STBorder.APPLES);
+        ctpBdr.setBottom(ctBorder);
+        ppr.setPBdr(ctpBdr);
+
+        List<XWPFStyle> styleList = Arrays.asList(heading1, heading2, heading3, heading4, heading5);
+        for (int i = 0; i < styleList.size(); ++i) {
+            if (styleList.get(i) == null) {
+                continue;
+            }
+            CTStyle ctStyle = styleList.get(i).getCTStyle();
+            CTRPr ctrPr = ctStyle.getRPr();
+            CTPPr ctpPr = ctStyle.getPPr();
+            if (ctrPr == null) {
+                ctStyle.addNewRPr();
+            }
+            if (ctpPr == null) {
+                ctStyle.addNewPPr();
+            }
+            ParagraphParams params = paragraphParamsList.get(i);
+            // межстрочный интервал
+            CTSpacing spacing = CTSpacing.Factory.newInstance();
+            spacing.setAfter(BigInteger.valueOf(0));
+            spacing.setBefore(BigInteger.valueOf(0));
+            spacing.setLineRule(STLineSpacingRule.AUTO);
+            spacing.setLine(BigInteger.valueOf((long) tempParams.getInterval_between_lines() * 240));
+            ctStyle.getPPr().setSpacing(spacing);
+            // цвет
+            CTColor color = CTColor.Factory.newInstance();
+            STHexColor col = STHexColor.Factory.newInstance();
+            col.setStringValue(params.getTextColor());
+            color.setVal(col);
+            ctrPr.setColor(color);
+            CTHighlight ctHighlight = CTHighlight.Factory.newInstance();
+            ctHighlight.setVal(Colors.getColorEnum(params.getTextHighlightColor()));
+            ctrPr.setHighlight(ctHighlight);
+            // шрифт
+            CTFonts fonts = CTFonts.Factory.newInstance();
+            fonts.setAscii(Fonts.getFontString(params.getFont()));
+            ctrPr.setRFonts(fonts);
+            CTHpsMeasure size = CTHpsMeasure.Factory.newInstance();
+            size.setVal(new BigInteger(String.valueOf(params.getFontSize() * 2)));
+            ctrPr.setSz(size);
+            CTOnOff ctOnOffBold = CTOnOff.Factory.newInstance();
+            ctOnOffBold.setVal(STOnOff.OFF);
+            CTOnOff ctOnOffItalic = CTOnOff.Factory.newInstance();
+            ctOnOffItalic.setVal(STOnOff.OFF);
+            CTUnderline ctUnderline = CTUnderline.Factory.newInstance();
+            ctUnderline.setVal(STUnderline.NONE);
+            if (params.isBold()) {
+                ctOnOffBold.setVal(STOnOff.ON);
+            }
+            if (params.isItalic()) {
+                ctOnOffItalic.setVal(STOnOff.ON);
+            }
+            if (params.isUnderline()) {
+                ctUnderline.setVal(STUnderline.SINGLE);
+            }
+            ctrPr.setB(ctOnOffBold);
+            ctrPr.setI(ctOnOffItalic);
+            ctrPr.setU(ctUnderline);
+            ctStyle.setRPr(ctrPr);
+        }
+
+        //разметка документа
+        TemplateCreater creater = new TemplateCreater();
+        if (tempParams.isHeader()) {
+            ParagraphParams params = paragraphParamsList.get(paragraphParamsList.size() - 3);
+            document = creater.createHeader(document, params);
+        }
+        if (tempParams.isTitle_page()) {
+            document = creater.insertTitlePage(document, titleParams, tempParams.getField());
+        }
+        if (tempParams.isNumeration()) {
+            document = creater.createNumeration(document);
+        }
+        if (tempParams.isFooter()) {
+            ParagraphParams params = paragraphParamsList.get(paragraphParamsList.size() - 2);
+            document = creater.createFooter(document, params);
+        }
+        //поля
+        CTSectPr ctSectPr = null;
+        CTDocument1 ctDocument = document.getDocument();
+        CTBody ctBody = ctDocument.getBody();
+        ctSectPr = ctBody.getSectPr();
+        if (ctSectPr == null) {
+            ctSectPr = document.getDocument().getBody().addNewSectPr();
+        }
+        creater.setFields(ctSectPr, tempParams.getField());
+
         return document;
     }
 }

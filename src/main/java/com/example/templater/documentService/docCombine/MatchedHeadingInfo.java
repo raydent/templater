@@ -19,4 +19,12 @@ public class MatchedHeadingInfo {
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
+
+    @Override
+    public String toString() {
+        return "MatchedHeadingInfo{" +
+                "headingName='" + headingName + '\'' +
+                ", fileName='" + fileName + '\'' +
+                '}';
+    }
 }
