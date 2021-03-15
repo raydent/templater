@@ -192,7 +192,7 @@ public class DocCombiner {
                             info.setFinalName(matchedHeadings.get(0).getHeadingName());
                             info.setMatched(tba);
                             if (!tba.isEmpty()) {
-                                info.setMatched(true);
+                                info.setIsMatched(true);
                             }
                         }
                     }
@@ -320,7 +320,7 @@ public class DocCombiner {
                                     }
                                     infos.add(matchedInfo);
                                     info.setMatched(infos);
-                                    info.setMatched(true);
+                                    info.setIsMatched(true);
                                     info.setFinalName(hwtL.getHeading().getText());
                                     break;
                                 }

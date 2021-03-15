@@ -1,6 +1,7 @@
 package com.example.templater.controller;
 
 import com.example.templater.documentService.docCombine.DocCombiner;
+import com.example.templater.documentService.docCombine.HeadingsCorrection;
 import com.example.templater.documentService.docCombine.MainHeadingInfo;
 import com.example.templater.documentService.docCombine.MatchedHeadingInfo;
 import com.example.templater.documentService.tempBuilder.*;
@@ -8,6 +9,7 @@ import com.example.templater.model.*;
 import com.example.templater.service.IUserService;
 //import com.example.templater.tempBuilder.*;
 import com.example.templater.service.TemplateService;
+import com.sun.xml.bind.v2.runtime.output.SAXOutput;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
@@ -45,6 +47,7 @@ public class MainController {
     private TemplateService templateService;
     //@Autowired
     private AuthenticationManager authenticationManager;
+    Map<String, List<File>> userFiles = new HashMap<>();
 //test
     @GetMapping("/login")
     public String getLogin(Model model, @AuthenticationPrincipal User authenticatedUser, @RequestParam(required = false) String error) {
@@ -73,7 +76,7 @@ public class MainController {
     }
 
     @PostMapping("/upload_angular")
-    public @ResponseBody byte[] handleFileUpload(@RequestPart("files") MultipartFile[] multipartFiles, Authentication authentication) {
+    public @ResponseBody List<MainHeadingInfo> handleFileUpload(@RequestPart("files") MultipartFile[] multipartFiles, Authentication authentication) {
         String message;
         List<File> files = new ArrayList<>();
         byte[] bytes = null;
@@ -93,15 +96,43 @@ public class MainController {
                 e.printStackTrace();
             }
         }
+        userFiles.put(authentication.getName(), files);
         try {
             DocCombiner dc = new DocCombiner();
             XWPFDocument result = dc.combineDocs(files,
                     null, true);
             FileOutputStream fos = new FileOutputStream("Combined.docx");
-            result.write(fos);
+//            result.write(fos);
             fos.close();
+            System.out.println(dc.getMainHeadingsInfo());
+            return dc.getMainHeadingsInfo();
+//            FileInputStream fis = new FileInputStream("Combined.docx");
+//            bytes = IOUtils.toByteArray(fis);
+//            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/combine_angular", method = RequestMethod.POST)
+    public @ResponseBody
+    byte[] combineDocs(@RequestBody List<HeadingsCorrection> correctionList, Authentication authentication){
+        System.out.println(correctionList.size());
+        System.out.println(correctionList);
+        byte[] bytes = null;
+        try {
+            DocCombiner dc = new DocCombiner();
+            System.out.println(userFiles.get(authentication.getName()));
+            XWPFDocument result = dc.combineDocs(userFiles.get(authentication.getName()),
+                    correctionList, true);
+            FileOutputStream fos = new FileOutputStream("Combined.docx");
+//            result.write(fos);
+            fos.close();
+//            System.out.println(dc.getMainHeadingsInfo());
             FileInputStream fis = new FileInputStream("Combined.docx");
             bytes = IOUtils.toByteArray(fis);
+            System.out.println(bytes.length);
             fis.close();
         } catch (Exception e) {
             e.printStackTrace();
