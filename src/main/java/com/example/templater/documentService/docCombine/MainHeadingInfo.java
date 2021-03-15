@@ -26,11 +26,11 @@ public class MainHeadingInfo {
         this.headingName = headingName;
     }
 
-    public boolean isMatched() {
+    public boolean getIsMatched() {
         return isMatched;
     }
 
-    public void setMatched(boolean matched) {
+    public void setIsMatched(boolean matched) {
         isMatched = matched;
     }
 
@@ -56,5 +56,19 @@ public class MainHeadingInfo {
 
     public void setSubheadingsNames(List<String> subheadingsNames) {
         this.subheadingsNames = subheadingsNames;
+    }
+    
+    
+
+    @Override
+    public String toString() {
+        return "MainHeadingInfo{" +
+                "headingName='" + headingName + '\'' +
+                ", finalName='" + finalName + '\'' +
+                ", isMatched=" + isMatched +
+                ", matched=" + matched +
+                ", fileName='" + fileName + '\'' +
+                ", subheadingsNames=" + subheadingsNames +
+                '}';
     }
 }

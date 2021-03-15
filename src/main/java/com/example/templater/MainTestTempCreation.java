@@ -102,7 +102,7 @@ public class MainTestTempCreation {
             List<MainHeadingInfo> mainHeadingsInfo = dc.getMainHeadingsInfo();
             for (MainHeadingInfo info : mainHeadingsInfo) {
                 System.out.println("Name: " + info.getHeadingName() + ", Final Name: " + info.getFinalName() + ", File name:"
-                        + info.getFileName() + ", Is matched: " + info.isMatched());
+                        + info.getFileName() + ", Is matched: " + info.getIsMatched());
                 if (info.getMatched() != null) {
                     System.out.println("Matched: ");
                     for (MatchedHeadingInfo m : info.getMatched()) {

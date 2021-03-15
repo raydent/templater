@@ -28,4 +28,12 @@ public class HeadingsCorrection {
     public void setFinalName(String finalName) {
         this.finalName = finalName;
     }
+
+    @Override
+    public String toString() {
+        return "HeadingsCorrection{" +
+                "headings=" + headings +
+                ", finalName='" + finalName + '\'' +
+                '}';
+    }
 }

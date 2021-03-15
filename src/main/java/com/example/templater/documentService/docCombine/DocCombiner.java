@@ -245,12 +245,12 @@ public class DocCombiner {
 
         // заполнение mainHeadingsInfo
         for (MainHeadingInfo info : mainHeadingsInfo) {
-            if (info.isMatched()) {
+            if (info.getIsMatched()) {
                 for (MatchedHeadingInfo matchedInfo : info.getMatched()) {
                     for (MainHeadingInfo info1 : mainHeadingsInfo) {
                         if (matchedInfo.getHeadingName().equals(info1.getHeadingName())
                                 && matchedInfo.getFileName().equals(info1.getFileName()) && !info1.isMatched) {
-                            info1.setMatched(true);
+                            info1.setIsMatched(true);
                             info1.setFinalName(info.getFinalName());
                             List<MatchedHeadingInfo> tba = new ArrayList<>(info.getMatched());
                             MatchedHeadingInfo info2 = new MatchedHeadingInfo();
@@ -367,7 +367,7 @@ public class DocCombiner {
                                     }
                                     infos.add(matchedInfo);
                                     info.setMatched(infos);
-                                    info.setMatched(true);
+                                    info.setIsMatched(true);
                                     if (hwtL.isToCorrect()) {
                                         info.setFinalName(hwtL.getFinalName());
                                     }

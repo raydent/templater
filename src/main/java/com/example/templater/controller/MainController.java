@@ -1,17 +1,22 @@
 package com.example.templater.controller;
 
 import com.example.templater.documentService.docCombine.DocCombiner;
+import com.example.templater.documentService.docCombine.HeadingsCorrection;
 import com.example.templater.documentService.docCombine.MainHeadingInfo;
 import com.example.templater.documentService.docCombine.MatchedHeadingInfo;
 import com.example.templater.documentService.tempBuilder.*;
+import com.example.templater.documentService.tempParamsGetter.AllTempParams;
 import com.example.templater.model.*;
+import com.example.templater.service.FileService;
 import com.example.templater.service.IUserService;
 //import com.example.templater.tempBuilder.*;
 import com.example.templater.service.TemplateService;
+import com.sun.xml.bind.v2.runtime.output.SAXOutput;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.xmlbeans.XmlException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -43,8 +48,12 @@ public class MainController {
     private IUserService userService;
     @Autowired
     private TemplateService templateService;
+    @Autowired
+    private FileService fileService;
     //@Autowired
     private AuthenticationManager authenticationManager;
+    Map<String, List<File>> userFilesToCombine = new HashMap<>();
+    Map<String, AllTempParams> userStyles = new HashMap<>();
 //test
     @GetMapping("/login")
     public String getLogin(Model model, @AuthenticationPrincipal User authenticatedUser, @RequestParam(required = false) String error) {
@@ -73,45 +82,47 @@ public class MainController {
     }
 
     @PostMapping("/upload_angular")
-    public @ResponseBody byte[] handleFileUpload(@RequestPart("files") MultipartFile[] multipartFiles, Authentication authentication) {
-        String message;
-        List<File> files = new ArrayList<>();
-        byte[] bytes = null;
-        for (int i = 0; i < multipartFiles.length; i++) {
-            File file = new File("temp" + multipartFiles[i].getOriginalFilename());
-            try {
-                file.createNewFile();
-                InputStream initialStream = multipartFiles[i].getInputStream();
-                byte[] buffer = new byte[initialStream.available()];
-                initialStream.read(buffer);
-                OutputStream outStream = new FileOutputStream(file);
-                outStream.write(buffer);
-                outStream.close();
-                initialStream.close();
-                files.add(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public @ResponseBody List<MainHeadingInfo> handleFileUpload(@RequestPart("files") MultipartFile[] multipartFiles, Authentication authentication) {
+        fileService.multipartFilesToFileMap(userFilesToCombine, authentication.getName(), multipartFiles);
         try {
             DocCombiner dc = new DocCombiner();
-            XWPFDocument result = dc.combineDocs(files,
+            XWPFDocument result = dc.combineDocs(userFilesToCombine.get(authentication.getName()),
                     null, true);
-            FileOutputStream fos = new FileOutputStream("Combined.docx");
-            result.write(fos);
-            fos.close();
-            FileInputStream fis = new FileInputStream("Combined.docx");
-            bytes = IOUtils.toByteArray(fis);
-            fis.close();
+            System.out.println(dc.getMainHeadingsInfo());
+            return dc.getMainHeadingsInfo();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return bytes;
+        return null;
     }
 
+    @RequestMapping(value = "/combine_angular", method = RequestMethod.POST)
+    public
+    @ResponseBody byte[]
+    combineDocs(@RequestBody List<HeadingsCorrection> correctionList, Authentication authentication){
+        return fileService.combineFiles(userFilesToCombine.get(authentication.getName()) ,correctionList);
+    }
+
+    @PostMapping("get_style_angular")
+    public @ResponseBody String
+    getStyleAngular(@RequestBody Temp_Full temp_full, Authentication authentication){
+        AllTempParams allTempParams = new AllTempParams(temp_full);
+        userStyles.put(authentication.getName(), allTempParams);
+        return "{\"STATUS\" : \"OK\"}";
+    }
+
+    @PostMapping("style_file_angular")
+    public @ResponseBody byte[]
+    styleFileAngular(@RequestPart("file") MultipartFile multipartFile, Authentication authentication){
+        return fileService.applyStyle(fileService.multipartFileToFile(multipartFile, authentication.getName(), "style"),
+                userStyles.get(authentication.getName()));
+    }
+
+
     @RequestMapping(value = "/save_angular", method = RequestMethod.POST, produces = "application/json")
-    public @ResponseBody
-    String saveTemplateAngular(@RequestBody Temp_Full temp_full, Authentication authentication, HttpServletRequest httpServletRequest){
+    public
+    @ResponseBody String
+    saveTemplateAngular(@RequestBody Temp_Full temp_full, Authentication authentication, HttpServletRequest httpServletRequest){
         User user = userService.getUserByName(authentication.getName());
         //System.out.println(temp_full.toString());
         temp_full.fillAllDBParams(user);
