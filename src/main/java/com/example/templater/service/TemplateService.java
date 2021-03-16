@@ -22,12 +22,14 @@ public class TemplateService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    private int[] defaultTemplateIds = {0, 11};
+
     public Temp_Full saveTemplate(Temp_Full template) {
         entityManager.persist(template);
         return template;
     }
-    public Temp_Full getById(int userId){
-        return temp_fullRepository.findTemp_FullById(userId);
+    public Temp_Full getById(int id){
+        return temp_fullRepository.findTemp_FullById(id);
         //return temp_fullRepository.findTemp_FullByU();
     }
 
@@ -43,6 +45,15 @@ public class TemplateService {
             userTemplates = Stream.concat(userTemplates.stream(), managerTemplates.stream()).collect(Collectors.toList());
         }
         List<String> templateNames = new ArrayList<>();
+        for (int i : defaultTemplateIds){
+            Temp_Full temp_full = getById(i);
+            if (temp_full != null) {
+                templateNames.add(getById(i).getName());
+            }
+            else{
+                System.out.println("No default id: " + i + "Current queries are written in /src/main/resources/querys.txt");
+            }
+        }
         for (Temp_Full temp_full : userTemplates){
             templateNames.add(temp_full.getName());
         }

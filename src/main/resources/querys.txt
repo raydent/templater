@@ -1,0 +1,92 @@
+
+-- template 1
+INSERT INTO public.template_data(
+	id, fields, footer, header, interval, numeration, title_alignment, title_description, title_name, title_organization, title_page, title_type, users_id, title_type_alignment, name)
+	VALUES (0, 'average', 0, 0, 1.0, 0, 'LEFT', null, null, null, 0, 0, null, 'LEFT', 'No header, footer, numeration, Times New Roman');
+
+INSERT INTO public.headers(
+	id, header_num, font, font_size, bold, italic, underline, alignment, text_color, text_highlight_color, template_data_id)
+	VALUES (1, 1, 'Times_New_Roman', 11, 0, 0, 0, 'LEFT', '#000000', '#000000', 0);
+
+INSERT INTO public.headers(
+	id, header_num, font, font_size, bold, italic, underline, alignment, text_color, text_highlight_color, template_data_id)
+	VALUES (2, 2, 'Times_New_Roman', 11, 0, 0, 0, 'LEFT', '#000000', '#000000', 0);
+
+INSERT INTO public.headers(
+	id, header_num, font, font_size, bold, italic, underline, alignment, text_color, text_highlight_color, template_data_id)
+	VALUES (3, 3, 'Times_New_Roman', 11, 0, 0, 0, 'LEFT', '#000000', '#000000', 0);
+
+INSERT INTO public.headers(
+	id, header_num, font, font_size, bold, italic, underline, alignment, text_color, text_highlight_color, template_data_id)
+	VALUES (4, 4, 'Times_New_Roman', 11, 0, 0, 0, 'LEFT', '#000000', '#000000', 0);
+
+INSERT INTO public.headers(
+	id, header_num, font, font_size, bold, italic, underline, alignment, text_color, text_highlight_color, template_data_id)
+	VALUES (5, 5, 'Times_New_Roman', 11, 0, 0, 0, 'LEFT', '#000000', '#000000', 0);
+
+INSERT INTO public.title_headers(
+	id, type, font, font_size, bold, italic, underline, text_color, text_highlight_color, template_data_id)
+	VALUES (6,	'name',	'Times_New_Roman',	'11',	'0',	'0',	'0',	'#000000',	'#000000',	0);
+
+INSERT INTO public.title_headers(
+	id, type, font, font_size, bold, italic, underline, text_color, text_highlight_color, template_data_id)
+	VALUES (7,	'organization',	'Times_New_Roman',	'11',	'0',	'0',	'0',	'#000000',	'#000000',	0);
+
+INSERT INTO public.title_headers(
+	id, type, font, font_size, bold, italic, underline, text_color, text_highlight_color, template_data_id)
+	VALUES (8,	'description',	'Times_New_Roman',	'11',	'0',	'0',	'0',	'#000000',	'#000000',	0);
+
+INSERT INTO public.title_headers(
+	id, type, font, font_size, bold, italic, underline, text_color, text_highlight_color, template_data_id)
+	VALUES (9,	'type',	'Times_New_Roman',	'11',	'0',	'0',	'0',	'#000000',	'#000000',	0);
+
+INSERT INTO public.temp_table(
+	id, table_heading_cell_text_color, table_heading_cell_color, table_cell_border_color, table_common_cell_color, table_font, table_font_size, table_bold, table_italic, template_data_id)
+	VALUES (10,	'#000000',	'#000000',	'#000000',	'#000000',	'Arial',	'11',	'0',	'1',	0);
+-- 
+
+-- template 2
+INSERT INTO public.template_data(
+	id, fields, footer, header, interval, numeration, title_alignment, title_description, title_name, title_organization, title_page, title_type, users_id, title_type_alignment, name)
+	VALUES (11, 'narrow', 1, 1, 1.0, 1, 'RIGHT', null, null, null, 0, 0, null, 'RIGHT', 'Header,footer, numeration, Times New Roman');
+
+INSERT INTO public.headers(
+	id, header_num, font, font_size, bold, italic, underline, alignment, text_color, text_highlight_color, template_data_id)
+	VALUES (12, 1, 'Times_New_Roman', 11, 0, 0, 0, 'LEFT', '#000000', '#000000', 11);
+
+INSERT INTO public.headers(
+	id, header_num, font, font_size, bold, italic, underline, alignment, text_color, text_highlight_color, template_data_id)
+	VALUES (13, 2, 'Times_New_Roman', 11, 0, 0, 0, 'LEFT', '#000000', '#000000', 11);
+
+INSERT INTO public.headers(
+	id, header_num, font, font_size, bold, italic, underline, alignment, text_color, text_highlight_color, template_data_id)
+	VALUES (14, 3, 'Times_New_Roman', 11, 0, 0, 0, 'LEFT', '#000000', '#000000', 11);
+
+INSERT INTO public.headers(
+	id, header_num, font, font_size, bold, italic, underline, alignment, text_color, text_highlight_color, template_data_id)
+	VALUES (15, 4, 'Times_New_Roman', 11, 0, 0, 0, 'LEFT', '#000000', '#000000', 11);
+
+INSERT INTO public.headers(
+	id, header_num, font, font_size, bold, italic, underline, alignment, text_color, text_highlight_color, template_data_id)
+	VALUES (16, 5, 'Times_New_Roman', 11, 0, 0, 0, 'LEFT', '#000000', '#000000', 11);
+
+INSERT INTO public.title_headers(
+	id, type, font, font_size, bold, italic, underline, text_color, text_highlight_color, template_data_id)
+	VALUES (17,	'name',	'Times_New_Roman',	'11',	'0',	'0',	'0',	'#000000',	'#000000',	11);
+
+INSERT INTO public.title_headers(
+	id, type, font, font_size, bold, italic, underline, text_color, text_highlight_color, template_data_id)
+	VALUES (18,	'organization',	'Times_New_Roman',	'11',	'0',	'0',	'0',	'#000000',	'#000000',	11);
+
+INSERT INTO public.title_headers(
+	id, type, font, font_size, bold, italic, underline, text_color, text_highlight_color, template_data_id)
+	VALUES (19,	'description',	'Times_New_Roman',	'11',	'0',	'0',	'0',	'#000000',	'#000000',	11);
+
+INSERT INTO public.title_headers(
+	id, type, font, font_size, bold, italic, underline, text_color, text_highlight_color, template_data_id)
+	VALUES (20,	'type',	'Times_New_Roman',	'11',	'0',	'0',	'0',	'#000000',	'#000000',	11);
+
+INSERT INTO public.temp_table(
+	id, table_heading_cell_text_color, table_heading_cell_color, table_cell_border_color, table_common_cell_color, table_font, table_font_size, table_bold, table_italic, template_data_id)
+	VALUES (21,	'#000000',	'#000000',	'#000000',	'#000000',	'Arial',	'11',	'0',	'1',	11);
+--
