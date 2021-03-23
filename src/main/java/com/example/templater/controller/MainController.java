@@ -40,6 +40,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Controller
@@ -52,8 +53,8 @@ public class MainController {
     private FileService fileService;
     //@Autowired
     private AuthenticationManager authenticationManager;
-    Map<String, List<File>> userFilesToCombine = new HashMap<>();
-    Map<String, AllTempParams> userStyles = new HashMap<>();
+    Map<String, List<File>> userFilesToCombine = new ConcurrentHashMap<>();
+    Map<String, AllTempParams> userStyles = new ConcurrentHashMap<>();
 //test
     @GetMapping("/login")
     public String getLogin(Model model, @AuthenticationPrincipal User authenticatedUser, @RequestParam(required = false) String error) {
@@ -83,6 +84,10 @@ public class MainController {
 
     @PostMapping("/upload_angular")
     public @ResponseBody List<MainHeadingInfo> handleFileUpload(@RequestPart("files") MultipartFile[] multipartFiles, Authentication authentication) {
+        List<File> oldFiles = userFilesToCombine.get(authentication.getName());
+        if (oldFiles != null){
+            oldFiles.stream().forEach(file -> file.delete());
+        }
         fileService.multipartFilesToFileMap(userFilesToCombine, authentication.getName(), multipartFiles);
         try {
             DocCombiner dc = new DocCombiner();
@@ -101,7 +106,10 @@ public class MainController {
     @ResponseBody byte[]
     combineDocs(@RequestBody List<HeadingsCorrection> correctionList, Authentication authentication){
         System.out.println(userStyles.get(authentication.getName()));
-        return fileService.combineFiles(userFilesToCombine.get(authentication.getName()) ,correctionList, userStyles.get(authentication.getName()));
+        byte[] bytes = null;
+        bytes = fileService.combineFiles(userFilesToCombine.get(authentication.getName()), correctionList, userStyles.get(authentication.getName()));
+        userFilesToCombine.get(authentication.getName()).stream().forEach(file -> file.delete());
+        return bytes;
     }
 
     @PostMapping("get_style_angular")
