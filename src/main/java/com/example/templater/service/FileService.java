@@ -52,13 +52,17 @@ public class FileService {
         map.put(name, files);
     }
 
-    public byte[] combineFiles(List<File> files, List<HeadingsCorrection> headingsCorrectionList){
+    public byte[] combineFiles(List<File> files, List<HeadingsCorrection> headingsCorrectionList, AllTempParams allTempParams){
         byte[] bytes = null;
         try {
             DocCombiner dc = new DocCombiner();
             System.out.println(files);
             XWPFDocument result = dc.combineDocs(files,
                     headingsCorrectionList, true);
+            if (allTempParams != null){
+                DocCombiner combiner = new DocCombiner();
+                result = combiner.applyTemplateToDoc(result, allTempParams);
+            }
             FileOutputStream fos = new FileOutputStream("Combined.docx");
             result.write(fos);
             fos.close();

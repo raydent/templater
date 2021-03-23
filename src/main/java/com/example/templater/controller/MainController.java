@@ -100,7 +100,8 @@ public class MainController {
     public
     @ResponseBody byte[]
     combineDocs(@RequestBody List<HeadingsCorrection> correctionList, Authentication authentication){
-        return fileService.combineFiles(userFilesToCombine.get(authentication.getName()) ,correctionList);
+        System.out.println(userStyles.get(authentication.getName()));
+        return fileService.combineFiles(userFilesToCombine.get(authentication.getName()) ,correctionList, userStyles.get(authentication.getName()));
     }
 
     @PostMapping("get_style_angular")
@@ -111,12 +112,19 @@ public class MainController {
         return "{\"STATUS\" : \"OK\"}";
     }
 
-    @PostMapping("style_file_angular")
+    @PostMapping("delete_style_angular")
+    public @ResponseBody String
+    deleteStyleAngular(Authentication authentication){
+        userStyles.remove(authentication.getName());
+        return "{\"STATUS\" : \"OK\"}";
+    }
+
+    /*@PostMapping("style_file_angular")
     public @ResponseBody byte[]
     styleFileAngular(@RequestPart("file") MultipartFile multipartFile, Authentication authentication){
         return fileService.applyStyle(fileService.multipartFileToFile(multipartFile, authentication.getName(), "style"),
                 userStyles.get(authentication.getName()));
-    }
+    }*/
 
 
     @RequestMapping(value = "/save_angular", method = RequestMethod.POST, produces = "application/json")
