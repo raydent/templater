@@ -51,6 +51,7 @@ public class DocCombiner {
             FileInputStream is = new FileInputStream(file);
             XWPFDocument document = new XWPFDocument(is);
             documentList.add(document);
+            is.close();//check
         }
 
         XWPFDocument document = documentList.get(0);
