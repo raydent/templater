@@ -108,7 +108,7 @@ public class MainController {
         System.out.println(userStyles.get(authentication.getName()));
         byte[] bytes = null;
         bytes = fileService.combineFiles(userFilesToCombine.get(authentication.getName()), correctionList, userStyles.get(authentication.getName()));
-        userFilesToCombine.get(authentication.getName()).stream().forEach(file -> file.delete());
+        //userFilesToCombine.get(authentication.getName()).stream().forEach(file -> file.delete());
         return bytes;
     }
 
