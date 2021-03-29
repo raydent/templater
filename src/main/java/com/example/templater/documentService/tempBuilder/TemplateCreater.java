@@ -578,7 +578,7 @@ public class TemplateCreater {
             run2.setTextHighlightColor(Colors.getColorName(Colors.getColorEnum(titleParams.getThirdLine().getTextHighlightColor())));
         }
         switch (titleParams.getType()) {
-            case 1: {
+            case 0: {
                 run.setText("Organisation");
                 run2.setText("Document's name");
                 run3.setText("Description");
