@@ -97,7 +97,6 @@ public class Temp_Full {
     private String title_type_text_color;
     @Transient
     private String title_type_text_highlight_color;
-    @Transient
     private String title_type_alignment;
 
 
@@ -1075,5 +1074,105 @@ public class Temp_Full {
             titleHeader.setTemp_full(null);
         }
         getTable().setTemp_full(null);
+    }
+
+    @Override
+    public String toString() {
+        return "Temp_Full{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", title_type='" + title_type + '\'' +
+                ", title_name='" + title_name + '\'' +
+                ", title_organization='" + title_organization + '\'' +
+                ", title_description='" + title_description + '\'' +
+                ", title_alignment='" + title_alignment + '\'' +
+                ", headers=" + headers +
+                ", title_headers=" + title_headers +
+                ", table=" + table +
+                ", user=" + user +
+                ", title_name_font='" + title_name_font + '\'' +
+                ", title_name_font_size='" + title_name_font_size + '\'' +
+                ", title_name_bold='" + title_name_bold + '\'' +
+                ", title_name_italic='" + title_name_italic + '\'' +
+                ", title_name_underline='" + title_name_underline + '\'' +
+                ", title_name_text_color='" + title_name_text_color + '\'' +
+                ", title_name_text_highlight_color='" + title_name_text_highlight_color + '\'' +
+                ", title_organization_font='" + title_organization_font + '\'' +
+                ", title_organization_font_size='" + title_organization_font_size + '\'' +
+                ", title_organization_bold='" + title_organization_bold + '\'' +
+                ", title_organization_italic='" + title_organization_italic + '\'' +
+                ", title_organization_underline='" + title_organization_underline + '\'' +
+                ", title_organization_text_color='" + title_organization_text_color + '\'' +
+                ", title_organization_text_highlight_color='" + title_organization_text_highlight_color + '\'' +
+                ", title_description_font='" + title_description_font + '\'' +
+                ", title_description_font_size='" + title_description_font_size + '\'' +
+                ", title_description_bold='" + title_description_bold + '\'' +
+                ", title_description_italic='" + title_description_italic + '\'' +
+                ", title_description_underline='" + title_description_underline + '\'' +
+                ", title_description_text_color='" + title_description_text_color + '\'' +
+                ", title_description_text_highlight_color='" + title_description_text_highlight_color + '\'' +
+                ", title_type_font='" + title_type_font + '\'' +
+                ", title_type_font_size='" + title_type_font_size + '\'' +
+                ", title_type_bold='" + title_type_bold + '\'' +
+                ", title_type_italic='" + title_type_italic + '\'' +
+                ", title_type_underline='" + title_type_underline + '\'' +
+                ", title_type_text_color='" + title_type_text_color + '\'' +
+                ", title_type_text_highlight_color='" + title_type_text_highlight_color + '\'' +
+                ", title_type_alignment='" + title_type_alignment + '\'' +
+                ", header='" + header + '\'' +
+                ", footer='" + footer + '\'' +
+                ", title_page='" + title_page + '\'' +
+                ", numeration='" + numeration + '\'' +
+                ", interval='" + interval + '\'' +
+                ", fields='" + fields + '\'' +
+                ", h1_font='" + h1_font + '\'' +
+                ", h1_font_size='" + h1_font_size + '\'' +
+                ", h1_bold='" + h1_bold + '\'' +
+                ", h1_italic='" + h1_italic + '\'' +
+                ", h1_underline='" + h1_underline + '\'' +
+                ", h1_alignment='" + h1_alignment + '\'' +
+                ", h1_text_color='" + h1_text_color + '\'' +
+                ", h1_text_highlight_color='" + h1_text_highlight_color + '\'' +
+                ", h2_font='" + h2_font + '\'' +
+                ", h2_font_size='" + h2_font_size + '\'' +
+                ", h2_bold='" + h2_bold + '\'' +
+                ", h2_italic='" + h2_italic + '\'' +
+                ", h2_underline='" + h2_underline + '\'' +
+                ", h2_alignment='" + h2_alignment + '\'' +
+                ", h2_text_color='" + h2_text_color + '\'' +
+                ", h2_text_highlight_color='" + h2_text_highlight_color + '\'' +
+                ", h3_font='" + h3_font + '\'' +
+                ", h3_font_size='" + h3_font_size + '\'' +
+                ", h3_bold='" + h3_bold + '\'' +
+                ", h3_italic='" + h3_italic + '\'' +
+                ", h3_underline='" + h3_underline + '\'' +
+                ", h3_alignment='" + h3_alignment + '\'' +
+                ", h3_text_color='" + h3_text_color + '\'' +
+                ", h3_text_highlight_color='" + h3_text_highlight_color + '\'' +
+                ", h4_font='" + h4_font + '\'' +
+                ", h4_font_size='" + h4_font_size + '\'' +
+                ", h4_bold='" + h4_bold + '\'' +
+                ", h4_italic='" + h4_italic + '\'' +
+                ", h4_underline='" + h4_underline + '\'' +
+                ", h4_alignment='" + h4_alignment + '\'' +
+                ", h4_text_color='" + h4_text_color + '\'' +
+                ", h4_text_highlight_color='" + h4_text_highlight_color + '\'' +
+                ", h5_font='" + h5_font + '\'' +
+                ", h5_font_size='" + h5_font_size + '\'' +
+                ", h5_bold='" + h5_bold + '\'' +
+                ", h5_italic='" + h5_italic + '\'' +
+                ", h5_underline='" + h5_underline + '\'' +
+                ", h5_alignment='" + h5_alignment + '\'' +
+                ", h5_text_color='" + h5_text_color + '\'' +
+                ", h5_text_highlight_color='" + h5_text_highlight_color + '\'' +
+                ", table_heading_cell_text_color='" + table_heading_cell_text_color + '\'' +
+                ", table_heading_cell_color='" + table_heading_cell_color + '\'' +
+                ", table_cell_border_color='" + table_cell_border_color + '\'' +
+                ", table_common_cell_color='" + table_common_cell_color + '\'' +
+                ", table_font='" + table_font + '\'' +
+                ", table_font_size='" + table_font_size + '\'' +
+                ", table_bold='" + table_bold + '\'' +
+                ", table_italic='" + table_italic + '\'' +
+                '}';
     }
 }
