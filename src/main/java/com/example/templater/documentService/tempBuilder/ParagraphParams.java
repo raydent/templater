@@ -117,6 +117,10 @@ public class ParagraphParams {
         return bold;
     }
 
+    public boolean getBold() {
+        return bold;
+    }
+
     public void setBold(boolean bold) {
         this.bold = bold;
     }
@@ -251,5 +255,6 @@ public class ParagraphParams {
         list.add(textField);
         return list;
     }
+
 
 }

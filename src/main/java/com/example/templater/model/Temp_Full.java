@@ -2,7 +2,16 @@ package com.example.templater.model;
 
 //import org.springframework.data.annotation.Transient;
 
+import com.example.templater.documentService.tempBuilder.Colors;
+import com.example.templater.documentService.tempBuilder.Fields;
+import com.example.templater.documentService.tempBuilder.Fonts;
+import com.example.templater.documentService.tempBuilder.ParagraphParams;
+import com.example.templater.documentService.tempParamsGetter.AllTempParams;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+
 import javax.persistence.*;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -220,6 +229,84 @@ public class Temp_Full {
     @Transient
     private String table_italic;
 
+    public Temp_Full(){
+
+    }
+
+    public Temp_Full(AllTempParams allTempParams){
+        this.headers = new ArrayList<>();
+        for (int i = 0; i < 5; i++){
+            ParagraphParams pp = allTempParams.getParamsList().get(i);
+            Header header = new Header();
+            System.out.println(pp.getFont());
+            System.out.println(pp.getFontSize());
+            header.setFont(pp.getFont().name());
+            header.setFont_size(String.valueOf(pp.getFontSize()));
+            header.setBold(pp.getBold() ? "1" : "0");
+            header.setItalic(pp.isItalic() ? "1" : "0");
+            header.setUnderline(pp.isUnderline() ? "1" : "0");
+            header.setAlignment(pp.getAlignment().toString());
+            header.setText_highlight_color(pp.getTextHighlightColor());
+            header.setText_color(pp.getTextColor());
+            headers.add(header);
+        }
+
+        this.title_page = allTempParams.getTempParams().isTitle_page() ? "1" : "0";
+        this.numeration = allTempParams.getTempParams().isNumeration() ? "1" : "0";
+        this.footer = allTempParams.getTempParams().isFooter() ? "1" : "0";
+        this.header = allTempParams.getTempParams().isHeader() ? "1" : "0";
+        this.interval = String.valueOf(allTempParams.getTempParams().getInterval_between_lines());
+        this.fields = allTempParams.getTempParams().getField().toString();
+
+        if (allTempParams.getTempParams().isTitle_page()) {
+            this.title_organization_font = allTempParams.getTitleParams().getFirstLine().getFont().toString();
+            this.title_organization_font_size = allTempParams.getTitleParams().getFirstLine().getFontSize().toString();
+            this.title_organization_bold = allTempParams.getTitleParams().getFirstLine().getBold() ? "1" : "0";
+            this.title_organization_italic = allTempParams.getTitleParams().getFirstLine().isItalic() ? "1" : "0";
+            this.title_organization_underline = allTempParams.getTitleParams().getFirstLine().isUnderline() ? "1" : "0";
+            this.title_organization_text_highlight_color = "#" + allTempParams.getTitleParams().getFirstLine().getTextHighlightColor();
+            this.title_organization_text_color = "#" + allTempParams.getTitleParams().getFirstLine().getTextColor();
+
+            this.title_name_font = allTempParams.getTitleParams().getSecondLine().getFont().toString();
+            this.title_name_font_size = allTempParams.getTitleParams().getSecondLine().getFontSize().toString();
+            this.title_name_bold = allTempParams.getTitleParams().getSecondLine().getBold() ? "1" : "0";
+            this.title_name_italic = allTempParams.getTitleParams().getSecondLine().isItalic() ? "1" : "0";
+            this.title_name_underline = allTempParams.getTitleParams().getSecondLine().isUnderline() ? "1" : "0";
+            this.title_name_text_highlight_color = "#" + allTempParams.getTitleParams().getSecondLine().getTextHighlightColor();
+            this.title_name_text_color = "#" + allTempParams.getTitleParams().getSecondLine().getTextColor();
+
+            this.title_description_font = allTempParams.getTitleParams().getThirdLine().getFont().toString();
+            this.title_description_font_size = allTempParams.getTitleParams().getThirdLine().getFontSize().toString();
+            this.title_description_bold = allTempParams.getTitleParams().getThirdLine().getBold() ? "1" : "0";
+            this.title_description_italic = allTempParams.getTitleParams().getThirdLine().isItalic() ? "1" : "0";
+            this.title_description_underline = allTempParams.getTitleParams().getThirdLine().isUnderline() ? "1" : "0";
+            this.title_description_text_highlight_color = "#" + allTempParams.getTitleParams().getThirdLine().getTextHighlightColor();
+            this.title_description_text_color = "#" + allTempParams.getTitleParams().getThirdLine().getTextColor();
+
+//            this.title_type_font = allTempParams.getTitleParams().getDateColomn().getFont().toString();
+//            this.title_type_font_size = allTempParams.getTitleParams().getDateColomn().getFontSize().toString();
+//            this.title_type_bold = allTempParams.getTitleParams().getDateColomn().isBold() ? "1" : "0";
+//            this.title_type_italic = allTempParams.getTitleParams().getDateColomn().isItalic() ? "1" : "0";
+//            this.title_type_underline = allTempParams.getTitleParams().getDateColomn().isUnderline() ? "1" : "0";
+//            this.title_type_text_highlight_color = "#" + allTempParams.getTitleParams().getDateColomn().getTextHighlightColor();
+//            this.title_type_text_color = "#" + allTempParams.getTitleParams().getDateColomn().getTextColor();
+        }
+
+//        this.dateColomn = new ParagraphParams(temp.getTitle_type_font(),
+//                temp.getTitle_type_font_size(),
+//                temp.getTitle_type_bold(), temp.getTitle_type_italic(),
+//                temp.getTitle_type_underline(), "LEFT", temp.getTitle_type_text_highlight_color().substring(1),
+//                temp.getTitle_type_text_color().substring(1));
+
+        this.table_heading_cell_text_color = "#" + allTempParams.getTableParams().getHeadingCellTextColor();
+        this.table_font = allTempParams.getTableParams().getHeadingTextFont().toString();
+        this.table_bold = allTempParams.getTableParams().isHeadingTextBold() ? "1" : "0";
+        this.table_italic = allTempParams.getTableParams().isHeadingTextItalic() ? "1" : "0";
+        this.table_font_size = allTempParams.getTableParams().getHeadingTextFontSize().toString();
+        this.table_heading_cell_color = "#" + allTempParams.getTableParams().getHeadingCellColor();
+        this.table_cell_border_color = "#" + allTempParams.getTableParams().getBorderColor();
+        this.table_common_cell_color = "#" + allTempParams.getTableParams().getCommonCellColor();
+    }
 
     public String getName() {
         return name;
@@ -306,22 +393,25 @@ public class Temp_Full {
     }
 
     public void fillHeaders() {
-        Header header1 = new Header(1, h1_font, h1_font_size, h1_bold,
-                h1_italic, h1_underline, h1_alignment, h1_text_color, h1_text_highlight_color);
-        Header header2 = new Header(2, h2_font, h2_font_size, h2_bold,
-                h2_italic, h2_underline, h2_alignment, h2_text_color, h2_text_highlight_color);
-        Header header3 = new Header(3, h3_font, h3_font_size, h3_bold,
-                h3_italic, h3_underline, h3_alignment, h3_text_color, h3_text_highlight_color);
-        Header header4 = new Header(4, h4_font, h4_font_size, h4_bold,
-                h4_italic, h4_underline, h4_alignment, h4_text_color, h4_text_highlight_color);
-        Header header5 = new Header(5, h5_font, h5_font_size, h5_bold,
-                h5_italic, h5_underline, h5_alignment, h5_text_color, h5_text_highlight_color);
-        headers = Arrays.asList(header1, header2, header3, header4, header5);
+        if (h1_font != null) {
+            Header header1 = new Header(1, h1_font, h1_font_size, h1_bold,
+                    h1_italic, h1_underline, h1_alignment, h1_text_color, h1_text_highlight_color);
+            Header header2 = new Header(2, h2_font, h2_font_size, h2_bold,
+                    h2_italic, h2_underline, h2_alignment, h2_text_color, h2_text_highlight_color);
+            Header header3 = new Header(3, h3_font, h3_font_size, h3_bold,
+                    h3_italic, h3_underline, h3_alignment, h3_text_color, h3_text_highlight_color);
+            Header header4 = new Header(4, h4_font, h4_font_size, h4_bold,
+                    h4_italic, h4_underline, h4_alignment, h4_text_color, h4_text_highlight_color);
+            Header header5 = new Header(5, h5_font, h5_font_size, h5_bold,
+                    h5_italic, h5_underline, h5_alignment, h5_text_color, h5_text_highlight_color);
+            headers = Arrays.asList(header1, header2, header3, header4, header5);
+        }
     }
 
     public void fillTable(){
         //String table_heading_cell_text_color, String table_heading_cell_color, String table_cell_border_color, String table_common_cell_color, String table_font, String table_font_size, String table_bold, String table_italic
-        table = new TempTable(table_heading_cell_text_color, table_heading_cell_color, table_cell_border_color, table_common_cell_color, table_font, table_font_size, table_bold, table_italic);
+        table = new TempTable(table_heading_cell_text_color, table_heading_cell_color,
+                table_cell_border_color, table_common_cell_color, table_font, table_font_size, table_bold, table_italic);
     }
 
     public void replaceCheckboxNulls() {
