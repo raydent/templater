@@ -695,7 +695,10 @@ public class DocCombiner {
         return document;
     }
 
-    public XWPFDocument applyTemplateToDoc(XWPFDocument document, AllTempParams allTempParams) throws IOException, XmlException {
+    public XWPFDocument applyTemplateToDoc(File file, AllTempParams allTempParams) throws IOException, XmlException {
+        FileInputStream fis = new FileInputStream(file);
+        XWPFDocument document = new XWPFDocument(fis);
+        fis.close();
         TempParams tempParams = allTempParams.getTempParams();
         TitleParams titleParams = allTempParams.getTitleParams();
         List<ParagraphParams> paragraphParamsList = allTempParams.getParamsList();
@@ -781,12 +784,12 @@ public class DocCombiner {
 
         //разметка документа
         TemplateCreater creater = new TemplateCreater();
+        if (tempParams.isTitle_page()) {
+            document = creater.insertTitlePage(document, allTempParams, tempParams.getField());
+        }
         if (tempParams.isHeader()) {
             ParagraphParams params = paragraphParamsList.get(paragraphParamsList.size() - 3);
             document = creater.createHeader(document, params);
-        }
-        if (tempParams.isTitle_page()) {
-            document = creater.insertTitlePage(document, titleParams, tempParams.getField());
         }
         if (tempParams.isNumeration()) {
             document = creater.createNumeration(document);
