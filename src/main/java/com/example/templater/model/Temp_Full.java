@@ -298,14 +298,16 @@ public class Temp_Full {
 //                temp.getTitle_type_underline(), "LEFT", temp.getTitle_type_text_highlight_color().substring(1),
 //                temp.getTitle_type_text_color().substring(1));
 
-        this.table_heading_cell_text_color = "#" + allTempParams.getTableParams().getHeadingCellTextColor();
-        this.table_font = allTempParams.getTableParams().getHeadingTextFont().toString();
-        this.table_bold = allTempParams.getTableParams().isHeadingTextBold() ? "1" : "0";
-        this.table_italic = allTempParams.getTableParams().isHeadingTextItalic() ? "1" : "0";
-        this.table_font_size = allTempParams.getTableParams().getHeadingTextFontSize().toString();
-        this.table_heading_cell_color = "#" + allTempParams.getTableParams().getHeadingCellColor();
-        this.table_cell_border_color = "#" + allTempParams.getTableParams().getBorderColor();
-        this.table_common_cell_color = "#" + allTempParams.getTableParams().getCommonCellColor();
+        if (allTempParams.getTableParams() != null) {
+            this.table_heading_cell_text_color = "#" + allTempParams.getTableParams().getHeadingCellTextColor();
+            this.table_font = allTempParams.getTableParams().getHeadingTextFont().toString();
+            this.table_bold = allTempParams.getTableParams().isHeadingTextBold() ? "1" : "0";
+            this.table_italic = allTempParams.getTableParams().isHeadingTextItalic() ? "1" : "0";
+            this.table_font_size = allTempParams.getTableParams().getHeadingTextFontSize().toString();
+            this.table_heading_cell_color = "#" + allTempParams.getTableParams().getHeadingCellColor();
+            this.table_cell_border_color = "#" + allTempParams.getTableParams().getBorderColor();
+            this.table_common_cell_color = "#" + allTempParams.getTableParams().getCommonCellColor();
+        }
     }
 
     public String getName() {

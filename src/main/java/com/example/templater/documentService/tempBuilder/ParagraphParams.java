@@ -53,7 +53,12 @@ public class ParagraphParams {
                 this.underline = temp.getH1_underline().equals("1");
                 this.alignment = ParagraphAlignment.valueOf(temp.getH1_alignment());
                 this.textHighlightColor = Colors.getColorName(temp.getH1_text_highlight_color().substring(1));
-                this.textColor = temp.getH1_text_color().substring(1);
+                if ( temp.getH1_text_color().charAt(0) == '#') {
+                    this.textColor = temp.getH1_text_color().substring(1);
+                }
+                else {
+                    this.textColor = temp.getH1_text_color().substring(0);
+                }
                 break;
             case(2):
                 this.font = Fonts.valueOf(temp.getH2_font());
@@ -63,7 +68,12 @@ public class ParagraphParams {
                 this.underline = temp.getH2_underline().equals("1");
                 this.alignment = ParagraphAlignment.valueOf(temp.getH2_alignment());
                 this.textHighlightColor = Colors.getColorName(temp.getH2_text_highlight_color().substring(1));
-                this.textColor = temp.getH2_text_color().substring(1);
+                if (temp.getH2_text_color().charAt(0) == '#') {
+                    this.textColor = temp.getH2_text_color().substring(1);
+                }
+                else {
+                    this.textColor = temp.getH2_text_color().substring(0);
+                }
                 break;
             case(3):
                 this.font = Fonts.valueOf(temp.getH3_font());
@@ -73,7 +83,12 @@ public class ParagraphParams {
                 this.underline = temp.getH3_underline().equals("1");
                 this.alignment = ParagraphAlignment.valueOf(temp.getH3_alignment());
                 this.textHighlightColor = Colors.getColorName(temp.getH3_text_highlight_color().substring(1));
-                this.textColor = temp.getH3_text_color().substring(1);
+                if (temp.getH3_text_color().charAt(0) == '#') {
+                    this.textColor = temp.getH3_text_color().substring(1);
+                }
+                else {
+                    this.textColor = temp.getH3_text_color().substring(0);
+                }
                 break;
             case(4):
                 this.font = Fonts.valueOf(temp.getH4_font());
@@ -83,7 +98,12 @@ public class ParagraphParams {
                 this.underline = temp.getH4_underline().equals("1");
                 this.alignment = ParagraphAlignment.valueOf(temp.getH4_alignment());
                 this.textHighlightColor = Colors.getColorName(temp.getH4_text_highlight_color().substring(1));
-                this.textColor = temp.getH4_text_color().substring(1);
+                if (temp.getH4_text_color().charAt(0) == '#') {
+                    this.textColor = temp.getH4_text_color().substring(1);
+                }
+                else {
+                    this.textColor = temp.getH4_text_color().substring(0);
+                }
                 break;
             default:
                 this.font = Fonts.valueOf(temp.getH5_font());
@@ -93,7 +113,12 @@ public class ParagraphParams {
                 this.underline = temp.getH5_underline().equals("1");
                 this.alignment = ParagraphAlignment.valueOf(temp.getH5_alignment());
                 this.textHighlightColor = Colors.getColorName(temp.getH5_text_highlight_color().substring(1));
-                this.textColor = temp.getH5_text_color().substring(1);
+                if (temp.getH5_text_color().charAt(0) == '#') {
+                    this.textColor = temp.getH5_text_color().substring(1);
+                }
+                else {
+                    this.textColor = temp.getH5_text_color().substring(0);
+                }
         }
     }
 

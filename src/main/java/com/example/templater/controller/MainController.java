@@ -230,12 +230,13 @@ public class MainController {
                 ParagraphAlignment.LEFT, Colors.getColorCode("black"), Colors.getColorCode("black"));
         List<ParagraphParams> paragraphParamsList = Arrays.asList(firstParagraph, secondParagraph,
                 thirdParagraph, fourthParagraph, fifthParagraph, null, null, textField);
-        TitleParams titleParams = new TitleParams(temp_full);
 
+        TitleParams titleParams = null;
+        if (Integer.parseInt(temp_full.getTitle_page()) != 0) {
+            titleParams = new TitleParams(temp_full);
+        }
         TempParams tempParams = new TempParams(temp_full);
-
         TableParams tableParams = new TableParams(temp_full);
-
 
         TemplateCreater templateCreater = new TemplateCreater();
         File file;

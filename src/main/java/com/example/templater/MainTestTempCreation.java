@@ -3,19 +3,18 @@ package com.example.templater;
 import com.example.templater.documentService.docCombine.*;
 import com.example.templater.documentService.tempBuilder.*;
 import com.example.templater.documentService.tempParamsGetter.AllTempParams;
+import com.example.templater.documentService.tempParamsGetter.TempParamsGetter;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.xmlbeans.XmlException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.print.Doc;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class MainTestTempCreation {
-    public static void main(String... s) {
+    public static void main(String... s) throws IOException, XmlException {
         /*
         TemplateCreater templateCreater = new TemplateCreater();
         TempParams tempParams = TempParams.getDefaultTemp1Params();
@@ -75,7 +74,7 @@ public class MainTestTempCreation {
         //File file1 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\2.docx");
         //File file2 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\3.docx");
         //File file3 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\Big files\\4.docx");
-        File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test1.docx");
+        /*File file = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test1.docx");
         File file1 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test2.docx");
         File file2 = new File("C:\\Users\\a-r-t\\Desktop\\IDEA projects\\templater\\Test files\\paper New York\\Test3.docx");
         try {
@@ -119,6 +118,19 @@ public class MainTestTempCreation {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+*/
+        File file1 = new File("C:\\Users\\a-r-t\\Downloads\\doc (12).docx");
+        File file = new File("C:\\Users\\a-r-t\\Downloads\\Res (2).docx");
+        FileInputStream fis = new FileInputStream(file);
+        XWPFDocument document = new XWPFDocument(fis);
+        fis.close();
+        fis = new FileInputStream(file1);
+        XWPFDocument template = new XWPFDocument(fis);
+        fis.close();
+        DocCombiner combiner = new DocCombiner();
+        XWPFDocument result = combiner.applyTemplateToDoc(file, TempParamsGetter.getTempParams(file1));
+        FileOutputStream fos = new FileOutputStream("Result.docx");
+        result.write(fos);
+        fos.close();
     }
 }
