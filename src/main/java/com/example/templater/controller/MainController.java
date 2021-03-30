@@ -6,6 +6,7 @@ import com.example.templater.documentService.docCombine.MainHeadingInfo;
 import com.example.templater.documentService.docCombine.MatchedHeadingInfo;
 import com.example.templater.documentService.tempBuilder.*;
 import com.example.templater.documentService.tempParamsGetter.AllTempParams;
+import com.example.templater.documentService.tempParamsGetter.TempParamsGetter;
 import com.example.templater.model.*;
 import com.example.templater.service.FileService;
 import com.example.templater.service.IUserService;
@@ -127,6 +128,22 @@ public class MainController {
         return "{\"STATUS\" : \"OK\"}";
     }
 
+    @PostMapping("extract_style_angular")
+    public @ResponseBody Temp_Full
+    extractStyleAngular(@RequestPart("file") MultipartFile multipartFile, Authentication authentication){
+        System.out.println("Extract");
+        File file = this.fileService.multipartFileToFile(multipartFile, authentication.getName(), "extract");
+        try {
+            AllTempParams allTempParams = TempParamsGetter.getTempParams(file);
+            Temp_Full temp_full = new Temp_Full(allTempParams);
+            temp_full.fillAllDBParams(null);
+            temp_full.cutRecursiveReferences();
+            return temp_full;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     /*@PostMapping("style_file_angular")
     public @ResponseBody byte[]
     styleFileAngular(@RequestPart("file") MultipartFile multipartFile, Authentication authentication){
@@ -399,25 +416,25 @@ public class MainController {
 
 
 
-    @GetMapping("/temp")
-    public String tempForm(Model model) {
-        Temp_Full temp = new Temp_Full();
-        model.addAttribute("temp", temp);
-        return "temp";
-    }
-
-
-    @PostMapping(value = "/temp", params = "save")
-    public void saveTemplate(@ModelAttribute("temp") Temp_Full temp,
-                             Authentication authentication){
-        temp.replaceCheckboxNulls();
-        String username = authentication.getName();
-        User user = userService.getUserByName(username);
-        temp.fillAllDBParams(user);
-        user.addTemp_Full(temp);
-        userService.saveUserUnsafe(user);
-        //templateService.saveTemplate(temp);
-    }
+//    @GetMapping("/temp")
+//    public String tempForm(Model model) {
+//        Temp_Full temp = new Temp_Full();
+//        model.addAttribute("temp", temp);
+//        return "temp";
+//    }
+//
+//
+//    @PostMapping(value = "/temp", params = "save")
+//    public void saveTemplate(@ModelAttribute("temp") Temp_Full temp,
+//                             Authentication authentication){
+//        temp.replaceCheckboxNulls();
+//        String username = authentication.getName();
+//        User user = userService.getUserByName(username);
+//        temp.fillAllDBParams(user);
+//        user.addTemp_Full(temp);
+//        userService.saveUserUnsafe(user);
+//        //templateService.saveTemplate(temp);
+//    }
 
     //function for testing selecting templates from db
     @PostMapping(value = "/temp", params = "get")
