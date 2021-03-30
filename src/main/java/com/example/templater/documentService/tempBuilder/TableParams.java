@@ -39,17 +39,22 @@ public class TableParams {
     }
 
     public TableParams(Temp_Full temp){
-        this.rows = 2;
-        this.coloms = 2;
-        this.width = Arrays.asList(BigInteger.valueOf(5000), BigInteger.valueOf(5000));
-        this.headingCellTextColor = temp.getTable_heading_cell_text_color().substring(1);
-        this.headingTextFont = Fonts.valueOf(temp.getTable_font());
-        this.headingTextBold = temp.getTable_bold().equals("1");
-        this.headingTextItalic = temp.getTable_italic().equals("1");
-        this.headingTextFontSize = Integer.valueOf(temp.getTable_font_size());
-        this.headingCellColor = temp.getTable_heading_cell_color().substring(1);
-        this.borderColor = temp.getTable_cell_border_color().substring(1);
-        this.CommonCellColor = temp.getTable_common_cell_color().substring(1);
+        try {
+            this.rows = 2;
+            this.coloms = 2;
+            this.width = Arrays.asList(BigInteger.valueOf(5000), BigInteger.valueOf(5000));
+            this.headingCellTextColor = temp.getTable_heading_cell_text_color().substring(1);
+            this.headingTextFont = Fonts.valueOf(temp.getTable_font());
+            this.headingTextBold = temp.getTable_bold().equals("1");
+            this.headingTextItalic = temp.getTable_italic().equals("1");
+            this.headingTextFontSize = Integer.valueOf(temp.getTable_font_size());
+            this.headingCellColor = temp.getTable_heading_cell_color().substring(1);
+            this.borderColor = temp.getTable_cell_border_color().substring(1);
+            this.CommonCellColor = temp.getTable_common_cell_color().substring(1);
+        }
+        catch (NullPointerException exception) {
+
+        }
     }
 
     public List<BigInteger> getWidth() {
