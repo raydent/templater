@@ -248,12 +248,13 @@ public class TempParamsGetter {
                 STHexColor color;
                 if (table.getCTTbl().getTblPr().isSetTblBorders()) {
                     color = table.getCTTbl().getTblPr().getTblBorders().getTop().xgetColor();
+                    tableParams.setBorderColor(color.getStringValue());
                 }
                 else {
                     color = STHexColor.Factory.newInstance();
                     color.setStringValue("000000");
+                    tableParams.setBorderColor(color.getStringValue());
                 }
-                tableParams.setBorderColor(color.getStringValue());
                 if (table.getNumberOfRows() > 1) {
                     tableParams.setCommonCellColor(table.getRow(1).getCell(0).getColor());
                 }

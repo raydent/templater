@@ -449,9 +449,11 @@ public class TemplateCreater {
         paragraph1.setStyle("Footer");
         XWPFRun run1 = paragraph1.createRun();
         run1.setText("Disclose and distribute solely to those individuals with a need to know.");
+        paragraph.setAlignment(ParagraphAlignment.CENTER);
+        paragraph1.setAlignment(ParagraphAlignment.CENTER);
         if (params != null) {
-            paragraph.setAlignment(params.getAlignment());
-            paragraph1.setAlignment(params.getAlignment());
+            paragraph.setAlignment(ParagraphAlignment.CENTER);
+            paragraph1.setAlignment(ParagraphAlignment.CENTER);
             if (params.isBold()) {
                 run.setBold(true);
                 run1.setBold(true);
@@ -464,10 +466,6 @@ public class TemplateCreater {
                 run.setUnderline(UnderlinePatterns.SINGLE);
                 run1.setUnderline(UnderlinePatterns.SINGLE);
             }
-        }
-        else {
-            paragraph.setAlignment(ParagraphAlignment.CENTER);
-            paragraph1.setAlignment(ParagraphAlignment.CENTER);
         }
         return document;
     }
@@ -645,7 +643,10 @@ public class TemplateCreater {
         return document;
     }
 
-    public XWPFDocument insertTitlePage(XWPFDocument document, TitleParams titleParams, Fields fields) throws IOException, XmlException {
+    public XWPFDocument insertTitlePage(XWPFDocument document, AllTempParams allTempParams, Fields fields) throws IOException, XmlException {
+        TitleParams titleParams = allTempParams.getTitleParams();
+        List<ParagraphParams> paragraphParamsList = allTempParams.getParamsList();
+        TempParams tempParams = allTempParams.getTempParams();
         if (TempParamsGetter.isTitlePage(document)) {
             List<XWPFTable> tables = document.getTables();
             int pos = document.getPosOfTable(tables.get(0));
@@ -690,6 +691,69 @@ public class TemplateCreater {
             ppr.setPBdr(ctpBdr);
 
             result = createTitlePage(result, titleParams, fields);
+
+            XWPFStyle style2 = styles.getStyle("Heading2");
+            XWPFStyle style3 = styles.getStyle("Heading3");
+            XWPFStyle style4 = styles.getStyle("Heading4");
+            XWPFStyle style5 = styles.getStyle("Heading5");
+            XWPFStyle hStyle = styles.getStyle("Header");
+            XWPFStyle fStyle = styles.getStyle("Footer");
+            List<XWPFStyle> styleList = Arrays.asList(style1, style2, style3, style4, style5, hStyle, fStyle);
+
+            for (int i = 0; i < styleList.size(); ++i) {
+                if (paragraphParamsList.get(i) == null) {
+                    continue;
+                }
+                CTStyle ctStyle = styleList.get(i).getCTStyle();
+                CTRPr rpr = ctStyle.getRPr();
+                if (rpr == null) {
+                    rpr = ctStyle.addNewRPr();
+                }
+                CTSpacing spacing = CTSpacing.Factory.newInstance();
+                spacing.setAfter(BigInteger.valueOf(0));
+                spacing.setBefore(BigInteger.valueOf(0));
+                spacing.setLineRule(STLineSpacingRule.AUTO);
+                spacing.setLine(BigInteger.valueOf((long) tempParams.getInterval_between_lines() * 240));
+                ctStyle.getPPr().setSpacing(spacing);
+
+                //color
+                CTColor color = CTColor.Factory.newInstance();
+                STHexColor col = STHexColor.Factory.newInstance();
+                col.setStringValue(paragraphParamsList.get(i).getTextColor());
+                color.setVal(col);
+                rpr.setColor(color);
+                CTHighlight ctHighlight = CTHighlight.Factory.newInstance();
+                ctHighlight.setVal(Colors.getColorEnum(paragraphParamsList.get(i).getTextHighlightColor()));
+                rpr.setHighlight(ctHighlight);
+
+                //font
+                CTFonts fonts = CTFonts.Factory.newInstance();
+                fonts.setAscii(Fonts.getFontString(paragraphParamsList.get(i).getFont()));
+                rpr.setRFonts(fonts);
+                CTHpsMeasure size = CTHpsMeasure.Factory.newInstance();
+                size.setVal(new BigInteger(String.valueOf(paragraphParamsList.get(i).getFontSize() * 2)));
+                rpr.setSz(size);
+                CTOnOff ctOnOffBold = CTOnOff.Factory.newInstance();
+                ctOnOffBold.setVal(STOnOff.OFF);
+                CTOnOff ctOnOffItalic = CTOnOff.Factory.newInstance();
+                ctOnOffItalic.setVal(STOnOff.OFF);
+                CTUnderline ctUnderline = CTUnderline.Factory.newInstance();
+                ctUnderline.setVal(STUnderline.NONE);
+                if (paragraphParamsList.get(i).isBold()) {
+                    ctOnOffBold.setVal(STOnOff.ON);
+                }
+                if (paragraphParamsList.get(i).isItalic()) {
+                    ctOnOffItalic.setVal(STOnOff.ON);
+                }
+                if (paragraphParamsList.get(i).isUnderline()) {
+                    ctUnderline.setVal(STUnderline.SINGLE);
+                }
+                rpr.setB(ctOnOffBold);
+                rpr.setI(ctOnOffItalic);
+                rpr.setU(ctUnderline);
+                ctStyle.setRPr(rpr);
+            }
+
             List<HeadingWithText> mainHeadings = TempParamsGetter.getMainHeadingsList(document);
             DocCombiner combiner = new DocCombiner();
             if (mainHeadings != null) {

@@ -61,7 +61,11 @@ public class FileService {
                     headingsCorrectionList, true);
             if (allTempParams != null){
                 DocCombiner combiner = new DocCombiner();
-                result = combiner.applyTemplateToDoc(result, allTempParams);
+                FileOutputStream fos = new FileOutputStream("Temp.docx");
+                result.write(fos);
+                fos.close();
+                File file1 = new File("Temp.docx");
+                result = combiner.applyTemplateToDoc(file1, allTempParams);
             }
             FileOutputStream fos = new FileOutputStream("Combined.docx");
             result.write(fos);
@@ -74,7 +78,7 @@ public class FileService {
         }
         return bytes;
     }
-
+    /*
     public byte[] applyStyle(File file, AllTempParams allTempParams){
         byte[] bytes = null;
         try {
@@ -95,5 +99,5 @@ public class FileService {
             e.printStackTrace();
         }
         return bytes;
-    }
+    }*/
 }
