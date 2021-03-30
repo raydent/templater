@@ -238,16 +238,14 @@ public class Temp_Full {
         for (int i = 0; i < 5; i++){
             ParagraphParams pp = allTempParams.getParamsList().get(i);
             Header header = new Header();
-            System.out.println(pp.getFont());
-            System.out.println(pp.getFontSize());
             header.setFont(pp.getFont().name());
             header.setFont_size(String.valueOf(pp.getFontSize()));
             header.setBold(pp.getBold() ? "1" : "0");
             header.setItalic(pp.isItalic() ? "1" : "0");
             header.setUnderline(pp.isUnderline() ? "1" : "0");
             header.setAlignment(pp.getAlignment().toString());
-            header.setText_highlight_color(pp.getTextHighlightColor());
-            header.setText_color(pp.getTextColor());
+            header.setText_highlight_color("#" + pp.getTextHighlightColor());
+            header.setText_color("#" + pp.getTextColor());
             headers.add(header);
         }
 
@@ -283,13 +281,15 @@ public class Temp_Full {
             this.title_description_text_highlight_color = "#" + allTempParams.getTitleParams().getThirdLine().getTextHighlightColor();
             this.title_description_text_color = "#" + allTempParams.getTitleParams().getThirdLine().getTextColor();
 
-//            this.title_type_font = allTempParams.getTitleParams().getDateColomn().getFont().toString();
-//            this.title_type_font_size = allTempParams.getTitleParams().getDateColomn().getFontSize().toString();
-//            this.title_type_bold = allTempParams.getTitleParams().getDateColomn().isBold() ? "1" : "0";
-//            this.title_type_italic = allTempParams.getTitleParams().getDateColomn().isItalic() ? "1" : "0";
-//            this.title_type_underline = allTempParams.getTitleParams().getDateColomn().isUnderline() ? "1" : "0";
-//            this.title_type_text_highlight_color = "#" + allTempParams.getTitleParams().getDateColomn().getTextHighlightColor();
-//            this.title_type_text_color = "#" + allTempParams.getTitleParams().getDateColomn().getTextColor();
+            this.title_type_font = allTempParams.getTitleParams().getNameField().getFont().toString();
+            this.title_type_font_size = allTempParams.getTitleParams().getNameField().getFontSize().toString();
+            this.title_type_bold = allTempParams.getTitleParams().getNameField().isBold() ? "1" : "0";
+            this.title_type_italic = allTempParams.getTitleParams().getNameField().isItalic() ? "1" : "0";
+            this.title_type_underline = allTempParams.getTitleParams().getNameField().isUnderline() ? "1" : "0";
+            this.title_type_text_highlight_color = "#" + allTempParams.getTitleParams().getNameField().getTextHighlightColor();
+            this.title_type_text_color = "#" + allTempParams.getTitleParams().getNameField().getTextColor();
+
+            this.title_alignment = "LEFT";
         }
 
 //        this.dateColomn = new ParagraphParams(temp.getTitle_type_font(),
